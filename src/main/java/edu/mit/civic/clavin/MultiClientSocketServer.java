@@ -16,7 +16,7 @@ public class MultiClientSocketServer implements Runnable {
 
     private int port;
     private ServerSocket serverSocket;
-    private volatile int clientCount = 0;
+    private int clientCount = 0;    // WARNING: wrap access to this in synchronized methods
 
     public MultiClientSocketServer(int p){
         port = p;
@@ -38,11 +38,11 @@ public class MultiClientSocketServer implements Runnable {
         }
     }
 
-    protected void decrementClientCount(){
+    protected synchronized void decrementClientCount(){
         clientCount--;
     }
     
-    public int getClientCount(){
+    public synchronized int getClientCount(){
         return clientCount;
     }
     
