@@ -1,4 +1,4 @@
-package edu.mit.civic.clavin;
+package edu.mit.civic.clavin.server;
 
 import java.io.BufferedReader;
 import java.io.IOException;

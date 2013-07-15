@@ -1,4 +1,4 @@
-package edu.mit.civic.clavin;
+package edu.mit.civic.clavin.server;
 
 import java.net.ServerSocket;
 import java.net.Socket;

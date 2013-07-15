@@ -1,4 +1,4 @@
-package edu.mit.civic.clavin;
+package edu.mit.civic.clavin.server;
 
 import java.util.List;
 
@@ -10,10 +10,14 @@ import org.slf4j.LoggerFactory;
 import com.berico.clavin.GeoParser;
 import com.berico.clavin.GeoParserFactory;
 import com.berico.clavin.extractor.LocationExtractor;
+import com.berico.clavin.gazetteer.Place;
 import com.berico.clavin.nerd.ExternalSequenceClassifierProvider;
 import com.berico.clavin.nerd.NerdLocationExtractor;
 import com.berico.clavin.nerd.SequenceClassifierProvider;
 import com.berico.clavin.resolver.ResolvedLocation;
+
+import edu.mit.civic.clavin.resolver.ResolvedLocationAggregator;
+import edu.mit.civic.clavin.resolver.ResolvedLocationGroup;
 
 /**
  * Singleton-style wrapper around a GeoParser
@@ -34,13 +38,28 @@ public class ParseManager {
         JSONObject results = new JSONObject();
         results.put("status","ok");
         List<ResolvedLocation> resolvedLocations = getParserInstance().parse(text).getLocations();
-        JSONArray locationList = new JSONArray();
+        // group the results by place
+        ResolvedLocationAggregator aggregateResolvedLocations = new ResolvedLocationAggregator();  
         for (ResolvedLocation resolvedLocation : resolvedLocations){
+            aggregateResolvedLocations.add(resolvedLocation);
+        }
+        // assemble some JSON back
+        JSONArray locationList = new JSONArray();
+        for (ResolvedLocationGroup resolvedLocationGroup : aggregateResolvedLocations.getAllResolvedLocationGroups()){
             JSONObject loc = new JSONObject();
-            loc.put("confidence", resolvedLocation.getConfidence());
-            loc.put("matchedName", resolvedLocation.getMatchedName());
-            loc.put("lat",resolvedLocation.getPlace().getCenter().getLatitude());
-            loc.put("lon",resolvedLocation.getPlace().getCenter().getLongitude());
+            Place place = resolvedLocationGroup.getPlace();
+            loc.put("confidence", resolvedLocationGroup.getAverageConfidence()); // low is good
+            loc.put("occurrences", resolvedLocationGroup.getOccurrenceCount());
+            loc.put("id",place.getId());
+            loc.put("name",place.getName());
+            loc.put("countryCode",place.getPrimaryCountryCode());
+            loc.put("lat",place.getCenter().getLatitude());
+            loc.put("lon",place.getCenter().getLongitude());
+            JSONArray alternateNames = new JSONArray();
+            for(String name: place.getAlternateNames()){
+                alternateNames.add(name);
+            }
+            loc.put("alternateNames",alternateNames);
             locationList.add(loc);
         }
         results.put("results",locationList);
