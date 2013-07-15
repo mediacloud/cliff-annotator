@@ -31,6 +31,8 @@ public class ParseManager {
         if(text.trim().length()==0){
             return getErrorText("No text");
         }
+        JSONObject results = new JSONObject();
+        results.put("status","ok");
         List<ResolvedLocation> resolvedLocations = getParserInstance().parse(text).getLocations();
         JSONArray locationList = new JSONArray();
         for (ResolvedLocation resolvedLocation : resolvedLocations){
@@ -41,7 +43,8 @@ public class ParseManager {
             loc.put("lon",resolvedLocation.getPlace().getCenter().getLongitude());
             locationList.add(loc);
         }
-        return locationList.toString();
+        results.put("results",locationList);
+        return results.toString();
     }
     
     @SuppressWarnings("unchecked")
