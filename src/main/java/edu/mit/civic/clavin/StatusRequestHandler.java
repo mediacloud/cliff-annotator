@@ -39,6 +39,9 @@ public class StatusRequestHandler implements HttpHandler {
             JSONObject status = new JSONObject();
             status.put("status","ok");
             status.put("activeSocketClientCount",parent.socketServer.getClientCount());
+            status.put("socketServerPort",parent.socketServer.getPort());
+            status.put("webPort",GeoServer.WEB_PORT);
+            
             responseBody.write(status.toString().getBytes());
             responseBody.close();
         }

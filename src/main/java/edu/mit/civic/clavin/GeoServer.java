@@ -20,7 +20,7 @@ public class GeoServer {
 	
 	private static final Logger logger = LoggerFactory.getLogger(GeoServer.class);
 
-	private static final int WEB_PORT = 8080;
+	static final int WEB_PORT = 8080;
 	private static final int SOCKET_PORT = 4000;
 		
 	public HttpServer webServer;
