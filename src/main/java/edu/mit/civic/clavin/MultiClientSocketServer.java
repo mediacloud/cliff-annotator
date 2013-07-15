@@ -21,7 +21,7 @@ public class MultiClientSocketServer implements Runnable {
     public MultiClientSocketServer(int p){
         port = p;
     }
-    
+
     public void run() {
         try{
             serverSocket = new ServerSocket(port);
@@ -41,9 +41,13 @@ public class MultiClientSocketServer implements Runnable {
     protected synchronized void decrementClientCount(){
         clientCount--;
     }
-    
+
     public synchronized int getClientCount(){
         return clientCount;
     }
-    
+
+    public int getPort() {
+        return port;
+    }
+
 }
