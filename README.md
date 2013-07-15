@@ -16,6 +16,12 @@ that, and then create a symlink in this directory from `./IndexDirectory` to the
 If you are using Eclipse, don't forget to do `mvn eclipse:eclipse` in this directory to finish setting things up
 correctly.
 
+On Ubuntu, make sure you do this:
+```
+sudo apt-get install maven2
+sudo apt-get install openjdk-6-jdk
+```
+
 Running
 -------
 

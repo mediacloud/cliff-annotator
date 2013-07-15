@@ -7,7 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Listens for clients that want a socket connection to locate text. 
+ * Listens for clients that want a socket connection to locate text.
+ * TODO: restrict allowed connection clients (ie. localhost only or something) 
  * @author rahulb
  */
 public class MultiClientSocketServer implements Runnable {

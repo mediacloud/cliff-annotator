@@ -12,7 +12,7 @@ import com.sun.net.httpserver.HttpServer;
 /**
  * Wrap sthe CLAVIN geoparser behind some ports so we can integrate it into other workflows.
  *
- * TODO: put the port in a config file
+ * TODO: put the ports in a config file
  * 
  * @author rahulb
  */
