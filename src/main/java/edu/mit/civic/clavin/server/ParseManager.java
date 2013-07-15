@@ -52,7 +52,7 @@ public class ParseManager {
             loc.put("occurrences", resolvedLocationGroup.getOccurrenceCount());
             loc.put("id",place.getId());
             loc.put("name",place.getName());
-            loc.put("countryCode",place.getPrimaryCountryCode());
+            loc.put("countryCode",place.getPrimaryCountryCode().toString());
             loc.put("lat",place.getCenter().getLatitude());
             loc.put("lon",place.getCenter().getLongitude());
             JSONArray alternateNames = new JSONArray();
