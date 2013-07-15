@@ -1,9 +1,9 @@
-CLAVIN Server (aka. Malone)
----------------------------
+CLAVIN Server
+-------------
 
-A lightweight server to allow HTTP-based requests to the CLAVIN geoparser.  It allows to submit unstructured 
-text over HTTP, and a receive in reply JSON results with information about any locations that a mentoned (name,
-lat/lon, confidence, etc).
+A lightweight server to allow socket-based requests to the CLAVIN geoparser.  It allows you to submit 
+unstructured text over a socket and a receive in reply JSON results with information about any locations 
+that are mentoned (name, lat/lon, confidence, etc).
 
 Installation
 ------------
