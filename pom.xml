@@ -1,0 +1,45 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>edu.mit.civic</groupId>
+  <artifactId>clavin-server</artifactId>
+  <version>0.1</version>
+  <packaging>jar</packaging>
+
+  <name>clavin-server</name>
+  <url>http://civic.mit.edu/</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <repositories>
+    <repository>
+       <id>nexus.bericotechnologies.com</id>
+       <name>Berico Technologies Nexus</name>
+       <url>http://nexus.bericotechnologies.com/content/groups/public</url>
+       <releases><enabled>true</enabled></releases>
+       <snapshots><enabled>true</enabled></snapshots>
+    </repository>
+  </repositories>
+
+  <dependencies>
+  	<dependency>
+		<groupId>edu.stanford.nlp</groupId>
+		<artifactId>stanford-corenlp</artifactId>
+		<version>1.3.5</version>
+	</dependency>
+    <dependency>
+     <groupId>com.berico</groupId>
+     <artifactId>clavin</artifactId>
+     <version>0.4.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.googlecode.json-simple</groupId>
+      <artifactId>json-simple</artifactId>
+      <version>1.1.1</version>
+    </dependency>
+  </dependencies>
+
+</project>
