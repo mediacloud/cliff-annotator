@@ -29,6 +29,7 @@ public class ParseRequestHandler implements HttpHandler {
             logger.info("Parse Request");
             Headers responseHeaders = exchange.getResponseHeaders();
             responseHeaders.set("Content-Type", "application/json");
+            responseHeaders.set("charset", "utf-8");
             exchange.sendResponseHeaders(200, 0);
 
             URI uri = exchange.getRequestURI();

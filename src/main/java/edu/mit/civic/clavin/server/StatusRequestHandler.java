@@ -33,6 +33,7 @@ public class StatusRequestHandler implements HttpHandler {
 
             Headers responseHeaders = exchange.getResponseHeaders();
             responseHeaders.set("Content-Type", "application/json");
+            responseHeaders.set("charset", "utf-8");
             exchange.sendResponseHeaders(200, 0);
 
             OutputStream responseBody = exchange.getResponseBody();

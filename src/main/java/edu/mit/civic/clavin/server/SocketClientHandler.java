@@ -1,9 +1,9 @@
 package edu.mit.civic.clavin.server;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.Socket;
 
 import org.slf4j.Logger;
@@ -18,14 +18,14 @@ public class SocketClientHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(SocketClientHandler.class);
 
     private final BufferedReader reader; 
-    private final PrintWriter output;
+    private final DataOutputStream output;
     private final Socket socket;
     private final MultiClientSocketServer parent;
     
     public SocketClientHandler(Socket incomingSocket, MultiClientSocketServer server) throws IOException{
         parent = server;
         socket = incomingSocket;
-        output = new PrintWriter(incomingSocket.getOutputStream());
+        output = new DataOutputStream(incomingSocket.getOutputStream());
         reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         logger.info("Created a new socket connection to "+socket.getRemoteSocketAddress());
     }
@@ -35,8 +35,8 @@ public class SocketClientHandler implements Runnable {
             String line = null;
             while((line = reader.readLine()) != null){
                 boolean quit = false;
-                String results = ParseManager.locate(line); 
-                output.write(results+"\n");
+                String results = ParseManager.locate(line)+"\n"; 
+                output.write(results.getBytes("UTF-8"));
                 output.flush();
                 if(quit){
                     break;
