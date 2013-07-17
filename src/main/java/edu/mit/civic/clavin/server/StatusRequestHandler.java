@@ -2,11 +2,12 @@ package edu.mit.civic.clavin.server;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashMap;
 
-import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gson.Gson;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -19,13 +20,15 @@ public class StatusRequestHandler implements HttpHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(StatusRequestHandler.class);
 
+    private static Gson gson = new Gson();
+    
     private GeoServer parent; 
     
     public StatusRequestHandler(GeoServer geoServer) {
         parent = geoServer;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void handle(HttpExchange exchange) throws IOException {
         String requestMethod = exchange.getRequestMethod();
         if (requestMethod.equalsIgnoreCase("GET")) {
@@ -37,13 +40,13 @@ public class StatusRequestHandler implements HttpHandler {
             exchange.sendResponseHeaders(200, 0);
 
             OutputStream responseBody = exchange.getResponseBody();
-            JSONObject status = new JSONObject();
+            HashMap status = new HashMap();
             status.put("status","ok");
             status.put("activeSocketClientCount",parent.socketServer.getClientCount());
             status.put("socketServerPort",parent.socketServer.getPort());
             status.put("webPort",GeoServer.WEB_PORT);
             
-            responseBody.write(status.toString().getBytes());
+            responseBody.write(gson.toJson(status).getBytes());
             responseBody.close();
         }
     }

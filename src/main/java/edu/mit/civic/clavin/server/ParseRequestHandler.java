@@ -39,7 +39,6 @@ public class ParseRequestHandler implements HttpHandler {
                 logger.info(results);
             } catch(Exception e){   // try to give the user something useful
                 logger.error(e.toString());
-                e.printStackTrace();
                 results = ParseManager.getErrorText(e.toString());
             }
 
