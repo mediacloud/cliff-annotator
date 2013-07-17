@@ -22,19 +22,27 @@ public class SocketClientHandler implements Runnable {
     private final Socket socket;
     private final MultiClientSocketServer parent;
     
+    private int requestCount = 0;
+    
     public SocketClientHandler(Socket incomingSocket, MultiClientSocketServer server) throws IOException{
         parent = server;
         socket = incomingSocket;
         output = new DataOutputStream(incomingSocket.getOutputStream());
         reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        logger.info("Created a new socket connection to "+socket.getRemoteSocketAddress());
+        logger.info("Created a new socket connection to "+getClientAddress());
+        parent.addClientHandler(this);
     }
 
+    protected String getClientAddress(){
+        return socket.getRemoteSocketAddress().toString();
+    }
+    
     public void run(){
         try{
             String line = null;
             while((line = reader.readLine()) != null){
                 boolean quit = false;
+                requestCount++;
                 String results = ParseManager.locate(line)+"\n"; 
                 output.write(results.getBytes("UTF-8"));
                 output.flush();
@@ -50,7 +58,12 @@ public class SocketClientHandler implements Runnable {
             } catch (Exception ee){
             }
             logger.info("Closet socket to "+socket.getRemoteSocketAddress());
-            parent.decrementClientCount();
+            parent.removeClientHandler(this);
         }
     }
+    
+    protected synchronized int getRequestCount(){
+        return requestCount;
+    }
+        
 }

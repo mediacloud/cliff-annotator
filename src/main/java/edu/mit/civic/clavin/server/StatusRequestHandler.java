@@ -3,6 +3,7 @@ package edu.mit.civic.clavin.server;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,9 +43,9 @@ public class StatusRequestHandler implements HttpHandler {
             OutputStream responseBody = exchange.getResponseBody();
             HashMap status = new HashMap();
             status.put("status","ok");
-            status.put("activeSocketClientCount",parent.socketServer.getClientCount());
+            status.put("socketClients", parent.socketServer.getClientRequestInfo());
             status.put("socketServerPort",parent.socketServer.getPort());
-            status.put("webPort",GeoServer.WEB_PORT);
+            status.put("webServerPort",GeoServer.WEB_PORT);
             
             responseBody.write(gson.toJson(status).getBytes());
             responseBody.close();

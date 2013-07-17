@@ -2,6 +2,8 @@ package edu.mit.civic.clavin.server;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,9 +19,10 @@ public class MultiClientSocketServer implements Runnable {
 
     private int port;
     private ServerSocket serverSocket;
-    private int clientCount = 0;    // WARNING: wrap access to this in synchronized methods
-
+    private ArrayList<SocketClientHandler> clients;
+    
     public MultiClientSocketServer(int p){
+        clients = new ArrayList<SocketClientHandler>();
         port = p;
     }
 
@@ -32,23 +35,34 @@ public class MultiClientSocketServer implements Runnable {
                 logger.info("Trying a new socket connection to "+client.getInetAddress());                
                 Thread t = new Thread(new SocketClientHandler(client,this));
                 t.start();
-                clientCount++;
             }
         }catch(Exception e){
             e.printStackTrace();
         }
     }
 
-    protected synchronized void decrementClientCount(){
-        clientCount--;
+    protected synchronized void addClientHandler(SocketClientHandler client){
+        clients.add(client);
+    }
+
+    protected synchronized void removeClientHandler(SocketClientHandler client){
+        clients.remove(client);
     }
 
     public synchronized int getClientCount(){
-        return clientCount;
+        return clients.size();
     }
 
     public int getPort() {
         return port;
     }
 
+    public HashMap<String, Integer> getClientRequestInfo(){
+        HashMap<String, Integer> info = new HashMap<String, Integer>();
+        for(SocketClientHandler client: clients){
+            info.put(client.getClientAddress(), new Integer(client.getRequestCount()));
+        }
+        return info;
+    }
+    
 }
