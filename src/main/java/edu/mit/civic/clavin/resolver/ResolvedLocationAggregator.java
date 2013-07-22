@@ -5,6 +5,10 @@ import java.util.HashMap;
 
 import com.berico.clavin.resolver.ResolvedLocation;
 
+/**
+ * Manage a map of PlaceIds to sets of resolved locations that share that place
+ * @author rahulb
+ */
 public class ResolvedLocationAggregator {
 
     protected HashMap<Integer, ResolvedLocationGroup> resolvedLocationGroupById;
