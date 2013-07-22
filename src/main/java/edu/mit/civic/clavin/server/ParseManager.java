@@ -71,11 +71,11 @@ public class ParseManager {
                 loc.put("countryCode",place.getPrimaryCountryCode().toString());
                 loc.put("lat",place.getCenter().getLatitude());
                 loc.put("lon",place.getCenter().getLongitude());
-                ArrayList<String> alternateNames = new ArrayList<String>();
+/*                ArrayList<String> alternateNames = new ArrayList<String>();
                 for(String name: place.getAlternateNames()){
                     alternateNames.add(name);
                 }
-                loc.put("alternateNames",alternateNames);
+                loc.put("alternateNames",alternateNames);*/
                 locationList.add(loc);
             }
             results.put("results",locationList);
