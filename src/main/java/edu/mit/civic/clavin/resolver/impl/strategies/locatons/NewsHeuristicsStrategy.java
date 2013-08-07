@@ -111,7 +111,24 @@ public class NewsHeuristicsStrategy implements LocationCandidateSelectionStrateg
         }
         logger.debug("Still have "+possibilitiesToDo.size()+" lists to do");
 
-        logger.debug("Pass 4: Pick the top populated exact match");
+        logger.debug("Pass 4: Pick countries that might not be an exact match");
+        possibilitiesToRemove.clear();
+        for( List<ResolvedLocation> locationCandidates: possibilitiesToDo){
+            ResolvedLocation firstLocationCandidate = locationCandidates.get(0);
+            if(firstLocationCandidate.getPlace().getPopulation()>0 && 
+                    firstLocationCandidate.getPlace().getSuperPlaces().get(0).getName().equals("00")){
+                bestCandidates.add(firstLocationCandidate);
+                logger.debug("  PICKED: "+firstLocationCandidate.getLocation().getText()+"@"+firstLocationCandidate.getLocation().getPosition());
+                logResolvedLocationInfo(firstLocationCandidate);
+                possibilitiesToRemove.add(locationCandidates);
+            }
+        }
+        for (List<ResolvedLocation> toRemove: possibilitiesToRemove){
+            possibilitiesToDo.remove(toRemove);
+        }
+        logger.debug("Still have "+possibilitiesToDo.size()+" lists to do");        
+        
+        logger.debug("Pass 5: Pick the top populated exact match");
         possibilitiesToRemove.clear(); 
         for( List<ResolvedLocation> locationCandidates: possibilitiesToDo){
             boolean foundOne = false;
@@ -131,7 +148,7 @@ public class NewsHeuristicsStrategy implements LocationCandidateSelectionStrateg
         }
         logger.debug("Still have "+possibilitiesToDo.size()+" lists to do");
         
-        logger.debug("Pass 4: Pick the top Admin Region of Populated Place");   //TODO
+        logger.debug("Pass 6: Pick the top Admin Region of Populated Place");   //TODO
         possibilitiesToRemove.clear(); 
         for( List<ResolvedLocation> locationCandidates: possibilitiesToDo){
             boolean foundOne = false;
