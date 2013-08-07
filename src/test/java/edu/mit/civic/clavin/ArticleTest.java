@@ -16,12 +16,18 @@ import edu.mit.civic.clavin.server.ParseManager;
  */
 public class ArticleTest {
  
+    private static final int STATUE_OF_MINNESOTA = 5037779;
+    private static final int CITY_OF_BEIJING = 1816670;
+    private static final int COUNTRY_OF_CHINA = 1814991;
+    private static final int COUNTRY_OF_INDIA = 1269750;
+    private static final int COUNTRY_OF_AUSTRALIA = 2077456;
+
     @Test
     public void testMinnesotaExample() throws Exception {
         File inputFile = new File("src/test/resources/sample-docs/minnesota.txt");
         String inputString = TextUtils.fileToString(inputFile);
         List<ResolvedLocation> results = ParseManager.locateRaw(inputString);
-        assertTrue(resultsContainsPlaceId(results, 5037779));   // has Minnesota
+        assertTrue(resultsContainsPlaceId(results, STATUE_OF_MINNESOTA));
     }
 
     @Test
@@ -29,8 +35,8 @@ public class ArticleTest {
         File inputFile = new File("src/test/resources/sample-docs/speech.txt");
         String inputString = TextUtils.fileToString(inputFile);
         List<ResolvedLocation> results = ParseManager.locateRaw(inputString);
-        assertTrue(resultsContainsPlaceId(results, 5037779));   // has Minnesota
-        assertTrue(resultsContainsPlaceId(results, 1816670));   // has city of Beijing
+        assertTrue(resultsContainsPlaceId(results, STATUE_OF_MINNESOTA));
+        assertTrue(resultsContainsPlaceId(results, CITY_OF_BEIJING));
     }
 
     @Test
@@ -38,9 +44,9 @@ public class ArticleTest {
         File inputFile = new File("src/test/resources/sample-docs/multi-country.txt");
         String inputString = TextUtils.fileToString(inputFile);
         List<ResolvedLocation> results = ParseManager.locateRaw(inputString);
-        assertTrue(resultsContainsPlaceId(results, 1814991));   // country of China
-        assertTrue(resultsContainsPlaceId(results, 1269750));   // country of India
-        assertTrue(resultsContainsPlaceId(results, 2077456));   // country of Australia
+        assertTrue(resultsContainsPlaceId(results, COUNTRY_OF_CHINA));
+        assertTrue(resultsContainsPlaceId(results, COUNTRY_OF_INDIA));
+        assertTrue(resultsContainsPlaceId(results, COUNTRY_OF_AUSTRALIA));
     }
 
     private boolean resultsContainsPlaceId(List<ResolvedLocation> results, int placeId){
