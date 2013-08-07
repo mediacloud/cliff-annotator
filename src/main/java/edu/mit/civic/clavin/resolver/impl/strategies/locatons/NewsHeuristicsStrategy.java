@@ -17,14 +17,12 @@ import com.berico.clavin.resolver.impl.LocationCandidateSelectionStrategy;
 /**
  * Employ a variety of heuristics for picking the best candidate, based on what might work
  * better for news articles where we care about what _country_ is being report on.
+ * 
+ * Noted Failure: Amazon, Russia, America
  */
 public class NewsHeuristicsStrategy implements LocationCandidateSelectionStrategy {
     
     private static final Logger logger = LoggerFactory.getLogger(NewsHeuristicsStrategy.class);
-    
-    private static final List<Integer> PLACE_ID_BLACKLIST = new ArrayList<Integer>(
-                new Integer(3313437)    //???
-            );    
     
     /**
      * For each candidate list, select the best candidate.
@@ -197,10 +195,5 @@ public class NewsHeuristicsStrategy implements LocationCandidateSelectionStrateg
                 + " / "+resolvedLocation.getConfidence()
                 +" / "+candidatePlace.getPopulation() + " / " + candidatePlace.getFeatureClass());
     }
-    
-    private boolean onPlaceIdBlacklist(int placeId){
-        // TODO: make this work
-        return PLACE_ID_BLACKLIST.contains(new Integer(placeId));
-    }
-    
+        
 }
