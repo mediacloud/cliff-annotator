@@ -33,8 +33,6 @@ import com.berico.clavin.resolver.impl.strategies.locations.ContextualOptimizati
 import com.google.gson.Gson;
 
 import edu.mit.civic.clavin.CustomGeoParser;
-import edu.mit.civic.clavin.resolver.impl.strategies.ResolvedLocationAggregator;
-import edu.mit.civic.clavin.resolver.impl.strategies.ResolvedLocationGroup;
 import edu.mit.civic.clavin.resolver.impl.strategies.locatons.NewsHeuristicsStrategy;
 
 /**
@@ -44,8 +42,6 @@ public class ParseManager {
 
     private static final Boolean BE_NERDY = false;   // controls using the Stanford NER or not
     private static final Boolean USE_CUSTOM_LOCATION_STRATEGY = true; 
-    
-    private static final Boolean USE_AGGREGATION = false;
     
     private static final Logger logger = LoggerFactory.getLogger(ParseManager.class);
 
@@ -74,56 +70,32 @@ public class ParseManager {
             HashMap results = new HashMap();
             results.put("status",STATUS_OK);
             ArrayList locationList = new ArrayList();
-            List<ResolvedLocation> resolvedLocations = getParserInstance().parse(text).getLocations();
-            if(USE_AGGREGATION){
-                // group the results by place
-                // TODO: this should really be an implementation of ResolutionResultsReductionStrategy,
-                // but because I want to track the occurance count, I can't really do that :-(
-                ResolvedLocationAggregator aggregateResolvedLocations = new ResolvedLocationAggregator();  
-                for (ResolvedLocation resolvedLocation : resolvedLocations){
-                    aggregateResolvedLocations.add(resolvedLocation);
-                }
-                // assemble some JSON back
-                for (ResolvedLocationGroup resolvedLocationGroup : aggregateResolvedLocations.getAllResolvedLocationGroups()){
-                    HashMap loc = new HashMap();
-                    Place place = resolvedLocationGroup.getPlace();
-                    loc.put("confidence", resolvedLocationGroup.getAverageConfidence()); // low is good
-                    loc.put("occurrences", resolvedLocationGroup.getOccurrenceCount());
-                    loc.put("id",place.getId());
-                    loc.put("name",place.getName());
-                    loc.put("countryCode",place.getPrimaryCountryCode().toString());
-                    loc.put("lat",place.getCenter().getLatitude());
-                    loc.put("lon",place.getCenter().getLongitude());
-    /*                ArrayList<String> alternateNames = new ArrayList<String>();
-                    for(String name: place.getAlternateNames()){
-                        alternateNames.add(name);
-                    }
-                    loc.put("alternateNames",alternateNames);*/
-                    locationList.add(loc);
-                }
-            } else {
-                for (ResolvedLocation resolvedLocation: resolvedLocations){
-                    HashMap loc = new HashMap();
-                    Place place = resolvedLocation.getPlace();
-                    loc.put("confidence", resolvedLocation.getConfidence()); // low is good
-                    loc.put("id",place.getId());
-                    loc.put("name",place.getName());
-                    loc.put("countryCode",place.getPrimaryCountryCode().toString());
-                    loc.put("lat",place.getCenter().getLatitude());
-                    loc.put("lon",place.getCenter().getLongitude());
-                    HashMap sourceInfo = new HashMap();
-                    sourceInfo.put("string",resolvedLocation.getLocation().getText());
-                    sourceInfo.put("charIndex",resolvedLocation.getLocation().getPosition());
-                    loc.put("source",sourceInfo);
-                    loc.put("type",place.getFeatureClass().type);
-                    locationList.add(loc);
-                }            
-            }
+            List<ResolvedLocation> resolvedLocations = locateRaw(text);
+            for (ResolvedLocation resolvedLocation: resolvedLocations){
+                HashMap loc = new HashMap();
+                Place place = resolvedLocation.getPlace();
+                loc.put("confidence", resolvedLocation.getConfidence()); // low is good
+                loc.put("id",place.getId());
+                loc.put("name",place.getName());
+                loc.put("countryCode",place.getPrimaryCountryCode().toString());
+                loc.put("lat",place.getCenter().getLatitude());
+                loc.put("lon",place.getCenter().getLongitude());
+                HashMap sourceInfo = new HashMap();
+                sourceInfo.put("string",resolvedLocation.getLocation().getText());
+                sourceInfo.put("charIndex",resolvedLocation.getLocation().getPosition());
+                loc.put("source",sourceInfo);
+                loc.put("type",place.getFeatureClass().type);
+                locationList.add(loc);
+            }            
             results.put("results",locationList);
             return gson.toJson(results);
         } catch (Exception e) {
             return getErrorText(e.toString());
         }
+    }
+    
+    public static List<ResolvedLocation> locateRaw(String text) throws Exception{
+        return getParserInstance().parse(text).getLocations();        
     }
     
     /**
