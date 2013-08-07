@@ -33,13 +33,32 @@
     <dependency>
 		<groupId>com.berico</groupId>
 		<artifactId>clavin</artifactId>
-		<version>0.4.0</version>
+		<version>0.4.2</version>
     </dependency>
 	<dependency>
 		<groupId>com.google.code.gson</groupId>
 		<artifactId>gson</artifactId>
 		<version>2.2.4</version>
 	</dependency>
+	<!-- TEST DEPENDENCIES -->
+	<dependency>
+		<groupId>junit</groupId>
+		<artifactId>junit</artifactId>
+		<version>4.11</version>
+		<scope>test</scope>
+	</dependency>
   </dependencies>
 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <argLine>-Xmx2g -ea</argLine>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  
 </project>

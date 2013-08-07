@@ -1,4 +1,4 @@
-package edu.mit.civic.clavin.resolver;
+package edu.mit.civic.clavin.resolver.impl.strategies;
 
 import java.util.ArrayList;
 import java.util.List;
