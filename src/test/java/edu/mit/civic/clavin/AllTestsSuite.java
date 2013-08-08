@@ -11,7 +11,7 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @RunWith(Suite.class)
 @SuiteClasses({
-    edu.mit.civic.clavin.ArticleTest.class,
+    edu.mit.civic.clavin.NewsHeuristicsStrategyTest.class,
 })
 public class AllTestsSuite {
     // THIS CLASS INTENTIONALLY LEFT BLANK

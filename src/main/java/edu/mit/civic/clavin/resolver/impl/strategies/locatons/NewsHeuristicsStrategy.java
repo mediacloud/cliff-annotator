@@ -18,7 +18,9 @@ import com.berico.clavin.resolver.impl.LocationCandidateSelectionStrategy;
  * Employ a variety of heuristics for picking the best candidate, based on what might work
  * better for news articles where we care about what _country_ is being report on.
  * 
- * Noted Failure: Amazon, Russia, America
+ * This is originally modeled on the common colocation + cooccurance strategy.
+ * 
+ * Noted Failure: Amazon, Russia, America, lots of countries in Europe => Europe?
  */
 public class NewsHeuristicsStrategy implements LocationCandidateSelectionStrategy {
     
@@ -55,7 +57,8 @@ public class NewsHeuristicsStrategy implements LocationCandidateSelectionStrateg
         for( List<ResolvedLocation> locationCandidates: allPossibilities){
             List<ResolvedLocation> perfectMatchCandidates = new ArrayList<ResolvedLocation>();
             for( ResolvedLocation locationCandidate: locationCandidates){
-                if(locationCandidate.getConfidence()==0.0){
+                if(locationCandidate.getConfidence()==0.0 && locationCandidate.getPlace().getPopulation()>0 && 
+                        (locationCandidate.getPlace().getFeatureClass()==FeatureClass.A || locationCandidate.getPlace().getFeatureClass()==FeatureClass.P)){
                     perfectMatchCandidates.add(locationCandidate);
                 }
             }
@@ -126,7 +129,7 @@ public class NewsHeuristicsStrategy implements LocationCandidateSelectionStrateg
         }
         logger.debug("Still have "+possibilitiesToDo.size()+" lists to do");        
         
-        logger.debug("Pass 5: Pick the top populated exact match");
+        logger.debug("Pass 5: Pick the top populated exact match"); // this helps us catch countries that are NOT exact matches (ie. China=>Republic of China)
         possibilitiesToRemove.clear(); 
         for( List<ResolvedLocation> locationCandidates: possibilitiesToDo){
             boolean foundOne = false;
@@ -146,7 +149,7 @@ public class NewsHeuristicsStrategy implements LocationCandidateSelectionStrateg
         }
         logger.debug("Still have "+possibilitiesToDo.size()+" lists to do");
         
-        logger.debug("Pass 6: Pick the top Admin Region of Populated Place");   //TODO
+        logger.debug("Pass 6: Pick the top Admin Region or Populated Place remaining");
         possibilitiesToRemove.clear(); 
         for( List<ResolvedLocation> locationCandidates: possibilitiesToDo){
             boolean foundOne = false;
@@ -160,6 +163,20 @@ public class NewsHeuristicsStrategy implements LocationCandidateSelectionStrateg
                     foundOne = true;
                 }
             }
+        }
+        for (List<ResolvedLocation> toRemove: possibilitiesToRemove){
+            possibilitiesToDo.remove(toRemove);
+        }
+        logger.debug("Still have "+possibilitiesToDo.size()+" lists to do");
+        
+        logger.debug("Pass 7: Pick the top result (last ditch effort)");
+        possibilitiesToRemove.clear(); 
+        for( List<ResolvedLocation> locationCandidates: possibilitiesToDo){
+            ResolvedLocation locationCandidate = locationCandidates.get(0); 
+            bestCandidates.add(locationCandidate);
+            logger.debug("  PICKED: "+locationCandidate.getLocation().getText()+"@"+locationCandidate.getLocation().getPosition());
+                    logResolvedLocationInfo(locationCandidate);
+                    possibilitiesToRemove.add(locationCandidates);
         }
         for (List<ResolvedLocation> toRemove: possibilitiesToRemove){
             possibilitiesToDo.remove(toRemove);
