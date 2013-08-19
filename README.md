@@ -19,7 +19,7 @@ correctly.
 On Ubuntu, make sure you do this:
 ```
 sudo apt-get install maven2
-sudo apt-get install openjdk-6-jdk
+sudo apt-get install openjdk-7-jdk
 ```
 
 Running

@@ -1,5 +1,6 @@
 package edu.mit.civic.clavin.server;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,33 +8,17 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.berico.clavin.GeoParserFactory;
+import com.berico.clavin.GeoParser;
+import com.berico.clavin.extractor.ApacheExtractor;
 import com.berico.clavin.extractor.LocationExtractor;
-import com.berico.clavin.extractor.coords.RegexCoordinateExtractor;
-import com.berico.clavin.extractor.opennlp.ApacheExtractor;
-import com.berico.clavin.gazetteer.Place;
+import com.berico.clavin.gazetteer.GeoName;
 import com.berico.clavin.nerd.ExternalSequenceClassifierProvider;
 import com.berico.clavin.nerd.NerdLocationExtractor;
 import com.berico.clavin.nerd.SequenceClassifierProvider;
 import com.berico.clavin.resolver.LocationResolver;
 import com.berico.clavin.resolver.ResolvedLocation;
-import com.berico.clavin.resolver.impl.CoordinateCandidateSelectionStrategy;
-import com.berico.clavin.resolver.impl.CoordinateIndex;
-import com.berico.clavin.resolver.impl.DefaultLocationResolver;
-import com.berico.clavin.resolver.impl.LocationCandidateSelectionStrategy;
-import com.berico.clavin.resolver.impl.LocationNameIndex;
-import com.berico.clavin.resolver.impl.ResolutionResultsReductionStrategy;
-import com.berico.clavin.resolver.impl.lucene.LuceneComponents;
-import com.berico.clavin.resolver.impl.lucene.LuceneComponentsFactory;
-import com.berico.clavin.resolver.impl.lucene.LuceneCoordinateIndex;
-import com.berico.clavin.resolver.impl.lucene.LuceneLocationNameIndex;
-import com.berico.clavin.resolver.impl.strategies.IdentityReductionStrategy;
-import com.berico.clavin.resolver.impl.strategies.WeightedCoordinateScoringStrategy;
-import com.berico.clavin.resolver.impl.strategies.locations.ContextualOptimizationStrategy;
+import com.berico.clavin.resolver.lucene.LuceneLocationResolver;
 import com.google.gson.Gson;
-
-import edu.mit.civic.clavin.CustomGeoParser;
-import edu.mit.civic.clavin.resolver.impl.strategies.locatons.NewsHeuristicsStrategy;
 
 /**
  * Singleton-style wrapper around a GeoParser.  Call GeoParser.locate(someText) to use this class.
@@ -41,11 +26,10 @@ import edu.mit.civic.clavin.resolver.impl.strategies.locatons.NewsHeuristicsStra
 public class ParseManager {
 
     private static final Boolean BE_NERDY = false;   // controls using the Stanford NER or not
-    private static final Boolean USE_CUSTOM_LOCATION_STRATEGY = true; 
     
     private static final Logger logger = LoggerFactory.getLogger(ParseManager.class);
 
-    public static CustomGeoParser parser = null;
+    public static GeoParser parser = null;
 
     private static Gson gson = new Gson();
     
@@ -73,18 +57,14 @@ public class ParseManager {
             List<ResolvedLocation> resolvedLocations = locateRaw(text);
             for (ResolvedLocation resolvedLocation: resolvedLocations){
                 HashMap loc = new HashMap();
-                Place place = resolvedLocation.getPlace();
-                loc.put("confidence", resolvedLocation.getConfidence()); // low is good
-                loc.put("id",place.getId());
-                loc.put("name",place.getName());
-                loc.put("countryCode",place.getPrimaryCountryCode().toString());
-                loc.put("lat",place.getCenter().getLatitude());
-                loc.put("lon",place.getCenter().getLongitude());
-                HashMap sourceInfo = new HashMap();
-                sourceInfo.put("string",resolvedLocation.getLocation().getText());
-                sourceInfo.put("charIndex",resolvedLocation.getLocation().getPosition());
-                loc.put("source",sourceInfo);
-                loc.put("type",place.getFeatureClass().type);
+                GeoName place = resolvedLocation.geoname;
+                loc.put("confidence", resolvedLocation.confidence); // low is good
+                loc.put("id",place.geonameID);
+                loc.put("name",place.name);
+                loc.put("countryCode",place.primaryCountryCode.toString());
+                loc.put("lat",place.latitude);
+                loc.put("lon",place.longitude);
+                loc.put("type",place.featureClass.type);
                 locationList.add(loc);
             }            
             results.put("results",locationList);
@@ -95,7 +75,7 @@ public class ParseManager {
     }
     
     public static List<ResolvedLocation> locateRaw(String text) throws Exception{
-        return getParserInstance().parse(text).getLocations();        
+        return getParserInstance().parse(text);        
     }
     
     /**
@@ -116,13 +96,13 @@ public class ParseManager {
      * @return
      * @throws Exception
      */
-    private static CustomGeoParser getParserInstance() throws Exception{
+    private static GeoParser getParserInstance() throws Exception{
 
         if(ParseManager.parser==null){
 
-            LocationExtractor locationExtractor = null;
-            
+
             // use the Stanford NER location extractor?
+            LocationExtractor locationExtractor = null;
             if(BE_NERDY) {
                 SequenceClassifierProvider sequenceClassifierProvider = 
                         new ExternalSequenceClassifierProvider(PATH_TO_NER_ZIP);
@@ -132,36 +112,15 @@ public class ParseManager {
                 locationExtractor = new ApacheExtractor();
             }
             
-            // custom disambiguation strategy
-            LocationCandidateSelectionStrategy locationSelectionStrategy = null;
-            if(USE_CUSTOM_LOCATION_STRATEGY){
-                locationSelectionStrategy = new NewsHeuristicsStrategy();
-            } else {
-                locationSelectionStrategy = new ContextualOptimizationStrategy();
-            }
-            
-            // default things (@see GeoParserFactory)
-            RegexCoordinateExtractor coordinateExtractor = 
-                    new RegexCoordinateExtractor(GeoParserFactory.DefaultCoordinateParsingStrategies);
-            LuceneComponentsFactory factory = new LuceneComponentsFactory(PATH_TO_GEONAMES_INDEX);
-            factory.initializeSearcher();
-            LuceneComponents lucene = factory.getComponents();
-            LocationNameIndex locationNameIndex = new LuceneLocationNameIndex(lucene);
-            CoordinateIndex coordinateIndex = new LuceneCoordinateIndex(lucene);
-            CoordinateCandidateSelectionStrategy coordinateSelectionStrategy = 
-                new WeightedCoordinateScoringStrategy(GeoParserFactory.DefaultCoordinateWeighers);
-            ResolutionResultsReductionStrategy reductionStrategy = 
-                    new IdentityReductionStrategy();
-            
-            // Instantiate the LocationResolver with my custom disambiguation
-            LocationResolver myLocationResolver = new DefaultLocationResolver(
-                    locationNameIndex, 
-                    coordinateIndex, 
-                    locationSelectionStrategy, 
-                    coordinateSelectionStrategy, 
-                    reductionStrategy);
+            int maxHitDepth = 1;
+            int maxContentWindow = 1;
+            boolean useFuzzyMatching = false;
 
-            parser = new CustomGeoParser(locationExtractor, coordinateExtractor, myLocationResolver);
+            LocationResolver resolver = new LuceneLocationResolver(new File(PATH_TO_GEONAMES_INDEX), 
+                    maxHitDepth, maxContentWindow);
+
+            parser = new GeoParser(locationExtractor, resolver, useFuzzyMatching);
+            
             logger.info("Created GeoParser successfully");
         }
         

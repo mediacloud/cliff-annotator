@@ -112,7 +112,7 @@ public class NewsHeuristicsStrategyTest {
     
     public static boolean resultsContainsPlaceId(List<ResolvedLocation> results, int placeId){
         for(ResolvedLocation location: results){
-            if(location.getPlace().getId()==placeId){
+            if(location.geoname.geonameID==placeId){
                 return true;
             }
         }
