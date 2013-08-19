@@ -17,8 +17,9 @@ import com.berico.clavin.nerd.NerdLocationExtractor;
 import com.berico.clavin.nerd.SequenceClassifierProvider;
 import com.berico.clavin.resolver.LocationResolver;
 import com.berico.clavin.resolver.ResolvedLocation;
-import com.berico.clavin.resolver.lucene.LuceneLocationResolver;
 import com.google.gson.Gson;
+
+import edu.mit.civic.clavin.resolver.lucene.CustomLuceneLocationResolver;
 
 /**
  * Singleton-style wrapper around a GeoParser.  Call GeoParser.locate(someText) to use this class.
@@ -113,12 +114,11 @@ public class ParseManager {
                 locationExtractor = new ApacheExtractor();
             }
             
-            int maxHitDepth = 1;
-            int maxContentWindow = 1;
+            int maxHitDepth = 10;
             boolean useFuzzyMatching = false;
 
-            LocationResolver resolver = new LuceneLocationResolver(new File(PATH_TO_GEONAMES_INDEX), 
-                    maxHitDepth, maxContentWindow);
+            LocationResolver resolver = new CustomLuceneLocationResolver(new File(PATH_TO_GEONAMES_INDEX), 
+                    maxHitDepth);
 
             parser = new GeoParser(locationExtractor, resolver, useFuzzyMatching);
             
