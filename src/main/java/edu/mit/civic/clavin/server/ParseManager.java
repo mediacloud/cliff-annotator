@@ -25,7 +25,7 @@ import com.google.gson.Gson;
  */
 public class ParseManager {
 
-    private static final Boolean BE_NERDY = false;   // controls using the Stanford NER or not
+    private static final Boolean BE_NERDY = true;   // controls using the Stanford NER or not
     
     private static final Logger logger = LoggerFactory.getLogger(ParseManager.class);
 
@@ -104,6 +104,7 @@ public class ParseManager {
             // use the Stanford NER location extractor?
             LocationExtractor locationExtractor = null;
             if(BE_NERDY) {
+                logger.info("Being NERdy!");
                 SequenceClassifierProvider sequenceClassifierProvider = 
                         new ExternalSequenceClassifierProvider(PATH_TO_NER_ZIP);
                 locationExtractor = 

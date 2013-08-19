@@ -2,24 +2,10 @@ package edu.mit.civic.clavin;
 
 import java.util.List;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
-import org.junit.runners.Suite.SuiteClasses;
-
 import com.berico.clavin.resolver.ResolvedLocation;
 
-
-/**
- * Runs all JUnit tests.
- * 
- */
-@RunWith(Suite.class)
-@SuiteClasses({
-    edu.mit.civic.clavin.SpecialCaseCountryTest.class,
-})
-public class AllTestsSuite {
-    // THIS CLASS INTENTIONALLY LEFT BLANK
-
+public class TestUtils {
+    
     public static boolean resultsContainsPlaceId(List<ResolvedLocation> results, int placeId){
         for(ResolvedLocation location: results){
             if(location.geoname.geonameID==placeId){
@@ -28,4 +14,5 @@ public class AllTestsSuite {
         }
         return false;
     }
+    
 }
