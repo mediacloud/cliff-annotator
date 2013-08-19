@@ -3,6 +3,7 @@ package edu.mit.civic.clavin;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
@@ -56,7 +57,7 @@ public class SpecialCaseCountryTest {
     }
     
     private void verifyPlacesInFile(String pathToFile, int[] places) throws Exception{
-        //logger.info("Looking for "+Arrays.toString(places)+" in "+pathToFile);
+        logger.info("Looking for "+Arrays.toString(places)+" in "+pathToFile);
         File inputFile = new File(pathToFile);
         String inputString = TextUtils.fileToString(inputFile);
         List<ResolvedLocation> results = ParseManager.locateRaw(inputString);

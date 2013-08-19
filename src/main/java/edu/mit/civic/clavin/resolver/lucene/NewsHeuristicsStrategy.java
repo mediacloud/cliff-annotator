@@ -16,7 +16,7 @@ import com.berico.clavin.resolver.ResolvedLocation;
  * 
  * This is originally modeled on the common colocation + cooccurance strategy.
  * 
- * Noted Failure: ?
+ * Noted Failures: ?
  */
 public class NewsHeuristicsStrategy {
     
@@ -27,8 +27,6 @@ public class NewsHeuristicsStrategy {
     /**
      * For each candidate list, select the best candidate.
      * @param allPossibilities Set of candidate lists to sort through.
-     * @param cooccurringCoordinates Coordinates that occurred within the document.
-     * @param options Options to help configure the optimization strategy.
      * @return Set of the best candidate choices.
      */
     public static List<ResolvedLocation> select(List<List<ResolvedLocation>> allPossibilities) {
