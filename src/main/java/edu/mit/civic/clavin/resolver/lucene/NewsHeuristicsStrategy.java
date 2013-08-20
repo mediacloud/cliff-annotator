@@ -6,6 +6,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.berico.clavin.gazetteer.CountryCode;
 import com.berico.clavin.gazetteer.FeatureClass;
 import com.berico.clavin.gazetteer.GeoName;
 import com.berico.clavin.resolver.ResolvedLocation;
@@ -16,7 +17,7 @@ import com.berico.clavin.resolver.ResolvedLocation;
  * 
  * This is originally modeled on the common colocation + cooccurance strategy.
  * 
- * Noted Failures: ?
+ * Noted Failures: Dutch, Del., Rocky Mountains
  */
 public class NewsHeuristicsStrategy {
     
@@ -44,9 +45,31 @@ public class NewsHeuristicsStrategy {
                 logResolvedLocationInfo(candidate);
             }
         }
-
+        possibilitiesToDo = allPossibilities;
+        
+        logger.info("Pass 0: Pick large areas");
+        possibilitiesToRemove.clear();
+        for( List<ResolvedLocation> candidates: possibilitiesToDo){
+            boolean foundOne = false;
+            for( ResolvedLocation candidate: candidates){
+                if(!foundOne && candidate.confidence==EXACT_MATCH_CONFIDENCE &&
+                    candidate.geoname.primaryCountryCode==CountryCode.NULL &&
+                    candidate.geoname.featureClass==FeatureClass.L){
+                    bestCandidates.add(candidate);
+                    logger.info("  PICKED: "+candidate.location.text+"@"+candidate.location.position);
+                    logResolvedLocationInfo(candidate);
+                    possibilitiesToRemove.add(candidates);
+                    foundOne = true;
+                }
+            }
+        }
+        for (List<ResolvedLocation> toRemove: possibilitiesToRemove){
+            possibilitiesToDo.remove(toRemove);
+        }
+        logger.info("Still have "+possibilitiesToDo.size()+" lists to do");
+        
         logger.info("Pass 1: Looking for unique exact matches");
-        for( List<ResolvedLocation> candidates: allPossibilities){
+        for( List<ResolvedLocation> candidates: possibilitiesToDo){
             List<ResolvedLocation> perfectMatchCandidates = new ArrayList<ResolvedLocation>();
             for( ResolvedLocation candidate: candidates){
                 if(candidate.confidence==EXACT_MATCH_CONFIDENCE && candidate.geoname.population>0 && 
@@ -59,8 +82,7 @@ public class NewsHeuristicsStrategy {
                 bestCandidates.add(candidate);
                 logger.info("  PICKED: "+candidate.location.text+"@"+candidate.location.position);
                 logResolvedLocationInfo(candidate);
-            } else {
-                possibilitiesToDo.add(candidates);
+                possibilitiesToRemove.add(candidates);
             }
         }
         logger.info("Still have "+possibilitiesToDo.size()+" lists to do");
@@ -85,29 +107,10 @@ public class NewsHeuristicsStrategy {
         logger.info("Pass 3: Looking for top populated exact match in same countries as best results so far");
         possibilitiesToRemove.clear();
         for( List<ResolvedLocation> candidates: possibilitiesToDo){
-            ResolvedLocation firstcandidate = candidates.get(0);
-            if(firstcandidate.confidence==EXACT_MATCH_CONFIDENCE && 
-                    firstcandidate.geoname.population>0 && 
-                    inSameCountry(firstcandidate, bestCandidates)){
-                bestCandidates.add(firstcandidate);
-                logger.info("  PICKED: "+firstcandidate.location.text+"@"+firstcandidate.location.position);
-                logResolvedLocationInfo(firstcandidate);
-                possibilitiesToRemove.add(candidates);
-            }
-        }
-        for (List<ResolvedLocation> toRemove: possibilitiesToRemove){
-            possibilitiesToDo.remove(toRemove);
-        }
-        logger.info("Still have "+possibilitiesToDo.size()+" lists to do");
-
-        logger.info("Pass 4: Looking for first populated exact matches in same super places as best results so far");
-        possibilitiesToRemove.clear(); 
-        for( List<ResolvedLocation> candidates: possibilitiesToDo){
             boolean foundOne = false;
-            for( ResolvedLocation candidate: candidates) {
+            for( ResolvedLocation candidate: candidates){
                 if(!foundOne && candidate.confidence==EXACT_MATCH_CONFIDENCE && 
-                        candidate.geoname.population>0 && 
-                        inSameSuperPlace(candidate, bestCandidates)){
+                    candidate.geoname.population>0 && inSameCountry(candidate, bestCandidates)){
                     bestCandidates.add(candidate);
                     logger.info("  PICKED: "+candidate.location.text+"@"+candidate.location.position);
                     logResolvedLocationInfo(candidate);
@@ -121,27 +124,7 @@ public class NewsHeuristicsStrategy {
         }
         logger.info("Still have "+possibilitiesToDo.size()+" lists to do");
 
-        logger.info("Pass 5: Pick the top populated exact match"); // this helps us catch countries that are NOT exact matches (ie. China=>Republic of China)
-        possibilitiesToRemove.clear(); 
-        for( List<ResolvedLocation> candidates: possibilitiesToDo){
-            boolean foundOne = false;
-            for( ResolvedLocation candidate: candidates) {
-                if(!foundOne && candidate.confidence==EXACT_MATCH_CONFIDENCE && 
-                        candidate.geoname.population>0){
-                    bestCandidates.add(candidate);
-                    logger.info("  PICKED: "+candidate.location.text+"@"+candidate.location.position);
-                    logResolvedLocationInfo(candidate);
-                    possibilitiesToRemove.add(candidates);
-                    foundOne = true;
-                }
-            }
-        }
-        for (List<ResolvedLocation> toRemove: possibilitiesToRemove){
-            possibilitiesToDo.remove(toRemove);
-        }
-        logger.info("Still have "+possibilitiesToDo.size()+" lists to do");
-        
-        logger.info("Pass 6: Pick the top Admin Region or Populated Place remaining that is in a country we found already");
+        logger.info("Pass 4: Pick the top Admin Region or Populated Place remaining that is in a country we found already");
         possibilitiesToRemove.clear(); 
         for( List<ResolvedLocation> candidates: possibilitiesToDo){
             boolean foundOne = false;
@@ -162,7 +145,7 @@ public class NewsHeuristicsStrategy {
         }
         logger.info("Still have "+possibilitiesToDo.size()+" lists to do");
 
-        logger.info("Pass 7: Pick the top Admin Region or Populated Place remaining");
+        logger.info("Pass 5: Pick the top Admin Region or Populated Place remaining");
         possibilitiesToRemove.clear(); 
         for( List<ResolvedLocation> candidates: possibilitiesToDo){
             boolean foundOne = false;
@@ -182,26 +165,7 @@ public class NewsHeuristicsStrategy {
         }
         logger.info("Still have "+possibilitiesToDo.size()+" lists to do");
 
-        logger.info("Pass 8: Pick the top place remaining that is in the same super place we found already");
-        possibilitiesToRemove.clear(); 
-        for( List<ResolvedLocation> candidates: possibilitiesToDo){
-            boolean foundOne = false;
-            for( ResolvedLocation candidate: candidates) {
-                if(!foundOne && inSameSuperPlace(candidate,bestCandidates)){
-                    bestCandidates.add(candidate);
-                    logger.info("  PICKED: "+candidate.location.text+"@"+candidate.location.position);
-                    logResolvedLocationInfo(candidate);
-                    possibilitiesToRemove.add(candidates);
-                    foundOne = true;
-                }
-            }
-        }
-        for (List<ResolvedLocation> toRemove: possibilitiesToRemove){
-            possibilitiesToDo.remove(toRemove);
-        }
-        logger.info("Still have "+possibilitiesToDo.size()+" lists to do");
-        
-        logger.info("Pass 9: Pick the top result (last ditch effort)");
+        logger.info("Pass 6: Pick the top result (last ditch effort)");
         possibilitiesToRemove.clear(); 
         for( List<ResolvedLocation> candidates: possibilitiesToDo){
             ResolvedLocation candidate = candidates.get(0); 

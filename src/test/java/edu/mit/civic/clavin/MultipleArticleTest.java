@@ -21,9 +21,9 @@ import edu.mit.civic.clavin.server.ParseManager;
 /**
  * 
  */
-public class MultipleArticleStrategyTest {
+public class MultipleArticleTest {
  
-    private static final Logger logger = LoggerFactory.getLogger(MultipleArticleStrategyTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(MultipleArticleTest.class);
 
     private static Gson gson = new Gson();
 

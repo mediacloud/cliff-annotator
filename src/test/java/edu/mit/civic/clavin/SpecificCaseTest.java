@@ -18,42 +18,57 @@ import edu.mit.civic.clavin.server.ParseManager;
 /**
  * These out the Strategy we've created for figuring out what country a news story is in.
  */
-public class SpecialCaseCountryTest {
+public class SpecificCaseTest {
  
-    private static final Logger logger = LoggerFactory.getLogger(SpecialCaseCountryTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(SpecificCaseTest.class);
 
-    private static final int STATE_OF_MINNESOTA = 5037779;
-    private static final int CITY_OF_BEIJING = 2038349;
-    private static final int COUNTRY_OF_CHINA = 1814991;
-    private static final int COUNTRY_OF_INDIA = 1269750;
-    private static final int COUNTRY_OF_AUSTRALIA = 2077456;
-    private static final int COUNTRY_OF_UK = 2635167;
-    private static final int COUNTRY_OF_US = 6252001;
+    private static final int STATE_MINNESOTA = 5037779;
+    private static final int CITY_BEIJING = 2038349;
+    private static final int COUNTRY_CHINA = 1814991;
+    private static final int COUNTRY_INDIA = 1269750;
+    private static final int COUNTRY_AUSTRALIA = 2077456;
+    private static final int COUNTRY_UK = 2635167;
+    private static final int COUNTRY_US = 6252001;
+    private static final int REGION_ASIA = 6255147;
+    private static final int REGION_MIDDLE_EAST = 6269133;
 
+    @Test
+    public void testMiddleEastExample() throws Exception {
+        verifyPlacesInFile("src/test/resources/sample-docs/middle-east.txt", 
+                new int[] {REGION_MIDDLE_EAST} );        
+    }
+
+    @Test
+    public void testAsia() throws Exception {
+        verifyPlacesInFile("src/test/resources/sample-docs/asia.txt", 
+                new int[] {REGION_ASIA} );        
+    }
+
+    
     @Test
     public void testMinnesotaExample() throws Exception {
         verifyPlacesInFile("src/test/resources/sample-docs/minnesota.txt", 
-                new int[] {STATE_OF_MINNESOTA} );
+                new int[] {STATE_MINNESOTA} );
         verifyPlacesInFile("src/test/resources/sample-docs/speech.txt", 
-                new int[] {STATE_OF_MINNESOTA,CITY_OF_BEIJING} );
+                new int[] {STATE_MINNESOTA,CITY_BEIJING} );
     }
 
     @Test
     public void testUsExample() throws Exception {
         verifyPlacesInFile("src/test/resources/sample-docs/us-story.txt", 
-                new int[] {COUNTRY_OF_US} );
+                new int[] {COUNTRY_US} );
     }
 
     @Test
     public void testUkExample() throws Exception {
         verifyPlacesInFile("src/test/resources/sample-docs/uk-story.txt", 
-                new int[] {COUNTRY_OF_UK} );
+                new int[] {COUNTRY_UK} );
     }
 
     @Test
     public void testCountryExample() throws Exception {
         verifyPlacesInFile("src/test/resources/sample-docs/multi-country.txt", 
-                new int[] {COUNTRY_OF_CHINA,COUNTRY_OF_INDIA,COUNTRY_OF_AUSTRALIA} );
+                new int[] {COUNTRY_CHINA,COUNTRY_INDIA,COUNTRY_AUSTRALIA} );
     }
     
     private void verifyPlacesInFile(String pathToFile, int[] places) throws Exception{

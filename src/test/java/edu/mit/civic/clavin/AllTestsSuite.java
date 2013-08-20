@@ -15,7 +15,7 @@ import com.berico.clavin.resolver.ResolvedLocation;
  */
 @RunWith(Suite.class)
 @SuiteClasses({
-    edu.mit.civic.clavin.SpecialCaseCountryTest.class,
+    edu.mit.civic.clavin.SpecificCaseTest.class,
 })
 public class AllTestsSuite {
     // THIS CLASS INTENTIONALLY LEFT BLANK
