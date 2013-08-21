@@ -19,7 +19,8 @@ import com.google.gson.reflect.TypeToken;
 import edu.mit.civic.clavin.server.ParseManager;
 
 /**
- * 
+ * Tests that verify against a small hand-coded corpus of articles.  These check that the
+ * list of extracted places contains the hand-coded one. 
  */
 public class MultipleArticleTest {
  

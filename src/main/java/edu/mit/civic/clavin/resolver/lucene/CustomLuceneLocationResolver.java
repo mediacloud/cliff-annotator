@@ -118,6 +118,16 @@ public class CustomLuceneLocationResolver implements LocationResolver {
 				"indexName", indexAnalyzer).parse("Reston"), null, maxHitDepth, populationSort);
 	}
 	
+	private ResolvedLocation getFirstExactMatch(String searchString, LocationOccurrence locationName) throws IOException, ParseException {
+        Query q = new AnalyzingQueryParser(Version.LUCENE_40,
+                "indexName", indexAnalyzer).parse("\"" + escape(searchString.toLowerCase()) + "\"");
+        TopDocs results = indexSearcher.search(q, null, maxHitDepth, populationSort);
+        if (results.scoreDocs.length > 0) {
+            return new ResolvedLocation(indexSearcher.doc(results.scoreDocs[0].doc), locationName, false);
+        }
+        return null;	    
+	}
+	
 	/**
 	 * Finds all matches (capped at {@link CustomLuceneLocationResolver#maxHitDepth})
 	 * in the Lucene index for a given location name.
@@ -135,6 +145,17 @@ public class CustomLuceneLocationResolver implements LocationResolver {
 		String sanitizedLocationName = escape(locationName.text.toLowerCase());
 		
 		try{
+		    // HACK: custom hacks to make certain strings work correectly
+		    if(locationName.text.equals("American")){
+		        List<ResolvedLocation> exactMatch = new ArrayList<ResolvedLocation>();
+		        exactMatch.add(getFirstExactMatch("United States", locationName));
+		        return exactMatch;
+		    } else if (locationName.text.equals("Dutch")){
+                List<ResolvedLocation> exactMatch = new ArrayList<ResolvedLocation>();
+                exactMatch.add(getFirstExactMatch("Kingdom of the Netherlands", locationName));
+                return exactMatch;		        
+		    }
+		    
 	  		// Lucene query used to look for matches based on the
 			// "indexName" field
 	  		Query q = new AnalyzingQueryParser(Version.LUCENE_40,
@@ -227,7 +248,7 @@ public class CustomLuceneLocationResolver implements LocationResolver {
   	private List<ResolvedLocation> pickBestCandidates(List<List<ResolvedLocation>> allCandidates) {
   		
   		// initialize return object
-  		List<ResolvedLocation> bestCandidates = NewsHeuristicsStrategy.select(allCandidates);
+  		List<ResolvedLocation> bestCandidates = NewsHeuristicsStrategy.select(this, allCandidates);
   		
   		return bestCandidates;
   	}

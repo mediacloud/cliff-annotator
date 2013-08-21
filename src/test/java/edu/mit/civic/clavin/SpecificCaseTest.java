@@ -16,7 +16,7 @@ import com.berico.clavin.util.TextUtils;
 import edu.mit.civic.clavin.server.ParseManager;
 
 /**
- * These out the Strategy we've created for figuring out what country a news story is in.
+ * Tests that verify some very specific cases work
  */
 public class SpecificCaseTest {
  
@@ -31,6 +31,21 @@ public class SpecificCaseTest {
     private static final int COUNTRY_US = 6252001;
     private static final int REGION_ASIA = 6255147;
     private static final int REGION_MIDDLE_EAST = 6269133;
+    private static final int COUNTRY_IRAQ = 99237;
+    private static final int COUNTRY_NETHERLANDS = 2750405;
+
+    @Test
+    public void testDutchExample() throws Exception {
+        verifyPlacesInFile("src/test/resources/sample-docs/dutch.txt", 
+                new int[] {COUNTRY_NETHERLANDS}, true);        
+    }
+
+    
+    @Test
+    public void testAmericanExample() throws Exception {
+        verifyPlacesInFile("src/test/resources/sample-docs/american.txt", 
+                new int[] {COUNTRY_US,COUNTRY_IRAQ}, true);        
+    }
 
     @Test
     public void testMiddleEastExample() throws Exception {
@@ -44,7 +59,6 @@ public class SpecificCaseTest {
                 new int[] {REGION_ASIA} );        
     }
 
-    
     @Test
     public void testMinnesotaExample() throws Exception {
         verifyPlacesInFile("src/test/resources/sample-docs/minnesota.txt", 
@@ -72,6 +86,10 @@ public class SpecificCaseTest {
     }
     
     private void verifyPlacesInFile(String pathToFile, int[] places) throws Exception{
+        verifyPlacesInFile(pathToFile, places, false);
+    }
+    
+    private void verifyPlacesInFile(String pathToFile, int[] places, boolean andNoOthers) throws Exception{
         logger.info("Looking for "+Arrays.toString(places)+" in "+pathToFile);
         File inputFile = new File(pathToFile);
         String inputString = TextUtils.fileToString(inputFile);
@@ -79,6 +97,9 @@ public class SpecificCaseTest {
         //for(ResolvedLocation resolvedLocation: results){ logger.info("  "+resolvedLocation.toString()); }
         for(int placeId: places){
             assertTrue(TestUtils.resultsContainsPlaceId(results, placeId));
+        }
+        if(andNoOthers){
+            assertTrue("There are some results that were unexecpted! Found "+results.size()+" but expected "+places.length+".",results.size()==places.length);
         }
     }
     

@@ -17,7 +17,7 @@ import com.berico.clavin.resolver.ResolvedLocation;
  * 
  * This is originally modeled on the common colocation + cooccurance strategy.
  * 
- * Noted Failures: Dutch, Del., Rocky Mountains
+ * Noted Failures: Del., Rocky Mountains
  */
 public class NewsHeuristicsStrategy {
     
@@ -30,7 +30,7 @@ public class NewsHeuristicsStrategy {
      * @param allPossibilities Set of candidate lists to sort through.
      * @return Set of the best candidate choices.
      */
-    public static List<ResolvedLocation> select(List<List<ResolvedLocation>> allPossibilities) {
+    public static List<ResolvedLocation> select(CustomLuceneLocationResolver resolver, List<List<ResolvedLocation>> allPossibilities) {
             
         List<ResolvedLocation> bestCandidates = new ArrayList<ResolvedLocation>();
         List<List<ResolvedLocation>> possibilitiesToDo = new ArrayList<List<ResolvedLocation>>();
@@ -84,6 +84,9 @@ public class NewsHeuristicsStrategy {
                 logResolvedLocationInfo(candidate);
                 possibilitiesToRemove.add(candidates);
             }
+        }
+        for (List<ResolvedLocation> toRemove: possibilitiesToRemove){
+            possibilitiesToDo.remove(toRemove);
         }
         logger.info("Still have "+possibilitiesToDo.size()+" lists to do");
 
