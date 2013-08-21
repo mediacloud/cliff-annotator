@@ -22,7 +22,7 @@ public class GeoServer {
 
 	static final int WEB_PORT = 8080;
 	private static final int SOCKET_PORT = 4000;
-		
+
 	public HttpServer webServer;
 	protected MultiClientSocketServer socketServer;
 	
