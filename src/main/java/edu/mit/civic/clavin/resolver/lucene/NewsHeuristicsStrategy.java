@@ -17,7 +17,7 @@ import com.berico.clavin.resolver.ResolvedLocation;
  * 
  * This is originally modeled on the common colocation + cooccurance strategy.
  * 
- * Noted Failures: Del., Rocky Mountains
+ * Noted Failures: Africa, Del., Rocky Mountains
  */
 public class NewsHeuristicsStrategy {
     
