@@ -42,6 +42,7 @@ public class StatusRequestHandler implements HttpHandler {
             OutputStream responseBody = exchange.getResponseBody();
             HashMap status = new HashMap();
             status.put("status","ok");
+            status.put("totalRequests",parent.socketServer.getTotalRequests());
             status.put("socketClients", parent.socketServer.getClientRequestInfo());
             status.put("socketServerPort",parent.socketServer.getPort());
             status.put("webServerPort",GeoServer.WEB_PORT);

@@ -20,6 +20,7 @@ public class MultiClientSocketServer implements Runnable {
     private int port;
     private ServerSocket serverSocket;
     private ArrayList<SocketClientHandler> clients;
+    int totalRequests = 0;
     
     public MultiClientSocketServer(int p){
         clients = new ArrayList<SocketClientHandler>();
@@ -63,6 +64,14 @@ public class MultiClientSocketServer implements Runnable {
             info.put(client.getClientAddress(), new Integer(client.getRequestCount()));
         }
         return info;
+    }
+
+    public synchronized void incrementTotalRequests() {
+        totalRequests++;        
+    }
+    
+    public synchronized int getTotalRequests(){
+        return totalRequests;
     }
     
 }

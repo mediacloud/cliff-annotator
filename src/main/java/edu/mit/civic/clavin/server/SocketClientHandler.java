@@ -46,6 +46,7 @@ public class SocketClientHandler implements Runnable {
                 String results = ParseManager.locate(line)+"\n"; 
                 output.write(results.getBytes("UTF-8"));
                 output.flush();
+                parent.incrementTotalRequests();
                 if(quit){
                     break;
                 }
