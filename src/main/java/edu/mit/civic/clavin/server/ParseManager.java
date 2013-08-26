@@ -63,13 +63,13 @@ public class ParseManager {
                 loc.put("id",place.geonameID);
                 loc.put("name",place.name);
                 loc.put("countryCode",place.primaryCountryCode.toString());
-                loc.put("lat",place.latitude);
-                loc.put("lon",place.longitude);
+                //loc.put("lat",place.latitude);
+                //loc.put("lon",place.longitude);
                 HashMap sourceInfo = new HashMap();
                 sourceInfo.put("string",resolvedLocation.location.text);
                 sourceInfo.put("charIndex",resolvedLocation.location.position);
                 loc.put("source",sourceInfo);
-                loc.put("type",place.featureClass.type);
+                //loc.put("type",place.featureClass.type);
                 locationList.add(loc);
             }            
             results.put("results",locationList);
