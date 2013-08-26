@@ -33,13 +33,19 @@ public class SpecificCaseTest {
     private static final int REGION_MIDDLE_EAST = 6269133;
     private static final int COUNTRY_IRAQ = 99237;
     private static final int COUNTRY_NETHERLANDS = 2750405;
+    private static final int COUNTRY_NORWAY = 3144096;
+
+    @Test
+    public void testChinaExample() throws Exception {
+        verifyPlacesInFile("src/test/resources/sample-docs/chinese.txt", 
+                new int[] {COUNTRY_CHINA,COUNTRY_NORWAY});        
+    }
 
     @Test
     public void testDutchExample() throws Exception {
         verifyPlacesInFile("src/test/resources/sample-docs/dutch.txt", 
                 new int[] {COUNTRY_NETHERLANDS}, true);        
     }
-
     
     @Test
     public void testAmericanExample() throws Exception {

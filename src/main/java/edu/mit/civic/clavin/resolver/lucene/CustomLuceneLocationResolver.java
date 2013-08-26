@@ -154,6 +154,10 @@ public class CustomLuceneLocationResolver implements LocationResolver {
                 List<ResolvedLocation> exactMatch = new ArrayList<ResolvedLocation>();
                 exactMatch.add(getFirstExactMatch("Kingdom of the Netherlands", locationName));
                 return exactMatch;		        
+		    } else if (locationName.text.equals("Chinese")){
+		        List<ResolvedLocation> exactMatch = new ArrayList<ResolvedLocation>();
+                exactMatch.add(getFirstExactMatch("People’s Republic of China", locationName));
+                return exactMatch;
 		    }
 		    
 	  		// Lucene query used to look for matches based on the
