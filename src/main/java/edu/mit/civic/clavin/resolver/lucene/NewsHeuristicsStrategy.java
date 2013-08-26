@@ -17,7 +17,7 @@ import com.berico.clavin.resolver.ResolvedLocation;
  * 
  * This is originally modeled on the common colocation + cooccurance strategy.
  * 
- * Noted Failures: Africa, Del., Rocky Mountains
+ * Noted Failures: Africa, Del., "Rocky Mountains", "Bristol Palin"
  */
 public class NewsHeuristicsStrategy {
     
@@ -98,7 +98,7 @@ public class NewsHeuristicsStrategy {
                     firstcandidate.geoname.admin1Code.equals("00")){
                 bestCandidates.add(firstcandidate);
                 logger.info("  PICKED: "+firstcandidate.location.text+"@"+firstcandidate.location.position);
-                logResolvedLocationInfo(firstcandidate);
+                logResolvedLocationInfo(firstcandidate);    
                 possibilitiesToRemove.add(candidates);
             }
         }
