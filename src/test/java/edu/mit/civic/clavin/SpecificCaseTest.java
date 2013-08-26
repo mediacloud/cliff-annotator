@@ -34,7 +34,16 @@ public class SpecificCaseTest {
     private static final int COUNTRY_IRAQ = 99237;
     private static final int COUNTRY_NETHERLANDS = 2750405;
     private static final int COUNTRY_NORWAY = 3144096;
+    private static final int CITY_LONDON = 2643741;
+    private static final int PLACE_RUSSEL_SQ_LONDON = 6954795;
 
+    @Test
+    public void testRussellSq() throws Exception {
+        // picks the right Russel Sq (the one in GB) after we find London in the article
+        verifyPlacesInFile("src/test/resources/sample-docs/russel-sq-london.txt",
+                new int[] {CITY_LONDON, PLACE_RUSSEL_SQ_LONDON}, true);
+    }
+    
     @Test
     public void testChinaExample() throws Exception {
         verifyPlacesInFile("src/test/resources/sample-docs/chinese.txt", 

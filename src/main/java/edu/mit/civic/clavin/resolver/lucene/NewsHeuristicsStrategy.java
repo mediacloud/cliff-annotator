@@ -17,7 +17,7 @@ import com.berico.clavin.resolver.ResolvedLocation;
  * 
  * This is originally modeled on the common colocation + cooccurance strategy.
  * 
- * Noted Failures: Africa, Del., "Rocky Mountains", "Bristol Palin"
+ * Noted Failures: Africa, Del., "Rocky Mountains", names ("Bristol Palin", "Chad")
  */
 public class NewsHeuristicsStrategy {
     
@@ -168,14 +168,26 @@ public class NewsHeuristicsStrategy {
         }
         logger.info("Still have "+possibilitiesToDo.size()+" lists to do");
 
-        logger.info("Pass 6: Pick the top result (last ditch effort)");
+        logger.info("Pass 6: Pick the top result, preferrring ones in the a country found already (last ditch effort)");
         possibilitiesToRemove.clear(); 
         for( List<ResolvedLocation> candidates: possibilitiesToDo){
-            ResolvedLocation candidate = candidates.get(0); 
-            bestCandidates.add(candidate);
-            logger.info("  PICKED: "+candidate.location.text+"@"+candidate.location.position);
+            boolean foundOne = false;
+            for( ResolvedLocation candidate: candidates) {
+                if(!foundOne && inSameCountry(candidate,bestCandidates)){
+                    bestCandidates.add(candidate);
+                    logger.info("  PICKED: "+candidate.location.text+"@"+candidate.location.position);
                     logResolvedLocationInfo(candidate);
                     possibilitiesToRemove.add(candidates);
+                    foundOne = true;
+                }
+            }
+            if(!foundOne){
+                ResolvedLocation candidate = candidates.get(0); 
+                bestCandidates.add(candidate);
+                logger.info("  PICKED: "+candidate.location.text+"@"+candidate.location.position);
+                        logResolvedLocationInfo(candidate);
+                        possibilitiesToRemove.add(candidates);
+            }
         }
         for (List<ResolvedLocation> toRemove: possibilitiesToRemove){
             possibilitiesToDo.remove(toRemove);
