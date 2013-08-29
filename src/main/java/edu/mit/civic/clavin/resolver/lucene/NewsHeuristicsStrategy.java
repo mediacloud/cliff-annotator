@@ -52,7 +52,7 @@ public class NewsHeuristicsStrategy {
         for( List<ResolvedLocation> candidates: possibilitiesToDo){
             boolean foundOne = false;
             for( ResolvedLocation candidate: candidates){
-                if(!foundOne && candidate.confidence==EXACT_MATCH_CONFIDENCE &&
+                if(!foundOne && isExactMatch(candidate) &&
                     candidate.geoname.primaryCountryCode==CountryCode.NULL &&
                     candidate.geoname.featureClass==FeatureClass.L){
                     bestCandidates.add(candidate);
@@ -68,29 +68,7 @@ public class NewsHeuristicsStrategy {
         }
         logger.info("Still have "+possibilitiesToDo.size()+" lists to do");
         
-        logger.info("Pass 1: Looking for unique exact matches");
-        for( List<ResolvedLocation> candidates: possibilitiesToDo){
-            List<ResolvedLocation> perfectMatchCandidates = new ArrayList<ResolvedLocation>();
-            for( ResolvedLocation candidate: candidates){
-                if(candidate.confidence==EXACT_MATCH_CONFIDENCE && candidate.geoname.population>0 && 
-                        (candidate.geoname.featureClass==FeatureClass.A || candidate.geoname.featureClass==FeatureClass.P)){
-                    perfectMatchCandidates.add(candidate);
-                }
-            }
-            if(perfectMatchCandidates.size()==1){   // ok if the same place shows up twice - we want to know that!
-                ResolvedLocation candidate = perfectMatchCandidates.get(0);
-                bestCandidates.add(candidate);
-                logger.info("  PICKED: "+candidate.location.text+"@"+candidate.location.position);
-                logResolvedLocationInfo(candidate);
-                possibilitiesToRemove.add(candidates);
-            }
-        }
-        for (List<ResolvedLocation> toRemove: possibilitiesToRemove){
-            possibilitiesToDo.remove(toRemove);
-        }
-        logger.info("Still have "+possibilitiesToDo.size()+" lists to do");
-
-        logger.info("Pass 2: Pick countries that might not be an exact match");
+        logger.info("Pass 1: Pick countries that might not be an exact match");
         possibilitiesToRemove.clear();
         for( List<ResolvedLocation> candidates: possibilitiesToDo){
             ResolvedLocation firstcandidate = candidates.get(0);
@@ -107,12 +85,12 @@ public class NewsHeuristicsStrategy {
         }
         logger.info("Still have "+possibilitiesToDo.size()+" lists to do");        
         
-        logger.info("Pass 3: Looking for top populated exact match in same countries as best results so far");
+        logger.info("Pass 2: Looking for top populated exact match in same countries as best results so far");
         possibilitiesToRemove.clear();
         for( List<ResolvedLocation> candidates: possibilitiesToDo){
             boolean foundOne = false;
             for( ResolvedLocation candidate: candidates){
-                if(!foundOne && candidate.confidence==EXACT_MATCH_CONFIDENCE && 
+                if(!foundOne && isExactMatch(candidate) && 
                     candidate.geoname.population>0 && inSameCountry(candidate, bestCandidates)){
                     bestCandidates.add(candidate);
                     logger.info("  PICKED: "+candidate.location.text+"@"+candidate.location.position);
@@ -127,7 +105,7 @@ public class NewsHeuristicsStrategy {
         }
         logger.info("Still have "+possibilitiesToDo.size()+" lists to do");
 
-        logger.info("Pass 4: Pick the top Admin Region or Populated Place remaining that is in a country we found already");
+        logger.info("Pass 3: Pick the top Admin Region or Populated Place remaining that is in a country we found already");
         possibilitiesToRemove.clear(); 
         for( List<ResolvedLocation> candidates: possibilitiesToDo){
             boolean foundOne = false;
@@ -148,7 +126,7 @@ public class NewsHeuristicsStrategy {
         }
         logger.info("Still have "+possibilitiesToDo.size()+" lists to do");
 
-        logger.info("Pass 5: Pick the top Admin Region or Populated Place remaining");
+        logger.info("Pass 4: Pick the top Admin Region or Populated Place remaining");
         possibilitiesToRemove.clear(); 
         for( List<ResolvedLocation> candidates: possibilitiesToDo){
             boolean foundOne = false;
@@ -168,7 +146,7 @@ public class NewsHeuristicsStrategy {
         }
         logger.info("Still have "+possibilitiesToDo.size()+" lists to do");
 
-        logger.info("Pass 6: Pick the top result, preferrring ones in the a country found already (last ditch effort)");
+        logger.info("Pass 5: Pick the top result, preferrring ones in the a country found already (last ditch effort)");
         possibilitiesToRemove.clear(); 
         for( List<ResolvedLocation> candidates: possibilitiesToDo){
             boolean foundOne = false;
@@ -197,6 +175,17 @@ public class NewsHeuristicsStrategy {
         return bestCandidates;
     }
 
+    /**
+     * This version of CLAVIN doesn't appear to fill in the confidence correctly - it says 1.0 for
+     * everything.  So we need a workaround to see if something is an exact match.
+     * @param candidate
+     * @return
+     */
+    static private boolean isExactMatch(ResolvedLocation candidate){
+        return candidate.geoname.name.equals( candidate.location.text);
+        //return candidate.confidence==EXACT_MATCH_CONFIDENCE;
+    }
+    
     static private boolean inSameSuperPlace(ResolvedLocation candidate, List<ResolvedLocation> list){
         for( ResolvedLocation item: list){
             if(candidate.geoname.admin1Code.equals(item.geoname.admin1Code)){
