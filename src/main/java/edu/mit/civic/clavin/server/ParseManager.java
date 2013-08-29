@@ -97,14 +97,13 @@ public class ParseManager {
     }
     
     /**
-     * Lazy instantiation of GeoParser
+     * Lazy instantiation of singleton GeoParser
      * @return
      * @throws Exception
      */
     private static GeoParser getParserInstance() throws Exception{
 
         if(ParseManager.parser==null){
-
 
             // use the Stanford NER location extractor?
             LocationExtractor locationExtractor = null;
@@ -118,11 +117,11 @@ public class ParseManager {
                 locationExtractor = new ApacheExtractor();
             }
             
-            int maxHitDepth = 10;
+            int numberOfResultsToFetch = 10;
             boolean useFuzzyMatching = false;
 
             LocationResolver resolver = new CustomLuceneLocationResolver(new File(PATH_TO_GEONAMES_INDEX), 
-                    maxHitDepth);
+                    numberOfResultsToFetch);
 
             parser = new GeoParser(locationExtractor, resolver, useFuzzyMatching);
             
