@@ -34,7 +34,7 @@ public class FrequencyOfMentionAboutnessStrategy {
         }
         // return results
         List<CountryCode> results = new ArrayList<CountryCode>();
-        results.add(primaryCountry);
+        if(primaryCountry!=null) results.add(primaryCountry);
         return results;
     }
     
