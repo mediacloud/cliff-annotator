@@ -72,7 +72,7 @@ public class ParseManager {
                 loc.put("source",sourceInfo);
                 places.add(loc);
             }
-            results.put("results",places);
+            results.put("places",places);
             results.put("primaryCountries", FrequencyOfMentionAboutnessStrategy.select(resolvedLocations));
             return gson.toJson(results);
         } catch (Exception e) {
