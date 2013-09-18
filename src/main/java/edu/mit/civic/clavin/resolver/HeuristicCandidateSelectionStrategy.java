@@ -1,4 +1,4 @@
-package edu.mit.civic.clavin.resolver.lucene;
+package edu.mit.civic.clavin.resolver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,17 +11,24 @@ import com.berico.clavin.gazetteer.FeatureClass;
 import com.berico.clavin.gazetteer.GeoName;
 import com.berico.clavin.resolver.ResolvedLocation;
 
+import edu.mit.civic.clavin.resolver.lucene.CustomLuceneLocationResolver;
+
 /**
  * Employ a variety of heuristics for picking the best candidate, based on what might work
  * better for news articles where we care about what _country_ is being report on.
  * 
  * This is originally modeled on the common colocation + cooccurance strategy.
  * 
- * Noted Failures: Africa, Del., "Rocky Mountains", names ("Bristol Palin", "Chad")
+ * Failures I've noticed: 
+ *  Africa
+ *  Del.
+ *  "Rocky Mountains"
+ *  Fla doesn't give you Florida
+ *  names ("Bristol Palin", "Chad")
  */
-public class NewsHeuristicsStrategy {
+public class HeuristicCandidateSelectionStrategy {
     
-    private static final Logger logger = LoggerFactory.getLogger(NewsHeuristicsStrategy.class);
+    private static final Logger logger = LoggerFactory.getLogger(HeuristicCandidateSelectionStrategy.class);
     
     private static final double EXACT_MATCH_CONFIDENCE = 1.0;
     
@@ -67,7 +74,7 @@ public class NewsHeuristicsStrategy {
             possibilitiesToDo.remove(toRemove);
         }
         logger.info("Still have "+possibilitiesToDo.size()+" lists to do");
-        
+
         logger.info("Pass 1: Pick countries that might not be an exact match");
         possibilitiesToRemove.clear();
         for( List<ResolvedLocation> candidates: possibilitiesToDo){
@@ -131,7 +138,7 @@ public class NewsHeuristicsStrategy {
         for( List<ResolvedLocation> candidates: possibilitiesToDo){
             boolean foundOne = false;
             for( ResolvedLocation candidate: candidates) {
-                if(!foundOne && 
+                if(!foundOne && (candidate.geoname.population>0) && 
                         (candidate.geoname.featureClass==FeatureClass.A || candidate.geoname.featureClass==FeatureClass.P)){
                     bestCandidates.add(candidate);
                     logger.info("  PICKED: "+candidate.location.text+"@"+candidate.location.position);
@@ -146,12 +153,14 @@ public class NewsHeuristicsStrategy {
         }
         logger.info("Still have "+possibilitiesToDo.size()+" lists to do");
 
+
         logger.info("Pass 5: Pick the top result, preferrring ones in the a country found already (last ditch effort)");
         possibilitiesToRemove.clear(); 
         for( List<ResolvedLocation> candidates: possibilitiesToDo){
             boolean foundOne = false;
+            // check for one in the same country
             for( ResolvedLocation candidate: candidates) {
-                if(!foundOne && inSameCountry(candidate,bestCandidates)){
+                if(!foundOne && inSameCountry(candidate,bestCandidates) ){
                     bestCandidates.add(candidate);
                     logger.info("  PICKED: "+candidate.location.text+"@"+candidate.location.position);
                     logResolvedLocationInfo(candidate);
@@ -160,11 +169,11 @@ public class NewsHeuristicsStrategy {
                 }
             }
             if(!foundOne){
-                ResolvedLocation candidate = candidates.get(0); 
+                ResolvedLocation candidate = candidates.get(0);
                 bestCandidates.add(candidate);
                 logger.info("  PICKED: "+candidate.location.text+"@"+candidate.location.position);
-                        logResolvedLocationInfo(candidate);
-                        possibilitiesToRemove.add(candidates);
+                logResolvedLocationInfo(candidate);
+                possibilitiesToRemove.add(candidates);
             }
         }
         for (List<ResolvedLocation> toRemove: possibilitiesToRemove){

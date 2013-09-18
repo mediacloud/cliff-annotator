@@ -19,6 +19,7 @@ import com.berico.clavin.resolver.LocationResolver;
 import com.berico.clavin.resolver.ResolvedLocation;
 import com.google.gson.Gson;
 
+import edu.mit.civic.clavin.resolver.FrequencyOfMentionAboutnessStrategy;
 import edu.mit.civic.clavin.resolver.lucene.CustomLuceneLocationResolver;
 
 /**
@@ -54,7 +55,7 @@ public class ParseManager {
         try {
             HashMap results = new HashMap();
             results.put("status",STATUS_OK);
-            ArrayList locationList = new ArrayList();
+            ArrayList places = new ArrayList();
             List<ResolvedLocation> resolvedLocations = locateRaw(text);
             for (ResolvedLocation resolvedLocation: resolvedLocations){
                 HashMap loc = new HashMap();
@@ -63,16 +64,16 @@ public class ParseManager {
                 loc.put("id",place.geonameID);
                 loc.put("name",place.name);
                 loc.put("countryCode",place.primaryCountryCode.toString());
-                //loc.put("lat",place.latitude);
-                //loc.put("lon",place.longitude);
+                loc.put("lat",place.latitude);
+                loc.put("lon",place.longitude);
                 HashMap sourceInfo = new HashMap();
                 sourceInfo.put("string",resolvedLocation.location.text);
                 sourceInfo.put("charIndex",resolvedLocation.location.position);
                 loc.put("source",sourceInfo);
-                //loc.put("type",place.featureClass.type);
-                locationList.add(loc);
-            }            
-            results.put("results",locationList);
+                places.add(loc);
+            }
+            results.put("results",places);
+            results.put("primaryCountries", FrequencyOfMentionAboutnessStrategy.select(resolvedLocations));
             return gson.toJson(results);
         } catch (Exception e) {
             return getErrorText(e.toString());

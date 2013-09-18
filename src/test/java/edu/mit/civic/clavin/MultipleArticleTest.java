@@ -36,30 +36,24 @@ public class MultipleArticleTest {
     }
 
     @Test
-    public void testBBCExamples() throws Exception {
-        List<CodedArticle> articles = loadExamplesFromFile("src/test/resources/sample-docs/bbc_annotated.json");
-        assertEquals(24, articles.size());
-        verifyArticles(articles);
-    }
-    
-    @Test
     public void testHuffingtonPostExamples() throws Exception {
         List<CodedArticle> articles = loadExamplesFromFile("src/test/resources/sample-docs/huffington_post_annotated.json");
         assertEquals(21, articles.size());
         verifyArticles(articles);
     }
 
+    @Test
+    public void testBBCExamples() throws Exception {
+        List<CodedArticle> articles = loadExamplesFromFile("src/test/resources/sample-docs/bbc_annotated.json");
+        assertEquals(24, articles.size());
+        verifyArticles(articles);
+    }
+
     private void verifyArticles(List<CodedArticle> articles) throws Exception{
         for(CodedArticle article: articles){
-            logger.info("Testing article "+article.mediacloudId+" (looking for "+article.handCodedPlaceName+" / "+article.primaryPlaceId+")");
-            /*
-            List<ResolvedLocation> results = ParseManager.locateRaw(article.text);
-            for(ResolvedLocation resolvedLocation: results){
-                logger.info("  "+resolvedLocation.geoname.geonameID+": "+resolvedLocation.geoname.name+", "+resolvedLocation.geoname.primaryCountryCode+" ("+resolvedLocation.location.text+" @ "+resolvedLocation.location.position+")");
-            }
-            */
-            assertTrue("Didn't find "+article.handCodedPlaceName+" ("+article.primaryPlaceId+") in article "+article.mediacloudId,
-                    article.primaryPlaceIsParsed());           
+            logger.info("Testing article "+article.mediacloudId+" (looking for "+article.handCodedPlaceName+" / "+article.handCodedCountryCode+")");
+            assertTrue("Didn't find "+article.handCodedPlaceName+" ("+article.handCodedCountryCode+") in article "+article.mediacloudId,
+                    article.isHandCodedCountryInResults());           
         }
     }
     
@@ -74,14 +68,14 @@ public class MultipleArticleTest {
         public int mediacloudId;
         public String text;
         public String handCodedPlaceName;
-        public int primaryPlaceId;
+        public String handCodedCountryCode;
         
-        public boolean primaryPlaceIsParsed() throws Exception{
+        public boolean isHandCodedCountryInResults() throws Exception{
             List<ResolvedLocation> results = ParseManager.locateRaw(text);
-            if(primaryPlaceId==0){  // no places mentioned in article!
+            if(handCodedCountryCode.length()==0){  // no places mentioned in article!
                 return true;
             } else {
-                return TestUtils.resultsContainsPlaceId(results, primaryPlaceId);
+                return TestUtils.isCountryCodeInResolvedLocations(results, handCodedCountryCode);
             }
         }
     }

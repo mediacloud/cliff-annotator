@@ -29,6 +29,8 @@ import com.berico.clavin.index.WhitespaceLowerCaseAnalyzer;
 import com.berico.clavin.resolver.LocationResolver;
 import com.berico.clavin.resolver.ResolvedLocation;
 
+import edu.mit.civic.clavin.resolver.HeuristicCandidateSelectionStrategy;
+
 /*#####################################################################
  * 
  * CLAVIN (Cartographic Location And Vicinity INdexer)
@@ -158,6 +160,10 @@ public class CustomLuceneLocationResolver implements LocationResolver {
 		        List<ResolvedLocation> exactMatch = new ArrayList<ResolvedLocation>();
                 exactMatch.add(getFirstExactMatch("People’s Republic of China", locationName));
                 return exactMatch;
+		    } else if (locationName.text.equals("Thai")){
+		        List<ResolvedLocation> exactMatch = new ArrayList<ResolvedLocation>();
+		        exactMatch.add(getFirstExactMatch("Thailand", locationName));
+		        return exactMatch;
 		    }
 		    
 	  		// Lucene query used to look for matches based on the
@@ -252,7 +258,7 @@ public class CustomLuceneLocationResolver implements LocationResolver {
   	private List<ResolvedLocation> pickBestCandidates(List<List<ResolvedLocation>> allCandidates) {
   		
   		// initialize return object
-  		List<ResolvedLocation> bestCandidates = NewsHeuristicsStrategy.select(this, allCandidates);
+  		List<ResolvedLocation> bestCandidates = HeuristicCandidateSelectionStrategy.select(this, allCandidates);
   		
   		return bestCandidates;
   	}
