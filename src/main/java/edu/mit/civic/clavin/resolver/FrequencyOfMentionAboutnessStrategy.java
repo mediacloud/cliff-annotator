@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.berico.clavin.gazetteer.CountryCode;
 import com.berico.clavin.resolver.ResolvedLocation;
 
@@ -15,10 +18,15 @@ import com.berico.clavin.resolver.ResolvedLocation;
  */
 public class FrequencyOfMentionAboutnessStrategy {
 
+    private static final Logger logger = LoggerFactory.getLogger(FrequencyOfMentionAboutnessStrategy.class);
+
     public static List<CountryCode> select(List<ResolvedLocation> resolvedLocations){
         // count country mentions
         HashMap<CountryCode,Integer> countryCounts = new HashMap<CountryCode,Integer>();
         for (ResolvedLocation resolvedLocation: resolvedLocations){
+            if(resolvedLocation.geoname.primaryCountryCode==CountryCode.NULL){
+                continue;
+            }
             CountryCode country = resolvedLocation.geoname.primaryCountryCode;
             if(!countryCounts.containsKey(country)){
                 countryCounts.put(country, 0);
@@ -32,6 +40,7 @@ public class FrequencyOfMentionAboutnessStrategy {
                 primaryCountry = countryCode;
             }
         }
+        logger.info("Found primary country "+primaryCountry);
         // return results
         List<CountryCode> results = new ArrayList<CountryCode>();
         if(primaryCountry!=null) results.add(primaryCountry);
