@@ -153,7 +153,6 @@ public class HeuristicCandidateSelectionStrategy {
         }
         logger.info("Still have "+possibilitiesToDo.size()+" lists to do");
 
-
         logger.info("Pass 5: Pick the top result, preferrring ones in the a country found already (last ditch effort)");
         possibilitiesToRemove.clear(); 
         for( List<ResolvedLocation> candidates: possibilitiesToDo){
