@@ -26,9 +26,9 @@ import edu.mit.civic.clavin.resolver.lucene.CustomLuceneLocationResolver;
  *  Fla doesn't give you Florida
  *  names ("Bristol Palin", "Chad")
  */
-public class HeuristicCandidateSelectionStrategy {
+public class HeuristicDisambiguationStrategy {
     
-    private static final Logger logger = LoggerFactory.getLogger(HeuristicCandidateSelectionStrategy.class);
+    private static final Logger logger = LoggerFactory.getLogger(HeuristicDisambiguationStrategy.class);
     
     private static final double EXACT_MATCH_CONFIDENCE = 1.0;
     

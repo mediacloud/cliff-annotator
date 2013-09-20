@@ -29,7 +29,7 @@ import com.berico.clavin.index.WhitespaceLowerCaseAnalyzer;
 import com.berico.clavin.resolver.LocationResolver;
 import com.berico.clavin.resolver.ResolvedLocation;
 
-import edu.mit.civic.clavin.resolver.HeuristicCandidateSelectionStrategy;
+import edu.mit.civic.clavin.resolver.HeuristicDisambiguationStrategy;
 
 /*#####################################################################
  * 
@@ -258,7 +258,7 @@ public class CustomLuceneLocationResolver implements LocationResolver {
   	private List<ResolvedLocation> pickBestCandidates(List<List<ResolvedLocation>> allCandidates) {
   		
   		// initialize return object
-  		List<ResolvedLocation> bestCandidates = HeuristicCandidateSelectionStrategy.select(this, allCandidates);
+  		List<ResolvedLocation> bestCandidates = HeuristicDisambiguationStrategy.select(this, allCandidates);
   		
   		return bestCandidates;
   	}
