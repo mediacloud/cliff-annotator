@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import com.berico.clavin.GeoParser;
 import com.berico.clavin.extractor.ApacheExtractor;
 import com.berico.clavin.extractor.LocationExtractor;
+import com.berico.clavin.gazetteer.CountryCode;
 import com.berico.clavin.gazetteer.GeoName;
 import com.berico.clavin.nerd.ExternalSequenceClassifierProvider;
 import com.berico.clavin.nerd.NerdLocationExtractor;
@@ -63,7 +64,11 @@ public class ParseManager {
                 loc.put("confidence", resolvedLocation.confidence); // low is good
                 loc.put("id",place.geonameID);
                 loc.put("name",place.name);
-                loc.put("countryCode",place.primaryCountryCode.toString());
+                String primaryCountryCodeAlpha2 = ""; 
+                if(place.primaryCountryCode!=CountryCode.NULL){
+                    primaryCountryCodeAlpha2 = place.primaryCountryCode.toString();
+                }
+                loc.put("countryCode",primaryCountryCodeAlpha2);
                 loc.put("lat",place.latitude);
                 loc.put("lon",place.longitude);
                 HashMap sourceInfo = new HashMap();
