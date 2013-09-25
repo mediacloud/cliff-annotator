@@ -33,22 +33,22 @@ public class MultipleArticleTest {
     @Test
     public void testMentionsHandCodedCountry() throws Exception {
         List<CodedArticle> articles;
-        articles = loadExamplesFromFile("src/test/resources/sample-docs/nyt_annotated.json");
-        assertEquals(25, articles.size());
+        articles = loadExamplesFromFile("src/test/resources/sample-docs/nyt.json");
+        assertEquals(23, articles.size());
         verifyArticlesMentionHandCodedCountry(articles);
-        articles = loadExamplesFromFile("src/test/resources/sample-docs/huffington_post_annotated.json");
-        assertEquals(21, articles.size());
+        articles = loadExamplesFromFile("src/test/resources/sample-docs/huffpo.json");
+        assertEquals(24, articles.size());
         verifyArticlesMentionHandCodedCountry(articles);
-        articles = loadExamplesFromFile("src/test/resources/sample-docs/bbc_annotated.json");
+        articles = loadExamplesFromFile("src/test/resources/sample-docs/bbc.json");
         assertEquals(24, articles.size());
         verifyArticlesMentionHandCodedCountry(articles);
     }
 
     @Test
     public void testIsAboutHandCodedCountry() throws Exception {
-        verifyAccuracyOfAboutness("src/test/resources/sample-docs/nyt_annotated.json");
-        verifyAccuracyOfAboutness("src/test/resources/sample-docs/huffington_post_annotated.json");
-        verifyAccuracyOfAboutness("src/test/resources/sample-docs/bbc_annotated.json");
+        verifyAccuracyOfAboutness("src/test/resources/sample-docs/nyt.json");
+        verifyAccuracyOfAboutness("src/test/resources/sample-docs/huffpo.json");
+        verifyAccuracyOfAboutness("src/test/resources/sample-docs/bbc.json");
     }
     
     private void verifyAccuracyOfAboutness(String filePath) throws Exception{
@@ -62,7 +62,7 @@ public class MultipleArticleTest {
         }
         double correctPct = (double)correct/(double)articles.size();
         logger.info("Accuracy of "+filePath+" at "+correctPct);
-        assertTrue("Only "+correctPct+" correct", correctPct > 0.9);
+        assertTrue("Only "+correctPct+" correct", correctPct > 1.0);
     }
     
     private void verifyArticlesMentionHandCodedCountry(List<CodedArticle> articles) throws Exception{
