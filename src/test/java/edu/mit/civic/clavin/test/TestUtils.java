@@ -1,11 +1,23 @@
-package edu.mit.civic.clavin;
+package edu.mit.civic.clavin.test;
 
+import java.io.File;
+import java.lang.reflect.Type;
 import java.util.List;
+
+import org.apache.commons.io.FileUtils;
 
 import com.berico.clavin.gazetteer.CountryCode;
 import com.berico.clavin.resolver.ResolvedLocation;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 public class TestUtils {
+    
+    private static Gson gson = new Gson();
+
+    public static String NYT_JSON_PATH = "src/test/resources/sample-docs/nyt.json";
+    public static String HUFFPO_JSON_PATH = "src/test/resources/sample-docs/huffpo.json";
+    public static String BBC_JSON_PATH = "src/test/resources/sample-docs/bbc.json";
     
     public static boolean resultsContainsPlaceId(List<ResolvedLocation> results, int placeId){
         if(placeId==0) return true;
@@ -35,6 +47,13 @@ public class TestUtils {
             }
         }
         return false;
+    }
+
+    public static List<CodedArticle> loadExamplesFromFile(String filename) throws Exception {
+        Type listType = new TypeToken<List<CodedArticle>>() {}.getType();
+        String json = FileUtils.readFileToString(new File(filename));
+        List<CodedArticle> articles = gson.fromJson(json, listType);
+        return articles;
     }
 
 }

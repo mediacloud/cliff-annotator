@@ -1,4 +1,4 @@
-package edu.mit.civic.clavin;
+package edu.mit.civic.clavin.test;
 
 import static org.junit.Assert.assertTrue;
 

@@ -1,4 +1,4 @@
-package edu.mit.civic.clavin;
+package edu.mit.civic.clavin.test;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ import com.berico.clavin.resolver.ResolvedLocation;
  */
 @RunWith(Suite.class)
 @SuiteClasses({
-    edu.mit.civic.clavin.SpecificCaseTest.class,
+    edu.mit.civic.clavin.test.SpecificCaseTest.class,
 })
 public class AllTestsSuite {
     // THIS CLASS INTENTIONALLY LEFT BLANK

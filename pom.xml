@@ -4,7 +4,7 @@
 
   <groupId>edu.mit.civic</groupId>
   <artifactId>clavin-server</artifactId>
-  <version>0.1</version>
+  <version>0.2</version>
   <packaging>jar</packaging>
 
   <name>clavin-server</name>

@@ -45,3 +45,14 @@ and to get some basic status hit this url:
 ```
 http://localhost:8080/status
 ```
+
+Testing
+-------
+
+```
+mvn test
+```
+
+```
+mvn exec:java -Dexec.mainClass="edu.mit.civic.clavin.test.AboutnessCheck" -Dexec.args="-Xmx2g"
+```
