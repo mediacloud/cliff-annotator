@@ -22,17 +22,7 @@ public class FrequencyOfMentionAboutnessStrategy {
 
     public static List<CountryCode> select(List<ResolvedLocation> resolvedLocations){
         // count country mentions
-        HashMap<CountryCode,Integer> countryCounts = new HashMap<CountryCode,Integer>();
-        for (ResolvedLocation resolvedLocation: resolvedLocations){
-            if(resolvedLocation.geoname.primaryCountryCode==CountryCode.NULL){
-                continue;
-            }
-            CountryCode country = resolvedLocation.geoname.primaryCountryCode;
-            if(!countryCounts.containsKey(country)){
-                countryCounts.put(country, 0);
-            }
-            countryCounts.put(country, countryCounts.get(country)+1);
-        }
+        HashMap<CountryCode,Integer> countryCounts = AboutnessUtils.getCountryCounts(resolvedLocations); 
         // find the most mentioned
         CountryCode primaryCountry = null;        
         for(CountryCode countryCode: countryCounts.keySet()){

@@ -79,6 +79,7 @@ public class ParseManager {
             }
             results.put("places",places);
             results.put("primaryCountries", FrequencyOfMentionAboutnessStrategy.select(resolvedLocations));
+            //results.put("primaryCountries", PercentageOfMentionsAboutnessStrategy.select(resolvedLocations));
             return gson.toJson(results);
         } catch (Exception e) {
             return getErrorText(e.toString());
