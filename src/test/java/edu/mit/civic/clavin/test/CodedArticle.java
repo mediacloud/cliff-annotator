@@ -2,8 +2,8 @@ package edu.mit.civic.clavin.test;
 
 import java.util.List;
 
-import com.berico.clavin.gazetteer.CountryCode;
-import com.berico.clavin.resolver.ResolvedLocation;
+import com.bericotech.clavin.gazetteer.CountryCode;
+import com.bericotech.clavin.resolver.ResolvedLocation;
 
 public class CodedArticle {
 

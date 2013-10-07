@@ -6,10 +6,10 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.berico.clavin.gazetteer.CountryCode;
-import com.berico.clavin.gazetteer.FeatureClass;
-import com.berico.clavin.gazetteer.GeoName;
-import com.berico.clavin.resolver.ResolvedLocation;
+import com.bericotech.clavin.gazetteer.CountryCode;
+import com.bericotech.clavin.gazetteer.FeatureClass;
+import com.bericotech.clavin.gazetteer.GeoName;
+import com.bericotech.clavin.resolver.ResolvedLocation;
 
 import edu.mit.civic.clavin.resolver.lucene.CustomLuceneLocationResolver;
 

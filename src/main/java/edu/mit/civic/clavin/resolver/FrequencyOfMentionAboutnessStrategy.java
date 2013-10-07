@@ -7,8 +7,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.berico.clavin.gazetteer.CountryCode;
-import com.berico.clavin.resolver.ResolvedLocation;
+import com.bericotech.clavin.gazetteer.CountryCode;
+import com.bericotech.clavin.resolver.ResolvedLocation;
 
 /**
  * Once we have selected the candidates, we need to pick what country the document is "about".  This

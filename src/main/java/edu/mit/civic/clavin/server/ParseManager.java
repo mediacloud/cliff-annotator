@@ -8,16 +8,14 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.berico.clavin.GeoParser;
-import com.berico.clavin.extractor.ApacheExtractor;
-import com.berico.clavin.extractor.LocationExtractor;
-import com.berico.clavin.gazetteer.CountryCode;
-import com.berico.clavin.gazetteer.GeoName;
-import com.berico.clavin.nerd.ExternalSequenceClassifierProvider;
-import com.berico.clavin.nerd.NerdLocationExtractor;
-import com.berico.clavin.nerd.SequenceClassifierProvider;
-import com.berico.clavin.resolver.LocationResolver;
-import com.berico.clavin.resolver.ResolvedLocation;
+import com.bericotech.clavin.GeoParser;
+import com.bericotech.clavin.extractor.ApacheExtractor;
+import com.bericotech.clavin.extractor.LocationExtractor;
+import com.bericotech.clavin.gazetteer.CountryCode;
+import com.bericotech.clavin.gazetteer.GeoName;
+import com.bericotech.clavin.nerd.StanfordExtractor;
+import com.bericotech.clavin.resolver.LocationResolver;
+import com.bericotech.clavin.resolver.ResolvedLocation;
 import com.google.gson.Gson;
 
 import edu.mit.civic.clavin.resolver.FrequencyOfMentionAboutnessStrategy;
@@ -37,7 +35,6 @@ public class ParseManager {
     private static Gson gson = new Gson();
     
     private static final String PATH_TO_GEONAMES_INDEX = "./IndexDirectory";
-    private static final String PATH_TO_NER_ZIP = "src/main/resources/all.3class.distsim.crf.ser.gz";
     
     // these two are the statuses used in the JSON responses
     private static final String STATUS_OK = "ok";
@@ -116,10 +113,7 @@ public class ParseManager {
             LocationExtractor locationExtractor = null;
             if(BE_NERDY) {
                 logger.info("Being NERdy!");
-                SequenceClassifierProvider sequenceClassifierProvider = 
-                        new ExternalSequenceClassifierProvider(PATH_TO_NER_ZIP);
-                locationExtractor = 
-                        new NerdLocationExtractor(sequenceClassifierProvider);                
+                locationExtractor = new StanfordExtractor();                
             } else {
                 locationExtractor = new ApacheExtractor();
             }

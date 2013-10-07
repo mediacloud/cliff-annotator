@@ -21,13 +21,13 @@ import org.apache.lucene.util.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.berico.clavin.extractor.LocationExtractor;
-import com.berico.clavin.extractor.LocationOccurrence;
-import com.berico.clavin.gazetteer.GeoName;
-import com.berico.clavin.index.BinarySimilarity;
-import com.berico.clavin.index.WhitespaceLowerCaseAnalyzer;
-import com.berico.clavin.resolver.LocationResolver;
-import com.berico.clavin.resolver.ResolvedLocation;
+import com.bericotech.clavin.extractor.LocationExtractor;
+import com.bericotech.clavin.extractor.LocationOccurrence;
+import com.bericotech.clavin.gazetteer.GeoName;
+import com.bericotech.clavin.index.BinarySimilarity;
+import com.bericotech.clavin.index.WhitespaceLowerCaseAnalyzer;
+import com.bericotech.clavin.resolver.LocationResolver;
+import com.bericotech.clavin.resolver.ResolvedLocation;
 
 import edu.mit.civic.clavin.resolver.HeuristicDisambiguationStrategy;
 
@@ -147,24 +147,6 @@ public class CustomLuceneLocationResolver implements LocationResolver {
 		String sanitizedLocationName = escape(locationName.text.toLowerCase());
 		
 		try{
-		    // HACK: custom hacks to make certain strings work correectly
-		    if(locationName.text.equals("American")){
-		        List<ResolvedLocation> exactMatch = new ArrayList<ResolvedLocation>();
-		        exactMatch.add(getFirstExactMatch("United States", locationName));
-		        return exactMatch;
-		    } else if (locationName.text.equals("Dutch")){
-                List<ResolvedLocation> exactMatch = new ArrayList<ResolvedLocation>();
-                exactMatch.add(getFirstExactMatch("Kingdom of the Netherlands", locationName));
-                return exactMatch;		        
-		    } else if (locationName.text.equals("Chinese")){
-		        List<ResolvedLocation> exactMatch = new ArrayList<ResolvedLocation>();
-                exactMatch.add(getFirstExactMatch("People’s Republic of China", locationName));
-                return exactMatch;
-		    } else if (locationName.text.equals("Thai")){
-		        List<ResolvedLocation> exactMatch = new ArrayList<ResolvedLocation>();
-		        exactMatch.add(getFirstExactMatch("Thailand", locationName));
-		        return exactMatch;
-		    }
 		    
 	  		// Lucene query used to look for matches based on the
 			// "indexName" field

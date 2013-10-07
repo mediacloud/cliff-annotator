@@ -10,8 +10,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.berico.clavin.resolver.ResolvedLocation;
-import com.berico.clavin.util.TextUtils;
+import com.bericotech.clavin.resolver.ResolvedLocation;
+import com.bericotech.clavin.util.TextUtils;
 
 import edu.mit.civic.clavin.server.ParseManager;
 
@@ -31,18 +31,8 @@ public class SpecificCaseTest {
     private static final int COUNTRY_US = 6252001;
     private static final int REGION_ASIA = 6255147;
     private static final int REGION_MIDDLE_EAST = 6269133;
-    private static final int COUNTRY_IRAQ = 99237;
-    private static final int COUNTRY_NETHERLANDS = 2750405;
-    private static final int COUNTRY_NORWAY = 3144096;
     private static final int CITY_LONDON = 2643741;
     private static final int PLACE_RUSSEL_SQ_LONDON = 6954795;
-    private static final int COUNTRY_THAILAND = 1605651;
-    
-    @Test
-    public void testThailand() throws Exception {
-        verifyPlacesInFile("src/test/resources/sample-docs/thai.txt",
-                new int[] {COUNTRY_THAILAND});
-    }
     
     @Test
     public void testRussellSq() throws Exception {
@@ -52,29 +42,11 @@ public class SpecificCaseTest {
     }
     
     @Test
-    public void testChinaExample() throws Exception {
-        verifyPlacesInFile("src/test/resources/sample-docs/chinese.txt", 
-                new int[] {COUNTRY_CHINA,COUNTRY_NORWAY});        
-    }
-
-    @Test
-    public void testDutchExample() throws Exception {
-        verifyPlacesInFile("src/test/resources/sample-docs/dutch.txt", 
-                new int[] {COUNTRY_NETHERLANDS}, true);        
-    }
-    
-    @Test
-    public void testAmericanExample() throws Exception {
-        verifyPlacesInFile("src/test/resources/sample-docs/american.txt", 
-                new int[] {COUNTRY_US,COUNTRY_IRAQ}, true);        
-    }
-
-    @Test
     public void testMiddleEastExample() throws Exception {
         verifyPlacesInFile("src/test/resources/sample-docs/middle-east.txt", 
                 new int[] {REGION_MIDDLE_EAST} );        
     }
-
+    
     @Test
     public void testAsia() throws Exception {
         verifyPlacesInFile("src/test/resources/sample-docs/asia.txt", 
@@ -118,7 +90,7 @@ public class SpecificCaseTest {
         List<ResolvedLocation> results = ParseManager.locateRaw(inputString);
         //for(ResolvedLocation resolvedLocation: results){ logger.info("  "+resolvedLocation.toString()); }
         for(int placeId: places){
-            assertTrue(TestUtils.resultsContainsPlaceId(results, placeId));
+            assertTrue("Didn't find "+placeId+" in list of places ("+places.length+" places found)",TestUtils.resultsContainsPlaceId(results, placeId));
         }
         if(andNoOthers){
             assertTrue("There are some results that were unexecpted! Found "+results.size()+" but expected "+places.length+".",results.size()==places.length);

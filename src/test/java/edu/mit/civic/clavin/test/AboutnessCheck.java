@@ -5,8 +5,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.berico.clavin.gazetteer.CountryCode;
-import com.berico.clavin.resolver.ResolvedLocation;
+import com.bericotech.clavin.gazetteer.CountryCode;
+import com.bericotech.clavin.resolver.ResolvedLocation;
 
 import edu.mit.civic.clavin.resolver.FrequencyOfMentionAboutnessStrategy;
 import edu.mit.civic.clavin.server.ParseManager;

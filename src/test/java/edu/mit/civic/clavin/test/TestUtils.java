@@ -6,8 +6,8 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 
-import com.berico.clavin.gazetteer.CountryCode;
-import com.berico.clavin.resolver.ResolvedLocation;
+import com.bericotech.clavin.gazetteer.CountryCode;
+import com.bericotech.clavin.resolver.ResolvedLocation;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 

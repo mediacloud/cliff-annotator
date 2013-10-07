@@ -30,11 +30,11 @@
 		<artifactId>stanford-corenlp</artifactId>
 		<version>1.3.5</version>
 	</dependency>
-    <dependency>
-		<groupId>com.berico</groupId>
-		<artifactId>clavin-nerd</artifactId>
-		<version>0.3.3-RELEASE</version>
-    </dependency>
+	<dependency>
+    	<groupId>com.bericotech</groupId>
+    	<artifactId>clavin-nerd</artifactId>
+    	<version>1.0.0</version>
+	</dependency>
 	<dependency>
 		<groupId>com.google.code.gson</groupId>
 		<artifactId>gson</artifactId>
