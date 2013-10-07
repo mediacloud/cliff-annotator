@@ -54,5 +54,5 @@ mvn test
 ```
 
 ```
-mvn exec:java -Dexec.mainClass="edu.mit.civic.clavin.test.AboutnessCheck" -Dexec.args="-Xmx2g"
+mvn exec:java -Dexec.mainClass="edu.mit.civic.clavin.AboutnessCheck" -Dexec.args="-Xmx2g"
 ```

@@ -1,4 +1,4 @@
-package edu.mit.civic.clavin.test;
+package edu.mit.civic.clavin;
 
 import java.util.List;
 
@@ -10,6 +10,9 @@ import com.bericotech.clavin.resolver.ResolvedLocation;
 
 import edu.mit.civic.clavin.resolver.FrequencyOfMentionAboutnessStrategy;
 import edu.mit.civic.clavin.server.ParseManager;
+import edu.mit.civic.clavin.test.CodedArticle;
+import edu.mit.civic.clavin.test.DisambiguationTest;
+import edu.mit.civic.clavin.test.TestUtils;
 
 /**
  * Print out the accuracy of our Aboutness algorithm against the hand-coded bake-off data.
