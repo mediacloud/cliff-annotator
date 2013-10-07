@@ -119,17 +119,7 @@ public class CustomLuceneLocationResolver implements LocationResolver {
 		indexSearcher.search(new AnalyzingQueryParser(Version.LUCENE_40,
 				"indexName", indexAnalyzer).parse("Reston"), null, maxHitDepth, populationSort);
 	}
-	
-	private ResolvedLocation getFirstExactMatch(String searchString, LocationOccurrence locationName) throws IOException, ParseException {
-        Query q = new AnalyzingQueryParser(Version.LUCENE_40,
-                "indexName", indexAnalyzer).parse("\"" + escape(searchString.toLowerCase()) + "\"");
-        TopDocs results = indexSearcher.search(q, null, maxHitDepth, populationSort);
-        if (results.scoreDocs.length > 0) {
-            return new ResolvedLocation(indexSearcher.doc(results.scoreDocs[0].doc), locationName, false);
-        }
-        return null;	    
-	}
-	
+		
 	/**
 	 * Finds all matches (capped at {@link CustomLuceneLocationResolver#maxHitDepth})
 	 * in the Lucene index for a given location name.

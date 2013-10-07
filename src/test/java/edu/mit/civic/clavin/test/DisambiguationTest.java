@@ -21,7 +21,7 @@ public class DisambiguationTest {
  
     private static final Logger logger = LoggerFactory.getLogger(DisambiguationTest.class);
 
-    //@Test
+    @Test
     public void testMentionsHandCodedCountry() throws Exception {
         List<CodedArticle> articles;
         articles = TestUtils.loadExamplesFromFile(TestUtils.NYT_JSON_PATH);
