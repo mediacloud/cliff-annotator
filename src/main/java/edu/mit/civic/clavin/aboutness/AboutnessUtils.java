@@ -1,4 +1,4 @@
-package edu.mit.civic.clavin.resolver;
+package edu.mit.civic.clavin.aboutness;
 
 import java.util.HashMap;
 import java.util.List;

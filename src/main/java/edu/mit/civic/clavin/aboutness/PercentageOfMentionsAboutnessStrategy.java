@@ -1,4 +1,4 @@
-package edu.mit.civic.clavin.resolver;
+package edu.mit.civic.clavin.aboutness;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,6 +14,7 @@ import com.bericotech.clavin.resolver.ResolvedLocation;
  * This doesn't seem to help much (compared the the FrequencyofMention strategy)
  * @author rahulb
  */
+@Deprecated
 public class PercentageOfMentionsAboutnessStrategy {
 
     private static final double THRESHOLD = 0.4; 

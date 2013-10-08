@@ -18,7 +18,7 @@ import com.bericotech.clavin.resolver.LocationResolver;
 import com.bericotech.clavin.resolver.ResolvedLocation;
 import com.google.gson.Gson;
 
-import edu.mit.civic.clavin.resolver.FrequencyOfMentionAboutnessStrategy;
+import edu.mit.civic.clavin.aboutness.FrequencyOfMentionAboutnessStrategy;
 import edu.mit.civic.clavin.resolver.lucene.CustomLuceneLocationResolver;
 
 /**
@@ -33,6 +33,8 @@ public class ParseManager {
     public static GeoParser parser = null;
 
     private static Gson gson = new Gson();
+    
+    private static LocationResolver resolver;   // HACK: pointer to keep around for stats logging
     
     private static final String PATH_TO_GEONAMES_INDEX = "./IndexDirectory";
     
@@ -100,6 +102,10 @@ public class ParseManager {
         return gson.toJson(info);
     }
     
+    public static void logStats(){
+        ((CustomLuceneLocationResolver) resolver).logStats();
+    }
+    
     /**
      * Lazy instantiation of singleton GeoParser
      * @return
@@ -121,7 +127,7 @@ public class ParseManager {
             int numberOfResultsToFetch = 10;
             boolean useFuzzyMatching = false;
 
-            LocationResolver resolver = new CustomLuceneLocationResolver(new File(PATH_TO_GEONAMES_INDEX), 
+            resolver = new CustomLuceneLocationResolver(new File(PATH_TO_GEONAMES_INDEX), 
                     numberOfResultsToFetch);
 
             parser = new GeoParser(locationExtractor, resolver, useFuzzyMatching);

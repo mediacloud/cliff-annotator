@@ -29,7 +29,8 @@ import com.bericotech.clavin.index.WhitespaceLowerCaseAnalyzer;
 import com.bericotech.clavin.resolver.LocationResolver;
 import com.bericotech.clavin.resolver.ResolvedLocation;
 
-import edu.mit.civic.clavin.resolver.HeuristicDisambiguationStrategy;
+import edu.mit.civic.clavin.disambiguation.DisambiguationStrategy;
+import edu.mit.civic.clavin.disambiguation.HeuristicDisambiguationStrategy;
 
 /*#####################################################################
  * 
@@ -88,6 +89,9 @@ public class CustomLuceneLocationResolver implements LocationResolver {
 	private static final Sort populationSort = new Sort(new SortField[]
 			{SortField.FIELD_SCORE, new SortField("population", SortField.Type.LONG, true)});
 	
+	// my custom wrapper to let us try out multiple different disambiguation strategies
+	private DisambiguationStrategy disambiguationStrategy;
+	
 	/**
 	 * Builds a {@link CustomLuceneLocationResolver} by loading a pre-built Lucene
 	 * index from disk and setting configuration parameters for
@@ -118,6 +122,9 @@ public class CustomLuceneLocationResolver implements LocationResolver {
 		// per: http://wiki.apache.org/lucene-java/ImproveSearchingSpeed
 		indexSearcher.search(new AnalyzingQueryParser(Version.LUCENE_40,
 				"indexName", indexAnalyzer).parse("Reston"), null, maxHitDepth, populationSort);
+		
+		//set up the disambiguator
+		disambiguationStrategy = new HeuristicDisambiguationStrategy();
 	}
 		
 	/**
@@ -230,7 +237,7 @@ public class CustomLuceneLocationResolver implements LocationResolver {
   	private List<ResolvedLocation> pickBestCandidates(List<List<ResolvedLocation>> allCandidates) {
   		
   		// initialize return object
-  		List<ResolvedLocation> bestCandidates = HeuristicDisambiguationStrategy.select(this, allCandidates);
+  		List<ResolvedLocation> bestCandidates = disambiguationStrategy.select(this, allCandidates);
   		
   		return bestCandidates;
   	}
@@ -303,4 +310,8 @@ public class CustomLuceneLocationResolver implements LocationResolver {
 		}
 	}
 
+    public void logStats(){
+        disambiguationStrategy.logStats();
+    }
+    
 }

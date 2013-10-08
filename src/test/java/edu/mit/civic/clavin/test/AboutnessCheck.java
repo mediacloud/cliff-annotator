@@ -1,4 +1,4 @@
-package edu.mit.civic.clavin;
+package edu.mit.civic.clavin.test;
 
 import java.util.List;
 
@@ -8,11 +8,8 @@ import org.slf4j.LoggerFactory;
 import com.bericotech.clavin.gazetteer.CountryCode;
 import com.bericotech.clavin.resolver.ResolvedLocation;
 
-import edu.mit.civic.clavin.resolver.FrequencyOfMentionAboutnessStrategy;
+import edu.mit.civic.clavin.aboutness.FrequencyOfMentionAboutnessStrategy;
 import edu.mit.civic.clavin.server.ParseManager;
-import edu.mit.civic.clavin.test.CodedArticle;
-import edu.mit.civic.clavin.test.DisambiguationTest;
-import edu.mit.civic.clavin.test.TestUtils;
 
 /**
  * Print out the accuracy of our Aboutness algorithm against the hand-coded bake-off data.
@@ -40,9 +37,11 @@ public class AboutnessCheck {
         double nytPct = getAboutnessAccuracy(TestUtils.NYT_JSON_PATH);
         double huffpoPct = getAboutnessAccuracy(TestUtils.HUFFPO_JSON_PATH);
         double bbcPct = getAboutnessAccuracy(TestUtils.BBC_JSON_PATH);
-        System.out.println("Aboutness gets NYT "+nytPct+" correct");
-        System.out.println("Aboutness gets Huff Po "+huffpoPct+" correct");
-        System.out.println("Aboutness gets BBC "+bbcPct+" correct");
+        logger.info("Aboutness gets NYT "+nytPct+" correct");
+        logger.info("Aboutness gets Huff Po "+huffpoPct+" correct");
+        logger.info("Aboutness gets BBC "+bbcPct+" correct");
+        
+        ParseManager.logStats();
     }
 
 }
