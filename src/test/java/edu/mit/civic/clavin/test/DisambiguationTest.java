@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import com.bericotech.clavin.resolver.ResolvedLocation;
 
-import edu.mit.civic.clavin.server.ParseManager;
+import edu.mit.civic.mediacloud.ParseManager;
 
 /**
  * Tests that verify against a small hand-coded corpus of articles.  These check that the
@@ -38,7 +38,7 @@ public class DisambiguationTest {
     private void verifyArticlesMentionHandCodedCountry(List<CodedArticle> articles) throws Exception{
         for(CodedArticle article: articles){
             logger.info("Testing article "+article.mediacloudId+" (looking for "+article.handCodedPlaceName+" / "+article.handCodedCountryCode+")");
-            List<ResolvedLocation> resolvedLocations = ParseManager.locateRaw(article.text);
+            List<ResolvedLocation> resolvedLocations = ParseManager.extractLocations(article.text);
             assertTrue("Didn't find "+article.handCodedPlaceName+" ("+article.handCodedCountryCode+") in article "+article.mediacloudId,
                     article.mentionsHandCodedCountry(resolvedLocations));
         }

@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import com.bericotech.clavin.resolver.ResolvedLocation;
 import com.bericotech.clavin.util.TextUtils;
 
-import edu.mit.civic.clavin.server.ParseManager;
+import edu.mit.civic.mediacloud.ParseManager;
 
 /**
  * Tests that verify some very specific cases work
@@ -87,7 +87,7 @@ public class SpecificCaseTest {
         logger.info("Looking for "+Arrays.toString(places)+" in "+pathToFile);
         File inputFile = new File(pathToFile);
         String inputString = TextUtils.fileToString(inputFile);
-        List<ResolvedLocation> results = ParseManager.locateRaw(inputString);
+        List<ResolvedLocation> results = ParseManager.extractLocations(inputString);
         //for(ResolvedLocation resolvedLocation: results){ logger.info("  "+resolvedLocation.toString()); }
         for(int placeId: places){
             assertTrue("Didn't find "+placeId+" in list of places ("+places.length+" places found)",TestUtils.resultsContainsPlaceId(results, placeId));

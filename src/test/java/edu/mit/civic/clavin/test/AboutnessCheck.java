@@ -8,9 +8,9 @@ import org.slf4j.LoggerFactory;
 import com.bericotech.clavin.gazetteer.CountryCode;
 import com.bericotech.clavin.resolver.ResolvedLocation;
 
-import edu.mit.civic.clavin.aboutness.AboutnessStrategy;
-import edu.mit.civic.clavin.aboutness.FrequencyOfMentionAboutnessStrategy;
-import edu.mit.civic.clavin.server.ParseManager;
+import edu.mit.civic.mediacloud.ParseManager;
+import edu.mit.civic.mediacloud.where.aboutness.AboutnessStrategy;
+import edu.mit.civic.mediacloud.where.aboutness.FrequencyOfMentionAboutnessStrategy;
 
 /**
  * Print out the accuracy of our Aboutness algorithm against the hand-coded bake-off data.
@@ -28,7 +28,7 @@ public class AboutnessCheck {
         List<CodedArticle> articles = TestUtils.loadExamplesFromFile(filePath);
         for(CodedArticle article: articles){
             logger.info("Testing article "+article.mediacloudId+" (looking for "+article.handCodedPlaceName+" / "+article.handCodedCountryCode+")");
-            List<ResolvedLocation> resolvedLocations = ParseManager.locateRaw(article.text);
+            List<ResolvedLocation> resolvedLocations = ParseManager.extractLocations(article.text);
             List<CountryCode> primaryCountries = aboutness.select(resolvedLocations);
             if(article.isAboutHandCodedCountry(primaryCountries)) correct++;
         }

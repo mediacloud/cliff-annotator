@@ -1,4 +1,4 @@
-package edu.mit.civic.clavin.server;
+package edu.mit.civic.mediacloud;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -43,7 +43,7 @@ public class SocketClientHandler implements Runnable {
             while((line = reader.readLine()) != null){
                 boolean quit = false;
                 requestCount++;
-                String results = ParseManager.locate(line)+"\n"; 
+                String results = ParseManager.parse(line)+"\n"; 
                 output.write(results.getBytes("UTF-8"));
                 output.flush();
                 parent.incrementTotalRequests();

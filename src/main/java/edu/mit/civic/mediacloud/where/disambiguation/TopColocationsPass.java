@@ -1,4 +1,4 @@
-package edu.mit.civic.clavin.disambiguation;
+package edu.mit.civic.mediacloud.where.disambiguation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,12 +6,13 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.bericotech.clavin.gazetteer.FeatureClass;
 import com.bericotech.clavin.resolver.ResolvedLocation;
 
-public class ExactColocationsPass extends GenericPass {
+public class TopColocationsPass extends GenericPass {
 
     private static final Logger logger = LoggerFactory
-            .getLogger(ExactColocationsPass.class);
+            .getLogger(TopColocationsPass.class);
 
     @Override
     protected List<List<ResolvedLocation>> disambiguate(
@@ -19,12 +20,13 @@ public class ExactColocationsPass extends GenericPass {
             List<ResolvedLocation> bestCandidates) {
         List<List<ResolvedLocation>> possibilitiesToRemove = new ArrayList<List<ResolvedLocation>>();
 
-        possibilitiesToRemove.clear();
+        possibilitiesToRemove.clear(); 
         for( List<ResolvedLocation> candidates: possibilitiesToDo){
             boolean foundOne = false;
-            for( ResolvedLocation candidate: candidates){
-                if(!foundOne && isExactMatch(candidate) && 
-                    candidate.geoname.population>0 && inSameCountry(candidate, bestCandidates)){
+            for( ResolvedLocation candidate: candidates) {
+                if(!foundOne && 
+                        (candidate.geoname.featureClass==FeatureClass.A || candidate.geoname.featureClass==FeatureClass.P) &&
+                        inSameCountry(candidate,bestCandidates)){
                     bestCandidates.add(candidate);
                     logger.info("  PICKED: "+candidate.location.text+"@"+candidate.location.position);
                     logResolvedLocationInfo(candidate);
@@ -39,7 +41,6 @@ public class ExactColocationsPass extends GenericPass {
 
     @Override
     public String getDescription() {
-        return "Looking for top populated exact match in same countries as best results so far";
+        return "Pick the top Admin Region or Populated Place remaining that is in a country we found already";
     }
-    
 }

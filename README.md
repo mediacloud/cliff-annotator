@@ -28,7 +28,7 @@ Running
 Running this command will start up a server on port 8080.
 
 ```
-mvn exec:java -Dexec.mainClass="edu.mit.civic.clavin.server.GeoServer" -Dexec.args="-Xmx2g"
+mvn exec:java -Dexec.mainClass="edu.mit.civic.mediacloud.ParseServer" -Dexec.args="-Xmx2g"
 ```
 
 Use

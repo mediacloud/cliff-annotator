@@ -1,4 +1,4 @@
-package edu.mit.civic.clavin.server;
+package edu.mit.civic.mediacloud;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -16,9 +16,9 @@ import com.sun.net.httpserver.HttpServer;
  * 
  * @author rahulb
  */
-public class GeoServer {
+public class ParseServer {
 	
-	private static final Logger logger = LoggerFactory.getLogger(GeoServer.class);
+	private static final Logger logger = LoggerFactory.getLogger(ParseServer.class);
 
 	static final int WEB_PORT = 8080;
 	private static final int SOCKET_PORT = 4000;
@@ -26,7 +26,7 @@ public class GeoServer {
 	public HttpServer webServer;
 	protected MultiClientSocketServer socketServer;
 	
-	public GeoServer() {
+	public ParseServer() {
 	    createWebServer();
 	    createSocketServer();
 	}
@@ -61,7 +61,7 @@ public class GeoServer {
 	}
 	
 	public static void main(String[] args){
-        GeoServer myServer = new GeoServer();
+        ParseServer myServer = new ParseServer();
         myServer.start();
 	}
 	

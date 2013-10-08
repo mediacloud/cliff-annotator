@@ -1,6 +1,7 @@
-package edu.mit.civic.clavin.server;
+package edu.mit.civic.mediacloud;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,9 +19,11 @@ import com.bericotech.clavin.resolver.LocationResolver;
 import com.bericotech.clavin.resolver.ResolvedLocation;
 import com.google.gson.Gson;
 
-import edu.mit.civic.clavin.aboutness.AboutnessStrategy;
-import edu.mit.civic.clavin.aboutness.FrequencyOfMentionAboutnessStrategy;
-import edu.mit.civic.clavin.resolver.lucene.CustomLuceneLocationResolver;
+import edu.mit.civic.mediacloud.where.CustomLuceneLocationResolver;
+import edu.mit.civic.mediacloud.where.aboutness.AboutnessStrategy;
+import edu.mit.civic.mediacloud.where.aboutness.FrequencyOfMentionAboutnessStrategy;
+import edu.mit.civic.mediacloud.who.PersonOccurrence;
+import edu.mit.civic.mediacloud.who.StanfordThreeClassExtractor;
 
 /**
  * Singleton-style wrapper around a GeoParser.  Call GeoParser.locate(someText) to use this class.
@@ -32,6 +35,8 @@ public class ParseManager {
     private static final Logger logger = LoggerFactory.getLogger(ParseManager.class);
 
     public static GeoParser parser = null;
+    
+    public static StanfordThreeClassExtractor peopleExtractor = null;
 
     private static Gson gson = new Gson();
     
@@ -51,7 +56,7 @@ public class ParseManager {
      * @return      json string with details about locations mentioned
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })  // I'm generating JSON... don't whine!
-    public static String locate(String text) {
+    public static String parse(String text) {
         if(text.trim().length()==0){
             return getErrorText("No text");
         }
@@ -59,7 +64,8 @@ public class ParseManager {
             HashMap results = new HashMap();
             results.put("status",STATUS_OK);
             ArrayList places = new ArrayList();
-            List<ResolvedLocation> resolvedLocations = locateRaw(text);
+            // parse out locations
+            List<ResolvedLocation> resolvedLocations = extractLocations(text);
             for (ResolvedLocation resolvedLocation: resolvedLocations){
                 HashMap loc = new HashMap();
                 GeoName place = resolvedLocation.geoname;
@@ -81,17 +87,28 @@ public class ParseManager {
             }
             results.put("places",places);
             results.put("primaryCountries", aboutness.select(resolvedLocations));
-            //results.put("primaryCountries", PercentageOfMentionsAboutnessStrategy.select(resolvedLocations));
+            // parse out people mentions
+            List<PersonOccurrence> resolvedPeople = extractPeople(text);
+            List<String> names = new ArrayList<String>();
+            for (PersonOccurrence person: resolvedPeople){
+                names.add(person.text);
+            }
+            results.put("people",names);
+            // return it as JSON
             return gson.toJson(results);
         } catch (Exception e) {
             return getErrorText(e.toString());
         }
     }
     
-    public static List<ResolvedLocation> locateRaw(String text) throws Exception{
+    public static List<ResolvedLocation> extractLocations(String text) throws Exception{
         return getParserInstance().parse(text);        
     }
     
+    public static List<PersonOccurrence> extractPeople(String text) throws Exception{
+        return getPeopleExtractorInstance().extractPeopleNames(text);
+    }
+        
     /**
      * We want all error messages sent to the client to have the same format 
      * @param msg
@@ -116,7 +133,7 @@ public class ParseManager {
      */
     private static GeoParser getParserInstance() throws Exception{
 
-        if(ParseManager.parser==null){
+        if(parser==null){
 
             // use the Stanford NER location extractor?
             LocationExtractor locationExtractor = null;
@@ -141,4 +158,12 @@ public class ParseManager {
         return parser;
     }
 
+    private static StanfordThreeClassExtractor getPeopleExtractorInstance() throws Exception {
+        if(peopleExtractor==null){
+            peopleExtractor = new StanfordThreeClassExtractor();
+            logger.info("Created People Extractor successfully");
+        }
+        return peopleExtractor;
+    }
+    
 }

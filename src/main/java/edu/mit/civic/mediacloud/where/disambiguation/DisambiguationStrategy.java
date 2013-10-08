@@ -1,10 +1,10 @@
-package edu.mit.civic.clavin.disambiguation;
+package edu.mit.civic.mediacloud.where.disambiguation;
 
 import java.util.List;
 
 import com.bericotech.clavin.resolver.ResolvedLocation;
 
-import edu.mit.civic.clavin.resolver.lucene.CustomLuceneLocationResolver;
+import edu.mit.civic.mediacloud.where.CustomLuceneLocationResolver;
 
 /**
  * Wrapper around disambiguation strategies, so we can try and compare different ones

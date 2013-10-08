@@ -1,4 +1,4 @@
-package edu.mit.civic.clavin.aboutness;
+package edu.mit.civic.mediacloud.where.aboutness;
 
 import java.util.ArrayList;
 import java.util.HashMap;

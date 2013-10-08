@@ -1,4 +1,4 @@
-package edu.mit.civic.clavin.server;
+package edu.mit.civic.mediacloud;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -22,9 +22,9 @@ public class StatusRequestHandler implements HttpHandler {
 
     private static Gson gson = new Gson();
     
-    private GeoServer parent; 
+    private ParseServer parent; 
     
-    public StatusRequestHandler(GeoServer geoServer) {
+    public StatusRequestHandler(ParseServer geoServer) {
         parent = geoServer;
     }
 
@@ -45,7 +45,7 @@ public class StatusRequestHandler implements HttpHandler {
             status.put("totalSocketRequests",parent.socketServer.getTotalRequests());
             status.put("socketClients", parent.socketServer.getClientRequestInfo());
             status.put("socketServerPort",parent.socketServer.getPort());
-            status.put("webServerPort",GeoServer.WEB_PORT);
+            status.put("webServerPort",ParseServer.WEB_PORT);
             
             responseBody.write(gson.toJson(status).getBytes());
             responseBody.close();

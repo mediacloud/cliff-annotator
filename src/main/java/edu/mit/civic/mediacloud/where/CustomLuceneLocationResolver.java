@@ -1,4 +1,4 @@
-package edu.mit.civic.clavin.resolver.lucene;
+package edu.mit.civic.mediacloud.where;
 
 import static org.apache.lucene.queryparser.classic.QueryParserBase.escape;
 
@@ -29,8 +29,8 @@ import com.bericotech.clavin.index.WhitespaceLowerCaseAnalyzer;
 import com.bericotech.clavin.resolver.LocationResolver;
 import com.bericotech.clavin.resolver.ResolvedLocation;
 
-import edu.mit.civic.clavin.disambiguation.DisambiguationStrategy;
-import edu.mit.civic.clavin.disambiguation.HeuristicDisambiguationStrategy;
+import edu.mit.civic.mediacloud.where.disambiguation.DisambiguationStrategy;
+import edu.mit.civic.mediacloud.where.disambiguation.HeuristicDisambiguationStrategy;
 
 /*#####################################################################
  * 

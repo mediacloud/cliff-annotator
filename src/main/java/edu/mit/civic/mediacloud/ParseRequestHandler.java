@@ -1,4 +1,4 @@
-package edu.mit.civic.clavin.server;
+package edu.mit.civic.mediacloud;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -35,7 +35,7 @@ public class ParseRequestHandler implements HttpHandler {
             URI uri = exchange.getRequestURI();
             String results = "";
             try {
-                results = ParseManager.locate(uri.getQuery());
+                results = ParseManager.parse(uri.getQuery());
                 logger.info(results);
             } catch(Exception e){   // try to give the user something useful
                 logger.error(e.toString());
