@@ -89,9 +89,12 @@ public class ParseManager {
             results.put("primaryCountries", aboutness.select(resolvedLocations));
             // parse out people mentions
             List<PersonOccurrence> resolvedPeople = extractPeople(text);
-            List<String> names = new ArrayList<String>();
+            List<HashMap> names = new ArrayList<HashMap>();
             for (PersonOccurrence person: resolvedPeople){
-                names.add(person.text);
+                HashMap sourceInfo = new HashMap();
+                sourceInfo.put("name", person.text);
+                sourceInfo.put("charIndex", person.position);
+                names.add(sourceInfo);
             }
             results.put("people",names);
             // return it as JSON
