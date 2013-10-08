@@ -1,4 +1,4 @@
-package edu.mit.civic.clavin.test;
+package edu.mit.civic.mediacloud.test.where;
 
 import java.io.File;
 import java.lang.reflect.Type;
