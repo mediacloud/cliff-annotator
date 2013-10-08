@@ -6,6 +6,11 @@ import com.bericotech.clavin.resolver.ResolvedLocation;
 
 import edu.mit.civic.clavin.resolver.lucene.CustomLuceneLocationResolver;
 
+/**
+ * Wrapper around disambiguation strategies, so we can try and compare different ones
+ * 
+ * @author rahulb
+ */
 public interface DisambiguationStrategy {
 
     /**

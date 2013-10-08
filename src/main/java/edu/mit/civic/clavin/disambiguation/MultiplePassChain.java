@@ -8,6 +8,9 @@ import org.slf4j.LoggerFactory;
 
 import com.bericotech.clavin.resolver.ResolvedLocation;
 
+/**
+ * Manages a chain of passes used to disambiguate (ie. lets you try different orders and combinations of passes)  
+ */
 public class MultiplePassChain {
 
     private static final Logger logger = LoggerFactory

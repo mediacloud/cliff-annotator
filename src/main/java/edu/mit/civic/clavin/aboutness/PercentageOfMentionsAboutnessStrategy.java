@@ -11,17 +11,19 @@ import com.bericotech.clavin.gazetteer.CountryCode;
 import com.bericotech.clavin.resolver.ResolvedLocation;
 
 /**
- * This doesn't seem to help much (compared the the FrequencyofMention strategy)
+ * This doesn't seem to help much (compared the the FrequencyofMention strategy), even when I
+ * tried different values for the threshold.
  * @author rahulb
  */
 @Deprecated
-public class PercentageOfMentionsAboutnessStrategy {
+public class PercentageOfMentionsAboutnessStrategy implements AboutnessStrategy {
 
     private static final double THRESHOLD = 0.4; 
     
     private static final Logger logger = LoggerFactory.getLogger(PercentageOfMentionsAboutnessStrategy.class);
 
-    public static List<CountryCode> select(List<ResolvedLocation> resolvedLocations){
+    @Override
+    public List<CountryCode> select(List<ResolvedLocation> resolvedLocations){
         HashMap<CountryCode,Integer> countryCounts = AboutnessUtils.getCountryCounts(resolvedLocations);
         
         List<CountryCode> countries = new ArrayList<CountryCode>();       

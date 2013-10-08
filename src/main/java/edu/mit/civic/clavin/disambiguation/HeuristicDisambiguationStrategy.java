@@ -24,9 +24,10 @@ public class HeuristicDisambiguationStrategy implements DisambiguationStrategy {
     private static final Logger logger = LoggerFactory
             .getLogger(HeuristicDisambiguationStrategy.class);
 
-    private MultiplePassChain chain;
+    private MultiplePassChain chain;    // keep this around so we can track stats
 
     public HeuristicDisambiguationStrategy() {
+        // set up which passes and the order for disambiguating
         chain = new MultiplePassChain();
         chain.add(new LargeAreasPass());
         chain.add(new FuzzyMatchedCountriesPass());
@@ -36,9 +37,6 @@ public class HeuristicDisambiguationStrategy implements DisambiguationStrategy {
         chain.add(new TopPreferringColocatedPass());
     }
 
-    /* (non-Javadoc)
-     * @see edu.mit.civic.clavin.disambiguation.DisambiguationStrategy#select(edu.mit.civic.clavin.resolver.lucene.CustomLuceneLocationResolver, java.util.List)
-     */
     @Override
     public List<ResolvedLocation> select(CustomLuceneLocationResolver resolver, List<List<ResolvedLocation>> allPossibilities) {
             
@@ -51,7 +49,8 @@ public class HeuristicDisambiguationStrategy implements DisambiguationStrategy {
                 GenericPass.logResolvedLocationInfo(candidate);
             }
         }
-        
+
+        // all this does is run the chain we set up already
         List<ResolvedLocation> bestCandidates = chain.disambiguate(allPossibilities);
         
         return bestCandidates;

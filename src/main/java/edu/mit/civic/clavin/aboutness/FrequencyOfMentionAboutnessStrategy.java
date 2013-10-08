@@ -16,11 +16,12 @@ import com.bericotech.clavin.resolver.ResolvedLocation;
  * 
  * @author rahulb
  */
-public class FrequencyOfMentionAboutnessStrategy {
+public class FrequencyOfMentionAboutnessStrategy implements AboutnessStrategy {
 
     private static final Logger logger = LoggerFactory.getLogger(FrequencyOfMentionAboutnessStrategy.class);
 
-    public static List<CountryCode> select(List<ResolvedLocation> resolvedLocations){
+    @Override
+    public List<CountryCode> select(List<ResolvedLocation> resolvedLocations){
         // count country mentions
         HashMap<CountryCode,Integer> countryCounts = AboutnessUtils.getCountryCounts(resolvedLocations); 
         // find the most mentioned

@@ -8,6 +8,11 @@ import org.slf4j.LoggerFactory;
 import com.bericotech.clavin.gazetteer.GeoName;
 import com.bericotech.clavin.resolver.ResolvedLocation;
 
+/**
+ * Wrapper around the concept that we can disambiguate ResolvedLocations in passes, building
+ * on the confidence in disambiguation results from preceeding passes. 
+ * @author rahulb
+ */
 public abstract class GenericPass {
 
     private static final Logger logger = LoggerFactory.getLogger(GenericPass.class);

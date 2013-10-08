@@ -18,6 +18,7 @@ import com.bericotech.clavin.resolver.LocationResolver;
 import com.bericotech.clavin.resolver.ResolvedLocation;
 import com.google.gson.Gson;
 
+import edu.mit.civic.clavin.aboutness.AboutnessStrategy;
 import edu.mit.civic.clavin.aboutness.FrequencyOfMentionAboutnessStrategy;
 import edu.mit.civic.clavin.resolver.lucene.CustomLuceneLocationResolver;
 
@@ -35,6 +36,8 @@ public class ParseManager {
     private static Gson gson = new Gson();
     
     private static LocationResolver resolver;   // HACK: pointer to keep around for stats logging
+    
+    private static AboutnessStrategy aboutness = new FrequencyOfMentionAboutnessStrategy();
     
     private static final String PATH_TO_GEONAMES_INDEX = "./IndexDirectory";
     
@@ -77,7 +80,7 @@ public class ParseManager {
                 places.add(loc);
             }
             results.put("places",places);
-            results.put("primaryCountries", FrequencyOfMentionAboutnessStrategy.select(resolvedLocations));
+            results.put("primaryCountries", aboutness.select(resolvedLocations));
             //results.put("primaryCountries", PercentageOfMentionsAboutnessStrategy.select(resolvedLocations));
             return gson.toJson(results);
         } catch (Exception e) {
