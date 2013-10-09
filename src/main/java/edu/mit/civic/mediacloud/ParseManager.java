@@ -1,7 +1,6 @@
 package edu.mit.civic.mediacloud;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +29,8 @@ import edu.mit.civic.mediacloud.who.StanfordThreeClassExtractor;
  */
 public class ParseManager {
 
+    private static final String PARSER_VERSION = "0.1"; // increment each time we change an algorithm so we know when parsed results already saved in a DB are stale!
+    
     private static final Boolean BE_NERDY = true;   // controls using the Stanford NER or not
     
     private static final Logger logger = LoggerFactory.getLogger(ParseManager.class);
@@ -63,6 +64,7 @@ public class ParseManager {
         try {
             HashMap results = new HashMap();
             results.put("status",STATUS_OK);
+            results.put("version", PARSER_VERSION);
             ArrayList places = new ArrayList();
             // parse out locations
             List<ResolvedLocation> resolvedLocations = extractLocations(text);
