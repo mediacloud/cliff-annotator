@@ -17,9 +17,9 @@ import edu.mit.civic.mediacloud.ParseManager;
  * Tests that verify against a small hand-coded corpus of articles.  These check that the
  * list of extracted places contains the hand-coded one. 
  */
-public class DisambiguationTest {
+public class HandCodedDisambiguationTest {
  
-    private static final Logger logger = LoggerFactory.getLogger(DisambiguationTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(HandCodedDisambiguationTest.class);
 
     @Test
     public void testMentionsHandCodedCountry() throws Exception {

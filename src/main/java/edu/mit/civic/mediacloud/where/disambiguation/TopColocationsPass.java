@@ -3,16 +3,10 @@ package edu.mit.civic.mediacloud.where.disambiguation;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.bericotech.clavin.gazetteer.FeatureClass;
 import com.bericotech.clavin.resolver.ResolvedLocation;
 
 public class TopColocationsPass extends GenericPass {
-
-    private static final Logger logger = LoggerFactory
-            .getLogger(TopColocationsPass.class);
 
     @Override
     protected List<List<ResolvedLocation>> disambiguate(
@@ -28,8 +22,6 @@ public class TopColocationsPass extends GenericPass {
                         (candidate.geoname.featureClass==FeatureClass.A || candidate.geoname.featureClass==FeatureClass.P) &&
                         inSameCountry(candidate,bestCandidates)){
                     bestCandidates.add(candidate);
-                    logger.info("  PICKED: "+candidate.location.text+"@"+candidate.location.position);
-                    logResolvedLocationInfo(candidate);
                     possibilitiesToRemove.add(candidates);
                     foundOne = true;
                 }

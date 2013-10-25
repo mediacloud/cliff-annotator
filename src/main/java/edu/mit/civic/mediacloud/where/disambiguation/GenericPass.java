@@ -28,6 +28,10 @@ public abstract class GenericPass {
         }
         List<List<ResolvedLocation>> possibilitiesToRemove = disambiguate(
                 possibilitiesToDo, bestCandidates);
+        for(ResolvedLocation pickedCandidate: bestCandidates){
+            logSelectedCandidate(pickedCandidate);
+            logResolvedLocationInfo(pickedCandidate);
+        }
         triggerCount+= possibilitiesToRemove.size();
         for (List<ResolvedLocation> toRemove : possibilitiesToRemove) {
             possibilitiesToDo.remove(toRemove);
@@ -72,6 +76,10 @@ public abstract class GenericPass {
         return false;
     }
 
+    public static void logSelectedCandidate(ResolvedLocation candidate){
+        logger.info("  PICKED: "+candidate.location.text+"@"+candidate.location.position);
+    }
+    
     public static void logResolvedLocationInfo(ResolvedLocation resolvedLocation){
         GeoName candidatePlace = resolvedLocation.geoname; 
         logger.info("    "+candidatePlace.geonameID+" "+candidatePlace.name+

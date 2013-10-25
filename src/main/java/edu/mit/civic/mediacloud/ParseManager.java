@@ -106,11 +106,32 @@ public class ParseManager {
         }
     }
     
-    public static List<ResolvedLocation> extractLocations(String text) throws Exception{
-        return getParserInstance().parse(text);        
+    public static List<CountryCode> getUniqueCountries(List<ResolvedLocation> resolvedLocations){
+        List<CountryCode> countries = new ArrayList<CountryCode>();
+        for(ResolvedLocation resolvedLocation: resolvedLocations){
+            CountryCode country = resolvedLocation.geoname.primaryCountryCode;
+            if( !countries.contains(country) ){
+                countries.add(country);
+            }
+        }
+        return countries;
     }
     
-    public static List<PersonOccurrence> extractPeople(String text) throws Exception{
+    public static List<ResolvedLocation> extractLocations(String text){
+        try {
+            return getParserInstance().parse(text);
+        } catch (Exception e) {
+            logger.error("Lucene Resolving Error: "+e.toString());
+        }
+        return new ArrayList<ResolvedLocation>();
+    }
+    
+    public static List<CountryCode> extractCountries(String text) {
+        List<ResolvedLocation> resolvedLocations = extractLocations(text);
+        return aboutness.select(resolvedLocations);
+    }
+    
+    public static List<PersonOccurrence> extractPeople(String text) {
         return getPeopleExtractorInstance().extractPeopleNames(text);
     }
         
@@ -128,7 +149,9 @@ public class ParseManager {
     }
     
     public static void logStats(){
-        ((CustomLuceneLocationResolver) resolver).logStats();
+        if(resolver!=null){
+            ((CustomLuceneLocationResolver) resolver).logStats();
+        }
     }
     
     /**
@@ -157,18 +180,35 @@ public class ParseManager {
 
             parser = new GeoParser(locationExtractor, resolver, useFuzzyMatching);
             
+            parser.parse("prime the pump");
+            
             logger.info("Created GeoParser successfully");
         }
         
         return parser;
     }
 
-    private static StanfordThreeClassExtractor getPeopleExtractorInstance() throws Exception {
+    private static StanfordThreeClassExtractor getPeopleExtractorInstance() {
         if(peopleExtractor==null){
-            peopleExtractor = new StanfordThreeClassExtractor();
-            logger.info("Created People Extractor successfully");
+            try {
+                peopleExtractor = new StanfordThreeClassExtractor();
+                logger.info("Created People Extractor successfully");
+            } catch (Exception e) {
+                logger.error("Unable to create Stanford People Extractor! "+e.toString());
+            }
         }
         return peopleExtractor;
     }
-    
+
+
+    public static LocationResolver getResolver() throws Exception {
+        ParseManager.getParserInstance();
+        return resolver;
+    }
+
+    public static AboutnessStrategy getAboutness() throws Exception {
+        ParseManager.getParserInstance();
+        return aboutness;
+    }
+
 }

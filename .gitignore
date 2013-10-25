@@ -3,3 +3,4 @@ target/classes
 target/surefire-reports/*
 target/test-classes/*
 target/maven-status/*
+data/nyt/*

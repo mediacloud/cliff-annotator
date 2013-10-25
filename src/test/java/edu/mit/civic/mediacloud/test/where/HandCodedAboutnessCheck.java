@@ -6,11 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.bericotech.clavin.gazetteer.CountryCode;
-import com.bericotech.clavin.resolver.ResolvedLocation;
 
 import edu.mit.civic.mediacloud.ParseManager;
-import edu.mit.civic.mediacloud.where.aboutness.AboutnessStrategy;
-import edu.mit.civic.mediacloud.where.aboutness.FrequencyOfMentionAboutnessStrategy;
 
 /**
  * Print out the accuracy of our Aboutness algorithm against the hand-coded bake-off data.
@@ -18,19 +15,21 @@ import edu.mit.civic.mediacloud.where.aboutness.FrequencyOfMentionAboutnessStrat
  * @author rahulb
  *
  */
-public class AboutnessCheck {
+public class HandCodedAboutnessCheck {
 
-    private static final Logger logger = LoggerFactory.getLogger(DisambiguationTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(HandCodedDisambiguationTest.class);
 
     private static double getAboutnessAccuracy(String filePath) throws Exception{
-        AboutnessStrategy aboutness = new FrequencyOfMentionAboutnessStrategy();
         int correct = 0;
         List<CodedArticle> articles = TestUtils.loadExamplesFromFile(filePath);
         for(CodedArticle article: articles){
             logger.info("Testing article "+article.mediacloudId+" (looking for "+article.handCodedPlaceName+" / "+article.handCodedCountryCode+")");
-            List<ResolvedLocation> resolvedLocations = ParseManager.extractLocations(article.text);
-            List<CountryCode> primaryCountries = aboutness.select(resolvedLocations);
-            if(article.isAboutHandCodedCountry(primaryCountries)) correct++;
+            List<CountryCode> primaryCountries = ParseManager.extractCountries(article.text);
+            if(article.isAboutHandCodedCountry(primaryCountries)) {
+                correct++;
+            } else {
+                logger.error("Didn't find "+article.handCodedCountryCode+" in "+primaryCountries);
+            }
         }
         return (double)correct/(double)articles.size();
     }

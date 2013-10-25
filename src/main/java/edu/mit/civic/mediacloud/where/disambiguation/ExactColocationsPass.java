@@ -3,15 +3,9 @@ package edu.mit.civic.mediacloud.where.disambiguation;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.bericotech.clavin.resolver.ResolvedLocation;
 
 public class ExactColocationsPass extends GenericPass {
-
-    private static final Logger logger = LoggerFactory
-            .getLogger(ExactColocationsPass.class);
 
     @Override
     protected List<List<ResolvedLocation>> disambiguate(
@@ -26,8 +20,6 @@ public class ExactColocationsPass extends GenericPass {
                 if(!foundOne && isExactMatch(candidate) && 
                     candidate.geoname.population>0 && inSameCountry(candidate, bestCandidates)){
                     bestCandidates.add(candidate);
-                    logger.info("  PICKED: "+candidate.location.text+"@"+candidate.location.position);
-                    logResolvedLocationInfo(candidate);
                     possibilitiesToRemove.add(candidates);
                     foundOne = true;
                 }

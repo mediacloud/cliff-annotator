@@ -3,15 +3,9 @@ package edu.mit.civic.mediacloud.where.disambiguation;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.bericotech.clavin.resolver.ResolvedLocation;
 
 public class TopPreferringColocatedPass extends GenericPass {
-
-    private static final Logger logger = LoggerFactory
-            .getLogger(TopPreferringColocatedPass.class);
 
     @Override
     protected List<List<ResolvedLocation>> disambiguate(
@@ -25,17 +19,14 @@ public class TopPreferringColocatedPass extends GenericPass {
             for( ResolvedLocation candidate: candidates) {
                 if(!foundOne && inSameCountry(candidate,bestCandidates) ){
                     bestCandidates.add(candidate);
-                    logger.info("  PICKED: "+candidate.location.text+"@"+candidate.location.position);
-                    logResolvedLocationInfo(candidate);
                     possibilitiesToRemove.add(candidates);
                     foundOne = true;
                 }
             }
             if(!foundOne){
                 ResolvedLocation candidate = candidates.get(0);
-                bestCandidates.add(candidate);
-                logger.info("  PICKED: "+candidate.location.text+"@"+candidate.location.position);
                 logResolvedLocationInfo(candidate);
+                bestCandidates.add(candidate);
                 possibilitiesToRemove.add(candidates);
             }
         }

@@ -12,7 +12,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({
     edu.mit.civic.mediacloud.test.where.SpecificCaseTest.class,
-    edu.mit.civic.mediacloud.test.where.DisambiguationTest.class,
+    edu.mit.civic.mediacloud.test.where.HandCodedDisambiguationTest.class,
 })
 public class AllTestsSuite {
 }
