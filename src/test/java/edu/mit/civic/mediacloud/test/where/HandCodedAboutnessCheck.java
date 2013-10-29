@@ -24,7 +24,7 @@ public class HandCodedAboutnessCheck {
         List<CodedArticle> articles = TestUtils.loadExamplesFromFile(filePath);
         for(CodedArticle article: articles){
             logger.info("Testing article "+article.mediacloudId+" (looking for "+article.handCodedPlaceName+" / "+article.handCodedCountryCode+")");
-            List<CountryCode> primaryCountries = ParseManager.extractCountries(article.text);
+            List<CountryCode> primaryCountries = ParseManager.extractAndResolve(article.text).getUniqueCountries();
             if(article.isAboutHandCodedCountry(primaryCountries)) {
                 correct++;
             } else {

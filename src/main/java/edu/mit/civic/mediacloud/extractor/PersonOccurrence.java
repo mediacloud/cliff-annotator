@@ -1,4 +1,4 @@
-package edu.mit.civic.mediacloud.who;
+package edu.mit.civic.mediacloud.extractor;
 
 public class PersonOccurrence {
     

@@ -8,34 +8,29 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.bericotech.clavin.GeoParser;
-import com.bericotech.clavin.extractor.ApacheExtractor;
-import com.bericotech.clavin.extractor.LocationExtractor;
 import com.bericotech.clavin.gazetteer.CountryCode;
 import com.bericotech.clavin.gazetteer.GeoName;
-import com.bericotech.clavin.nerd.StanfordExtractor;
 import com.bericotech.clavin.resolver.LocationResolver;
 import com.bericotech.clavin.resolver.ResolvedLocation;
 import com.google.gson.Gson;
 
+import edu.mit.civic.mediacloud.extractor.ExtractedEntities;
+import edu.mit.civic.mediacloud.extractor.PersonOccurrence;
+import edu.mit.civic.mediacloud.extractor.StanfordThreeClassExtractor;
 import edu.mit.civic.mediacloud.where.CustomLuceneLocationResolver;
 import edu.mit.civic.mediacloud.where.aboutness.AboutnessStrategy;
 import edu.mit.civic.mediacloud.where.aboutness.FrequencyOfMentionAboutnessStrategy;
-import edu.mit.civic.mediacloud.who.PersonOccurrence;
-import edu.mit.civic.mediacloud.who.StanfordThreeClassExtractor;
 
 /**
  * Singleton-style wrapper around a GeoParser.  Call GeoParser.locate(someText) to use this class.
  */
 public class ParseManager {
 
-    private static final String PARSER_VERSION = "0.1"; // increment each time we change an algorithm so we know when parsed results already saved in a DB are stale!
-    
-    private static final Boolean BE_NERDY = true;   // controls using the Stanford NER or not
+    private static final String PARSER_VERSION = "0.2"; // increment each time we change an algorithm so we know when parsed results already saved in a DB are stale!
     
     private static final Logger logger = LoggerFactory.getLogger(ParseManager.class);
 
-    public static GeoParser parser = null;
+    public static EntityParser parser = null;
     
     public static StanfordThreeClassExtractor peopleExtractor = null;
 
@@ -66,9 +61,9 @@ public class ParseManager {
             results.put("status",STATUS_OK);
             results.put("version", PARSER_VERSION);
             ArrayList places = new ArrayList();
-            // parse out locations
-            List<ResolvedLocation> resolvedLocations = extractLocations(text);
-            for (ResolvedLocation resolvedLocation: resolvedLocations){
+            ExtractedEntities entities = extractAndResolve(text);
+
+            for (ResolvedLocation resolvedLocation: entities.getResolvedLocations()){
                 HashMap loc = new HashMap();
                 GeoName place = resolvedLocation.geoname;
                 loc.put("confidence", resolvedLocation.confidence); // low is good
@@ -88,9 +83,10 @@ public class ParseManager {
                 places.add(loc);
             }
             results.put("places",places);
-            results.put("primaryCountries", aboutness.select(resolvedLocations));
-            // parse out people mentions
-            List<PersonOccurrence> resolvedPeople = extractPeople(text);
+            results.put("primaryCountries", aboutness.select(entities.getResolvedLocations()));
+
+
+            List<PersonOccurrence> resolvedPeople = entities.getPeople();
             List<HashMap> names = new ArrayList<HashMap>();
             for (PersonOccurrence person: resolvedPeople){
                 HashMap sourceInfo = new HashMap();
@@ -99,6 +95,7 @@ public class ParseManager {
                 names.add(sourceInfo);
             }
             results.put("people",names);
+
             // return it as JSON
             return gson.toJson(results);
         } catch (Exception e) {
@@ -106,35 +103,15 @@ public class ParseManager {
         }
     }
     
-    public static List<CountryCode> getUniqueCountries(List<ResolvedLocation> resolvedLocations){
-        List<CountryCode> countries = new ArrayList<CountryCode>();
-        for(ResolvedLocation resolvedLocation: resolvedLocations){
-            CountryCode country = resolvedLocation.geoname.primaryCountryCode;
-            if( !countries.contains(country) ){
-                countries.add(country);
-            }
-        }
-        return countries;
-    }
-    
-    public static List<ResolvedLocation> extractLocations(String text){
+    public static ExtractedEntities extractAndResolve(String text){
         try {
             return getParserInstance().parse(text);
         } catch (Exception e) {
             logger.error("Lucene Resolving Error: "+e.toString());
         }
-        return new ArrayList<ResolvedLocation>();
+        return new ExtractedEntities();
     }
-    
-    public static List<CountryCode> extractCountries(String text) {
-        List<ResolvedLocation> resolvedLocations = extractLocations(text);
-        return aboutness.select(resolvedLocations);
-    }
-    
-    public static List<PersonOccurrence> extractPeople(String text) {
-        return getPeopleExtractorInstance().extractPeopleNames(text);
-    }
-        
+
     /**
      * We want all error messages sent to the client to have the same format 
      * @param msg
@@ -155,34 +132,25 @@ public class ParseManager {
     }
     
     /**
-     * Lazy instantiation of singleton GeoParser
+     * Lazy instantiation of singleton parser
      * @return
      * @throws Exception
      */
-    private static GeoParser getParserInstance() throws Exception{
+    private static EntityParser getParserInstance() throws Exception{
 
         if(parser==null){
 
             // use the Stanford NER location extractor?
-            LocationExtractor locationExtractor = null;
-            if(BE_NERDY) {
-                logger.info("Being NERdy!");
-                locationExtractor = new StanfordExtractor();                
-            } else {
-                locationExtractor = new ApacheExtractor();
-            }
+            StanfordThreeClassExtractor locationExtractor = new StanfordThreeClassExtractor();                
             
             int numberOfResultsToFetch = 10;
             boolean useFuzzyMatching = false;
-
             resolver = new CustomLuceneLocationResolver(new File(PATH_TO_GEONAMES_INDEX), 
                     numberOfResultsToFetch);
 
-            parser = new GeoParser(locationExtractor, resolver, useFuzzyMatching);
-            
-            parser.parse("prime the pump");
-            
-            logger.info("Created GeoParser successfully");
+            parser = new EntityParser(locationExtractor, resolver, useFuzzyMatching);
+                        
+            logger.info("Created parser successfully");
         }
         
         return parser;
@@ -211,4 +179,14 @@ public class ParseManager {
         return aboutness;
     }
 
+    static {
+     // instatiate and load right away
+        try {
+            ParseManager.getParserInstance();  
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            logger.error("Unable to create parser "+e);
+        }
+    }
+    
 }

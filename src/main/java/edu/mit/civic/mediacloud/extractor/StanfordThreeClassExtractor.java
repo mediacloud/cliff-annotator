@@ -1,11 +1,17 @@
-package edu.mit.civic.mediacloud.who;
+package edu.mit.civic.mediacloud.extractor;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.bericotech.clavin.extractor.LocationOccurrence;
+
+import edu.mit.civic.mediacloud.demonyms.DemonymMap;
+import edu.mit.civic.mediacloud.demonyms.WikipediaDemonymMap;
 import edu.stanford.nlp.ie.AbstractSequenceClassifier;
 import edu.stanford.nlp.ie.crf.CRFClassifier;
 import edu.stanford.nlp.util.CoreMap;
@@ -15,9 +21,14 @@ import edu.stanford.nlp.util.Triple;
  */
 public class StanfordThreeClassExtractor{
 
+    public final static Logger logger = LoggerFactory.getLogger(StanfordThreeClassExtractor.class);
+
     // the actual named entity recognizer (NER) object
     private AbstractSequenceClassifier<CoreMap> namedEntityRecognizer;
     
+    private static final boolean SUBSITUE_DEMONYMS = true; 
+    
+    private DemonymMap demonyms;
     
     /**
      * Default constructor. Instantiates a {@link StanfordThreeClassExtractor}
@@ -29,6 +40,7 @@ public class StanfordThreeClassExtractor{
      */
     public StanfordThreeClassExtractor() throws ClassCastException, IOException, ClassNotFoundException {
         this("all.3class.distsim.crf.ser.gz", "all.3class.distsim.prop" );
+        demonyms = new WikipediaDemonymMap();
     }
     
     /**
@@ -61,12 +73,12 @@ public class StanfordThreeClassExtractor{
      * @param text      Text content to perform extraction on.
      * @return          List of Location Occurrences.
      */
-    public List<PersonOccurrence> extractPeopleNames(String text) {
+    public ExtractedEntities extractEntities(String text) {
         if (text == null)
-            throw new IllegalArgumentException("text input to extractPeopleNames should not be null");
+            throw new IllegalArgumentException("text input to extractEntities should not be null");
 
-        List<PersonOccurrence> extractedPeople = new ArrayList<PersonOccurrence>();
-
+        ExtractedEntities entities = new ExtractedEntities();
+        
         // extract entities as <Entity Type, Start Index, Stop Index>
         List<Triple<String, Integer, Integer>> extractedEntities = 
                 namedEntityRecognizer.classifyToCharacterOffsets(text);
@@ -77,11 +89,34 @@ public class StanfordThreeClassExtractor{
                     PersonOccurrence person = new PersonOccurrence(
                             text.substring(extractedEntity.second(), extractedEntity.third()), 
                             extractedEntity.second());
-                    extractedPeople.add(person);
+                    entities.addPerson( person );
+                }
+                if (extractedEntity.first.equalsIgnoreCase("LOCATION")) {
+                    LocationOccurrence location = new LocationOccurrence(
+                            text.substring(extractedEntity.second(), extractedEntity.third()), 
+                            extractedEntity.second());
+                    // map demonyms to country names
+                    if(SUBSITUE_DEMONYMS){
+                        if (demonyms.contains(location.text)) {
+                            LocationOccurrence modifiedLocation = new LocationOccurrence(
+                                    demonyms.getCountry(location.text), extractedEntity.second()
+                                    );
+                            entities.addLocation( modifiedLocation );
+                            logger.debug("Demonym decoded "+location.text+" to "+modifiedLocation.text);
+                        } else {
+                            entities.addLocation( location );
+                        }
+                    } else {
+                        entities.addLocation( location );
+                    }
+                }
+                if (extractedEntity.first.equalsIgnoreCase("ORGANIZATION")) {
+                    // TODO: do something clever with these
+                    //logger.info("  "+text.substring(extractedEntity.second(), extractedEntity.third()));
                 }
             }
         }
 
-        return extractedPeople;
+        return entities;
     }
 }

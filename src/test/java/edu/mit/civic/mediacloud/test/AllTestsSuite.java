@@ -13,6 +13,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({
     edu.mit.civic.mediacloud.test.where.SpecificCaseTest.class,
     edu.mit.civic.mediacloud.test.where.HandCodedDisambiguationTest.class,
+    edu.mit.civic.mediacloud.test.demonyms.WikipediaDemonymMapTest.class
 })
 public class AllTestsSuite {
 }

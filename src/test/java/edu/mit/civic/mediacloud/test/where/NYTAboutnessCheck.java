@@ -12,7 +12,6 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +22,7 @@ import com.nytlabs.corpus.NYTCorpusDocument;
 import com.nytlabs.corpus.NYTCorpusDocumentParser;
 
 import edu.mit.civic.mediacloud.ParseManager;
+import edu.mit.civic.mediacloud.extractor.ExtractedEntities;
 
 /**
  * Print out the accuracy of our Aboutness algorithm against the NYT Not a unit
@@ -64,15 +64,15 @@ public class NYTAboutnessCheck {
                     List<LocationOccurrence> locationOccurrences = new ArrayList<LocationOccurrence>();
                     for (String locationName: doc.getLocations()){
                         locationOccurrences.add( new LocationOccurrence(locationName,0) );
-                        rawResolvedLocations.addAll( ParseManager.extractLocations(locationName) );
+                        rawResolvedLocations.addAll( ParseManager.extractAndResolve(locationName).getResolvedLocations() );
                     }
                     try {
                         List<ResolvedLocation> resolvedLocations;
                         resolvedLocations = ParseManager.getResolver().resolveLocations(locationOccurrences,false);
                         resolvedLocations.addAll(rawResolvedLocations);
-                        List<CountryCode> countriesTheyCoded = ParseManager.getUniqueCountries(resolvedLocations);
+                        List<CountryCode> countriesTheyCoded = ExtractedEntities.getUniqueCountries(resolvedLocations);
                         // now geoparse it ourselves
-                        List<CountryCode> countriesWeFound = ParseManager.extractCountries(doc.getBody());
+                        List<CountryCode> countriesWeFound = ParseManager.extractAndResolve(doc.getBody()).getUniqueCountries();
                         if(countriesWeFound.size()>0){
                             boolean allMatched = true;
                             for(CountryCode countryWeFound:countriesWeFound){

@@ -38,7 +38,7 @@ public class HandCodedDisambiguationTest {
     private void verifyArticlesMentionHandCodedCountry(List<CodedArticle> articles) throws Exception{
         for(CodedArticle article: articles){
             logger.info("Testing article "+article.mediacloudId+" (looking for "+article.handCodedPlaceName+" / "+article.handCodedCountryCode+")");
-            List<ResolvedLocation> resolvedLocations = ParseManager.extractLocations(article.text);
+            List<ResolvedLocation> resolvedLocations = ParseManager.extractAndResolve(article.text).getResolvedLocations();
             assertTrue("Didn't find "+article.handCodedPlaceName+" ("+article.handCodedCountryCode+") in article "+article.mediacloudId,
                     article.mentionsHandCodedCountry(resolvedLocations));
         }

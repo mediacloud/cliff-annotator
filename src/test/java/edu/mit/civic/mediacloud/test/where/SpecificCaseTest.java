@@ -87,7 +87,7 @@ public class SpecificCaseTest {
         logger.info("Looking for "+Arrays.toString(places)+" in "+pathToFile);
         File inputFile = new File(pathToFile);
         String inputString = TextUtils.fileToString(inputFile);
-        List<ResolvedLocation> results = ParseManager.extractLocations(inputString);
+        List<ResolvedLocation> results = ParseManager.extractAndResolve(inputString).getResolvedLocations();
         //for(ResolvedLocation resolvedLocation: results){ logger.info("  "+resolvedLocation.toString()); }
         for(int placeId: places){
             assertTrue("Didn't find "+placeId+" in list of places ("+places.length+" places found)",TestUtils.resultsContainsPlaceId(results, placeId));
