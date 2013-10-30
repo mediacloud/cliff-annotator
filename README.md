@@ -1,20 +1,22 @@
-CLAVIN Server
--------------
+News Parsing Server
+-------------------
 
-A lightweight server to allow socket-based requests to the CLAVIN geoparser.  It allows you to submit 
-unstructured text over a socket and a receive in reply JSON results with information about any locations 
-that are mentoned (name, lat/lon, confidence, etc).
+A lightweight server to allow socket-based requests to the Stanford Named Entity 
+Recognized and CLAVIN geoparser.  It allows you to submit unstructured text over a socket 
+and a receive in reply JSON results with information about locations mentioned, people 
+mentioned, and countries the text is "about".  The geoparsing is tuned to identify countries.
 
 Installation
 ------------
 
 You need maven and java.
 
-You also need to build CLAVIN in order to build the Geonames Gazetteer Index.  The idea is that you build all 
-that, and then create a symlink in this directory from `./IndexDirectory` to the index you just built.
+You also need to build CLAVIN in order to build the Geonames Gazetteer Index for geoparsing.  
+The idea is that you build all that, and then create a symlink in this directory from 
+`./IndexDirectory` to the index you just built.
 
-If you are using Eclipse, don't forget to do `mvn eclipse:eclipse` in this directory to finish setting things up
-correctly.
+If you are developing and using Eclipse, don't forget to do `mvn eclipse:eclipse` in this 
+directory to finish setting things up correctly.
 
 On Ubuntu, make sure you do this:
 ```
@@ -51,8 +53,4 @@ Testing
 
 ```
 mvn test
-```
-
-```
-mvn exec:java -Dexec.mainClass="edu.mit.civic.clavin.aboutness.AboutnessCheck" -Dexec.args="-Xmx2g"
 ```
