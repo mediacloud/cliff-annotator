@@ -54,6 +54,9 @@ public class ExtractedEntities {
         List<CountryCode> countries = new ArrayList<CountryCode>();
         for(ResolvedLocation resolvedLocation: resolvedLocations){
             CountryCode country = resolvedLocation.geoname.primaryCountryCode;
+            if(country==CountryCode.NULL){  // skip things that aren't in countries (ie. "Asia")
+                continue;
+            }
             if( !countries.contains(country) ){
                 countries.add(country);
             }

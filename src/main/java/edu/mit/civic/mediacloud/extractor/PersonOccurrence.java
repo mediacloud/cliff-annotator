@@ -6,7 +6,7 @@ public class PersonOccurrence {
     public final String text;
     
     // number of UTF-16 code units from the start of the document at
-    // which the location name starts
+    // which the person name starts
     public final int position;
 
     public PersonOccurrence(String text, int position) {
