@@ -4,3 +4,5 @@ target/surefire-reports/*
 target/test-classes/*
 target/maven-status/*
 data/nyt/*
+
+.settings/org.eclipse.jdt.core.prefs

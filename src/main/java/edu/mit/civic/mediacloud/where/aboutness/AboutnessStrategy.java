@@ -13,6 +13,6 @@ import com.bericotech.clavin.resolver.ResolvedLocation;
 public interface AboutnessStrategy {
 
     public abstract List<CountryCode> select(
-            List<ResolvedLocation> resolvedLocations);
+            List<ResolvedLocation> resolvedLocations, String text);
 
 }

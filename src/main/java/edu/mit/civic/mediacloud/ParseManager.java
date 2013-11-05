@@ -20,6 +20,7 @@ import edu.mit.civic.mediacloud.extractor.StanfordThreeClassExtractor;
 import edu.mit.civic.mediacloud.where.CustomLuceneLocationResolver;
 import edu.mit.civic.mediacloud.where.aboutness.AboutnessStrategy;
 import edu.mit.civic.mediacloud.where.aboutness.FrequencyOfMentionAboutnessStrategy;
+import edu.mit.civic.mediacloud.where.aboutness.LocationScoredAboutnessStrategy;
 
 /**
  * Singleton-style wrapper around a GeoParser.  Call GeoParser.locate(someText) to use this class.
@@ -38,7 +39,8 @@ public class ParseManager {
     
     private static LocationResolver resolver;   // HACK: pointer to keep around for stats logging
     
-    private static AboutnessStrategy aboutness = new FrequencyOfMentionAboutnessStrategy();
+    //private static AboutnessStrategy aboutness = new FrequencyOfMentionAboutnessStrategy();
+    private static AboutnessStrategy aboutness = new LocationScoredAboutnessStrategy();
     
     private static final String PATH_TO_GEONAMES_INDEX = "./IndexDirectory";
     
@@ -62,10 +64,12 @@ public class ParseManager {
             results.put("version", PARSER_VERSION);
             ArrayList places = new ArrayList();
             ExtractedEntities entities = extractAndResolve(text);
-
+            
             for (ResolvedLocation resolvedLocation: entities.getResolvedLocations()){
                 HashMap loc = new HashMap();
                 GeoName place = resolvedLocation.geoname;
+                int charIndex = resolvedLocation.location.position;
+                
                 loc.put("confidence", resolvedLocation.confidence); // low is good
                 loc.put("id",place.geonameID);
                 loc.put("name",place.name);
@@ -78,12 +82,12 @@ public class ParseManager {
                 loc.put("lon",place.longitude);
                 HashMap sourceInfo = new HashMap();
                 sourceInfo.put("string",resolvedLocation.location.text);
-                sourceInfo.put("charIndex",resolvedLocation.location.position);
+                sourceInfo.put("charIndex",charIndex);  
                 loc.put("source",sourceInfo);
                 places.add(loc);
             }
             results.put("places",places);
-            results.put("primaryCountries", aboutness.select(entities.getResolvedLocations()));
+            results.put("primaryCountries", aboutness.select(entities.getResolvedLocations(), text));
 
 
             List<PersonOccurrence> resolvedPeople = entities.getPeople();
