@@ -35,15 +35,11 @@ public class AboutnessUtils {
                 continue;
             }
             int position = resolvedLocation.location.position;
-            int percent18 = ((Double)(text.length() * 0.2)).intValue();
+            int percent10 = ((Double)(text.length() * 0.1)).intValue();
             int points = 1;
-            if( position <= percent18){
-            	points = 2;
-            	
-            	
-            } 
-            System.out.println("added points: " + points + " for country " + resolvedLocation.geoname.primaryCountryCode);
-            
+            if( position <= percent10){
+            	points = 2;	
+            }
             
             CountryCode country = resolvedLocation.geoname.primaryCountryCode;
             if(!countryCounts.containsKey(country)){
