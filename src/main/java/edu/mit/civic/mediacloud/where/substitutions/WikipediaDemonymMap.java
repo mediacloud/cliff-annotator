@@ -1,4 +1,4 @@
-package edu.mit.civic.mediacloud.demonyms;
+package edu.mit.civic.mediacloud.where.substitutions;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,13 +10,11 @@ import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class WikipediaDemonymMap implements DemonymMap {
+public class WikipediaDemonymMap extends AbstractSubstitutionMap {
 
     private static final Logger logger = LoggerFactory.getLogger(WikipediaDemonymMap.class);
 
     public static final String RESOURCE_NAME = "wikipedia-demonyms.tsv";
-    
-    protected HashMap<String,String> map;
     
     public WikipediaDemonymMap(){
         try {
@@ -54,26 +52,5 @@ public class WikipediaDemonymMap implements DemonymMap {
         }         
     }
 
-    @Override
-    public int getCount(){
-        return map.keySet().size();
-    }
-    
-    /* (non-Javadoc)
-     * @see edu.mit.civic.mediacloud.demonyms.DemonymMap#contains(java.lang.String)
-     */
-    @Override
-    public boolean contains(String demonymCandidate){
-        return map.keySet().contains(demonymCandidate.toLowerCase());
-    }
-
-    /* (non-Javadoc)
-     * @see edu.mit.civic.mediacloud.demonyms.DemonymMap#getCountry(java.lang.String)
-     */
-    @Override
-    public String getCountry(String demonymCandidate) {
-        return map.get(demonymCandidate.toLowerCase());
-    }
-        
 }
 

@@ -23,6 +23,8 @@ import com.nytlabs.corpus.NYTCorpusDocumentParser;
 
 import edu.mit.civic.mediacloud.ParseManager;
 import edu.mit.civic.mediacloud.extractor.ExtractedEntities;
+import edu.mit.civic.mediacloud.where.substitutions.AbstractSubstitutionMap;
+import edu.mit.civic.mediacloud.where.substitutions.CustomSubstitutionMap;
 
 /**
  * Print out the accuracy of our Aboutness algorithm against the NYT Not a unit
@@ -43,6 +45,8 @@ public class NYTAboutnessCheck {
     private int articlesWithLocations = 0;
     private int articlesWeGotRight = 0;
 
+    private AbstractSubstitutionMap customSubstitutions = new CustomSubstitutionMap(); 
+    
     public NYTAboutnessCheck() throws IOException {
         FileVisitor<Path> fileProcessor = new ProcessFile();
         Files.walkFileTree(Paths.get(NYT_BASE_DIR), fileProcessor);
@@ -54,15 +58,20 @@ public class NYTAboutnessCheck {
         @Override
         public FileVisitResult visitFile(Path aFile, BasicFileAttributes aAttrs)
                 throws IOException {
+            logger.info("--------------------------------------------------------------------------------");
             logger.info("Visiting file "+aFile);
             if( aFile.getFileName().toString().endsWith(".xml") ) {
                 NYTCorpusDocument doc = parser.parseNYTCorpusDocumentFromFile(new File(aFile.toString()), false);
+                logger.info("  "+doc.getHeadline());
                 if(doc.getLocations().size()>0){
                     articlesWithLocations++;
                     // load the document and geolocate the places NYT tagged
                     List<ResolvedLocation> rawResolvedLocations = new ArrayList<ResolvedLocation>();
                     List<LocationOccurrence> locationOccurrences = new ArrayList<LocationOccurrence>();
                     for (String locationName: doc.getLocations()){
+                        if(customSubstitutions.contains(locationName)){
+                            locationName = customSubstitutions.getSubstitution(locationName); 
+                        }
                         locationOccurrences.add( new LocationOccurrence(locationName,0) );
                         rawResolvedLocations.addAll( ParseManager.extractAndResolve(locationName).getResolvedLocations() );
                     }
@@ -75,8 +84,8 @@ public class NYTAboutnessCheck {
                         List<CountryCode> countriesWeFound = ParseManager.extractAndResolve(doc.getBody()).getUniqueCountries();
                         if(countriesWeFound.size()>0){
                             boolean allMatched = true;
-                            for(CountryCode countryWeFound:countriesWeFound){
-                                if(!countriesTheyCoded.contains(countryWeFound)){
+                            for(CountryCode countryTheyCoded:countriesTheyCoded){
+                                if(!countriesWeFound.contains(countryTheyCoded)){
                                     allMatched = false;
                                 }
                             }
@@ -84,7 +93,7 @@ public class NYTAboutnessCheck {
                                 articlesWeGotRight++;
                             } else {
                                 logger.warn("We found "+countriesWeFound+" they found "+countriesTheyCoded+" from ("+doc.getLocations()+")");
-                                logger.info("TC:" + doc.getTaxonomicClassifiers());
+                                //logger.info("TC:" + doc.getTaxonomicClassifiers());
                             }
                         }
                     } catch (Exception e) {

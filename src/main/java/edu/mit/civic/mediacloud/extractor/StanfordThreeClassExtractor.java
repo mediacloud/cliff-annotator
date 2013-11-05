@@ -10,8 +10,9 @@ import org.slf4j.LoggerFactory;
 
 import com.bericotech.clavin.extractor.LocationOccurrence;
 
-import edu.mit.civic.mediacloud.demonyms.DemonymMap;
-import edu.mit.civic.mediacloud.demonyms.WikipediaDemonymMap;
+import edu.mit.civic.mediacloud.where.substitutions.AbstractSubstitutionMap;
+import edu.mit.civic.mediacloud.where.substitutions.CustomSubstitutionMap;
+import edu.mit.civic.mediacloud.where.substitutions.WikipediaDemonymMap;
 import edu.stanford.nlp.ie.AbstractSequenceClassifier;
 import edu.stanford.nlp.ie.crf.CRFClassifier;
 import edu.stanford.nlp.util.CoreMap;
@@ -28,7 +29,8 @@ public class StanfordThreeClassExtractor{
     
     private static final boolean SUBSITUE_DEMONYMS = true; 
     
-    private DemonymMap demonyms;
+    private AbstractSubstitutionMap demonyms;
+    private AbstractSubstitutionMap customSubstitutions;
     
     /**
      * Default constructor. Instantiates a {@link StanfordThreeClassExtractor}
@@ -41,6 +43,7 @@ public class StanfordThreeClassExtractor{
     public StanfordThreeClassExtractor() throws ClassCastException, IOException, ClassNotFoundException {
         this("all.3class.distsim.crf.ser.gz", "all.3class.distsim.prop" );
         demonyms = new WikipediaDemonymMap();
+        customSubstitutions = new CustomSubstitutionMap();
     }
     
     /**
@@ -85,30 +88,14 @@ public class StanfordThreeClassExtractor{
 
         if (extractedEntities != null) {
             for (Triple<String, Integer, Integer> extractedEntity : extractedEntities) {
+                String entityName = text.substring(extractedEntity.second(), extractedEntity.third());
+                int position = extractedEntity.second();
                 if (extractedEntity.first.equalsIgnoreCase("PERSON")) {
-                    PersonOccurrence person = new PersonOccurrence(
-                            text.substring(extractedEntity.second(), extractedEntity.third()), 
-                            extractedEntity.second());
+                    PersonOccurrence person = new PersonOccurrence(entityName, position);
                     entities.addPerson( person );
                 }
                 if (extractedEntity.first.equalsIgnoreCase("LOCATION")) {
-                    LocationOccurrence location = new LocationOccurrence(
-                            text.substring(extractedEntity.second(), extractedEntity.third()), 
-                            extractedEntity.second());
-                    // map demonyms to country names
-                    if(SUBSITUE_DEMONYMS){
-                        if (demonyms.contains(location.text)) {
-                            LocationOccurrence modifiedLocation = new LocationOccurrence(
-                                    demonyms.getCountry(location.text), extractedEntity.second()
-                                    );
-                            entities.addLocation( modifiedLocation );
-                            logger.debug("Demonym decoded "+location.text+" to "+modifiedLocation.text);
-                        } else {
-                            entities.addLocation( location );
-                        }
-                    } else {
-                        entities.addLocation( location );
-                    }
+                    entities.addLocation( getLocationOccurrence(entityName, position) );
                 }
                 if (extractedEntity.first.equalsIgnoreCase("ORGANIZATION")) {
                     // TODO: do something clever with these
@@ -119,4 +106,17 @@ public class StanfordThreeClassExtractor{
 
         return entities;
     }
+    
+    private LocationOccurrence getLocationOccurrence(String entityName, int position){
+        String fixedName = entityName;
+        if (SUBSITUE_DEMONYMS && demonyms.contains(entityName)) {
+            fixedName = demonyms.getSubstitution(entityName); 
+            logger.debug("Demonym substitution: "+entityName+" to "+fixedName);
+        } else if(customSubstitutions.contains(entityName)) {
+            fixedName = customSubstitutions.getSubstitution(entityName);
+            logger.debug("Custom substitution: "+entityName+" to "+fixedName);
+        }
+        return new LocationOccurrence(fixedName, position);
+    }
+    
 }
