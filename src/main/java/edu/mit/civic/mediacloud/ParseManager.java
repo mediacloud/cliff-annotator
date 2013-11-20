@@ -87,7 +87,8 @@ public class ParseManager {
                 places.add(loc);
             }
             results.put("places",places);
-            results.put("primaryCountries", aboutness.select(entities.getResolvedLocations(), text));
+            results.put("primaryCountries", aboutness.selectCountries(entities.getResolvedLocations(), text));
+            results.put("primaryStates", aboutness.selectStates(entities.getResolvedLocations(), text));
 
 
             List<PersonOccurrence> resolvedPeople = entities.getPeople();

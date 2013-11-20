@@ -23,7 +23,7 @@ public class PercentageOfMentionsAboutnessStrategy implements AboutnessStrategy 
     private static final Logger logger = LoggerFactory.getLogger(PercentageOfMentionsAboutnessStrategy.class);
 
     @Override
-    public List<CountryCode> select(List<ResolvedLocation> resolvedLocations, String text){
+    public List<CountryCode> selectCountries(List<ResolvedLocation> resolvedLocations, String text){
         HashMap<CountryCode,Integer> countryCounts = AboutnessUtils.getCountryCounts(resolvedLocations);
         
         List<CountryCode> countries = new ArrayList<CountryCode>();       
@@ -34,6 +34,18 @@ public class PercentageOfMentionsAboutnessStrategy implements AboutnessStrategy 
             }
         }
         return countries;
+    }
+    public List<String> selectStates(List<ResolvedLocation> resolvedLocations, String text){
+        HashMap<String,Integer> stateCounts = AboutnessUtils.getStateCounts(resolvedLocations);
+        
+        List<String> states = new ArrayList<String>();       
+        for(String stateCode: stateCounts.keySet()){
+            double pct = ((double) stateCounts.get(stateCode).intValue()) / ((double) stateCounts.size());
+            if( pct > THRESHOLD ){
+                states.add(stateCode);
+            }
+        }
+        return states;
     }
     
 }
