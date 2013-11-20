@@ -39,8 +39,8 @@ public class ParseManager {
     
     private static LocationResolver resolver;   // HACK: pointer to keep around for stats logging
     
-    //private static AboutnessStrategy aboutness = new FrequencyOfMentionAboutnessStrategy();
-    private static AboutnessStrategy aboutness = new LocationScoredAboutnessStrategy();
+    private static AboutnessStrategy aboutness = new FrequencyOfMentionAboutnessStrategy();
+    //private static AboutnessStrategy aboutness = new LocationScoredAboutnessStrategy();
     
     private static final String PATH_TO_GEONAMES_INDEX = "./IndexDirectory";
     

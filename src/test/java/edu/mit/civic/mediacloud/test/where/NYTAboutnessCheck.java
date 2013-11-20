@@ -23,6 +23,7 @@ import com.nytlabs.corpus.NYTCorpusDocumentParser;
 
 import edu.mit.civic.mediacloud.ParseManager;
 import edu.mit.civic.mediacloud.extractor.ExtractedEntities;
+import edu.mit.civic.mediacloud.where.aboutness.AboutnessStrategy;
 import edu.mit.civic.mediacloud.where.substitutions.AbstractSubstitutionMap;
 import edu.mit.civic.mediacloud.where.substitutions.CustomSubstitutionMap;
 
@@ -44,6 +45,7 @@ public class NYTAboutnessCheck {
     
     private int articlesWithLocations = 0;
     private int articlesWeGotRight = 0;
+    private int aboutnessArticlesWeGotRight = 0;
 
     private AbstractSubstitutionMap customSubstitutions = new CustomSubstitutionMap(); 
     
@@ -51,7 +53,9 @@ public class NYTAboutnessCheck {
         FileVisitor<Path> fileProcessor = new ProcessFile();
         Files.walkFileTree(Paths.get(NYT_BASE_DIR), fileProcessor);
         double success = (double)articlesWeGotRight/(double)articlesWithLocations; 
-        logger.info("Checked "+articlesWithLocations+" Articles - "+success);
+        double aboutnessSuccess = (double)aboutnessArticlesWeGotRight/(double)articlesWithLocations; 
+        logger.info("Checked "+articlesWithLocations+" Articles - Base success rate: "+success);
+        logger.info("Checked "+articlesWithLocations+" Articles - Aboutness success rate: "+aboutnessSuccess);
     }
 
     private final class ProcessFile extends SimpleFileVisitor<Path> {
@@ -81,7 +85,8 @@ public class NYTAboutnessCheck {
                         resolvedLocations.addAll(rawResolvedLocations);
                         List<CountryCode> countriesTheyCoded = ExtractedEntities.getUniqueCountries(resolvedLocations);
                         // now geoparse it ourselves
-                        List<CountryCode> countriesWeFound = ParseManager.extractAndResolve(doc.getBody()).getUniqueCountries();
+                        List<CountryCode> countriesWeFound = ParseManager.extractAndResolve(doc.getHeadline() + " " + doc.getBody()).getUniqueCountries();
+                       
                         if(countriesWeFound.size()>0){
                             boolean allMatched = true;
                             for(CountryCode countryTheyCoded:countriesTheyCoded){
@@ -96,6 +101,25 @@ public class NYTAboutnessCheck {
                                 //logger.info("TC:" + doc.getTaxonomicClassifiers());
                             }
                         }
+                        
+                        //also have a measure for making sure the main "about" country is included in their list of countries
+                        AboutnessStrategy aboutness = ParseManager.getAboutness();
+                        List<CountryCode> ourAboutnessCountries = aboutness.select(resolvedLocations, doc.getHeadline() + " " + doc.getBody());
+                        if(ourAboutnessCountries.size()>0){
+                            boolean allMatched = true;
+                            for(CountryCode aboutnessCountry:ourAboutnessCountries){
+                                if(!countriesTheyCoded.contains(aboutnessCountry)){
+                                    allMatched = false;
+                                }
+                            }
+                            if(allMatched){
+                                aboutnessArticlesWeGotRight++;
+                            } else {
+                                logger.warn("We found "+ourAboutnessCountries+" they found "+countriesTheyCoded+" from ("+doc.getLocations()+")");
+                                //logger.info("TC:" + doc.getTaxonomicClassifiers());
+                            }
+                        }
+                        
                     } catch (Exception e) {
                         logger.error("Lucene Resolving Error: "+e.toString());
                     }
@@ -113,7 +137,7 @@ public class NYTAboutnessCheck {
     }
 
     /**
-     * The ‘locations’ field specifies a list of geographic descriptors drawn
+     * The ���locations��� field specifies a list of geographic descriptors drawn
      * from a normalized controlled vocabulary that correspond to places
      * mentioned in the article. These tags are hand-assigned by The New York
      * Times Indexing Service.

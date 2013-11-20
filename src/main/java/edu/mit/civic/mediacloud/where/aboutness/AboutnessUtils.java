@@ -28,10 +28,10 @@ public class AboutnessUtils {
         //This is a rough sentence parsing hack to deal with test data - doesn't take into account !? - re-do once we have MediaCloud sentences again
         //For testing different approaches to this strategy
         int headlineAndFirstSentenceIdx = text.indexOf('.');
-        int secondSentenceIdx = text.indexOf('.', headlineAndFirstSentenceIdx);
-        int thirdSentenceIdx = text.indexOf('.', secondSentenceIdx);
-        int fourthSentenceIdx = text.indexOf('.', thirdSentenceIdx);
-        int fifthSentenceIdx = text.indexOf('.', fourthSentenceIdx);
+        int secondSentenceIdx = text.indexOf('.', headlineAndFirstSentenceIdx + 1);
+        int thirdSentenceIdx = text.indexOf('.', secondSentenceIdx + 1);
+        int fourthSentenceIdx = text.indexOf('.', thirdSentenceIdx + 1);
+        int fifthSentenceIdx = text.indexOf('.', fourthSentenceIdx + 1);
         
         for (ResolvedLocation resolvedLocation: resolvedLocations){
             if(resolvedLocation.geoname.primaryCountryCode==CountryCode.NULL){
