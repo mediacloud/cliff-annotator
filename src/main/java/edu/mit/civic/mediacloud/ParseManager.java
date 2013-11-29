@@ -77,6 +77,11 @@ public class ParseManager {
                 if(place.primaryCountryCode!=CountryCode.NULL){
                     primaryCountryCodeAlpha2 = place.primaryCountryCode.toString();
                 }
+                String admin1Code = "";
+                if(place.admin1Code !=null){
+                    admin1Code = place.admin1Code;
+                }
+                loc.put("state", admin1Code);
                 loc.put("countryCode",primaryCountryCodeAlpha2);
                 loc.put("lat",place.latitude);
                 loc.put("lon",place.longitude);
