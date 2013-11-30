@@ -78,9 +78,14 @@ public class ParseManager {
                     primaryCountryCodeAlpha2 = place.primaryCountryCode.toString();
                 }
                 String admin1Code = "";
+                
                 if(place.admin1Code !=null){
                     admin1Code = place.admin1Code;
                 }
+                String isCountryReference = "true";
+                String featureCode = place.featureCode.toString();
+                
+                loc.put("featureCode", featureCode);
                 loc.put("state", admin1Code);
                 loc.put("countryCode",primaryCountryCodeAlpha2);
                 loc.put("lat",place.latitude);
