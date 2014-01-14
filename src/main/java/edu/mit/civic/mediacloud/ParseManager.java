@@ -66,40 +66,21 @@ public class ParseManager {
             ExtractedEntities entities = extractAndResolve(text);
             
             for (ResolvedLocation resolvedLocation: entities.getResolvedLocations()){
-                HashMap loc = new HashMap();
-                GeoName place = resolvedLocation.geoname;
-                int charIndex = resolvedLocation.location.position;
-                
-                loc.put("confidence", resolvedLocation.confidence); // low is good
-                loc.put("id",place.geonameID);
-                loc.put("name",place.name);
-                String primaryCountryCodeAlpha2 = ""; 
-                if(place.primaryCountryCode!=CountryCode.NULL){
-                    primaryCountryCodeAlpha2 = place.primaryCountryCode.toString();
-                }
-                String admin1Code = "";
-                
-                if(place.admin1Code !=null){
-                    admin1Code = place.admin1Code;
-                }
-                String isCountryReference = "true";
-                String featureCode = place.featureCode.toString();
-                
-                loc.put("featureCode", featureCode);
-                loc.put("state", admin1Code);
-                loc.put("countryCode",primaryCountryCodeAlpha2);
-                loc.put("lat",place.latitude);
-                loc.put("lon",place.longitude);
-                HashMap sourceInfo = new HashMap();
-                sourceInfo.put("string",resolvedLocation.location.text);
-                sourceInfo.put("charIndex",charIndex);  
-                loc.put("source",sourceInfo);
+                HashMap loc = writeResolvedLocationToHash(resolvedLocation);
                 places.add(loc);
             }
             results.put("places",places);
             results.put("primaryCountries", aboutness.selectCountries(entities.getResolvedLocations(), text));
             results.put("primaryStates", aboutness.selectStates(entities.getResolvedLocations(), text));
-            results.put("primaryCities", aboutness.selectCities(entities.getResolvedLocations(), text));
+            
+            ArrayList primaryCities = new ArrayList();
+            
+            for (ResolvedLocation resolvedLocation: aboutness.selectCities(entities.getResolvedLocations(),text)){
+                HashMap loc = writeResolvedLocationToHash(resolvedLocation);
+                primaryCities.add(loc);
+            }
+            results.put("primaryCities",primaryCities);
+       
 
 
             List<PersonOccurrence> resolvedPeople = entities.getPeople();
@@ -118,7 +99,39 @@ public class ParseManager {
             return getErrorText(e.toString());
         }
     }
-    
+    public static HashMap writeResolvedLocationToHash(ResolvedLocation resolvedLocation){
+    	HashMap loc = new HashMap();
+    	int charIndex = resolvedLocation.location.position;
+    	GeoName place = resolvedLocation.geoname;
+        loc.put("confidence", resolvedLocation.confidence); // low is good
+        loc.put("id",place.geonameID);
+        loc.put("name",place.name);
+        String primaryCountryCodeAlpha2 = ""; 
+        if(place.primaryCountryCode!=CountryCode.NULL){
+            primaryCountryCodeAlpha2 = place.primaryCountryCode.toString();
+        }
+        String admin1Code = "";
+        
+        if(place.admin1Code !=null){
+            admin1Code = place.admin1Code;
+        }
+        String isCountryReference = "true";
+        String featureCode = place.featureCode.toString();
+        loc.put("featureClass", place.featureClass.toString());
+        loc.put("featureCode", featureCode);
+        loc.put("population", place.population);
+        loc.put("stateCode", admin1Code);
+        loc.put("countryCode",primaryCountryCodeAlpha2);
+        loc.put("lat",place.latitude);
+        loc.put("lon",place.longitude);
+        HashMap sourceInfo = new HashMap();
+        sourceInfo.put("string",resolvedLocation.location.text);
+        sourceInfo.put("charIndex",charIndex);  
+        loc.put("source",sourceInfo);
+        
+    	return loc;
+    	
+    }
     public static ExtractedEntities extractAndResolve(String text){
         try {
             return getParserInstance().parse(text);

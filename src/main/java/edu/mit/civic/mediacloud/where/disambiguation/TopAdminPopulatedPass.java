@@ -15,24 +15,37 @@ public class TopAdminPopulatedPass extends GenericPass {
         List<List<ResolvedLocation>> possibilitiesToRemove = new ArrayList<List<ResolvedLocation>>();
         
         for( List<ResolvedLocation> candidates: possibilitiesToDo){
-            boolean foundOne = false;
+            boolean foundCity = false;
+            boolean foundAdmin = false;
             
-            //Prioritize populated city names first, then prioritize populated states/admin regions
+            ResolvedLocation cityCandidate = null;
+            ResolvedLocation adminCandidate = null;
+            
+            
             for( ResolvedLocation candidate: candidates) {
-                if(!foundOne && (candidate.geoname.population>0) && 
+                if(!foundCity && (candidate.geoname.population>0) && 
                         candidate.geoname.featureClass==FeatureClass.P){
-                    bestCandidates.add(candidate);
-                    possibilitiesToRemove.add(candidates);
-                    foundOne = true;
+                    
+                    cityCandidate = candidate;
+                    foundCity = true;
                     break;
                 }
             }
             for( ResolvedLocation candidate: candidates) {
-                if(!foundOne && (candidate.geoname.population>0) && 
+                if(!foundAdmin && (candidate.geoname.population>0) && 
                         candidate.geoname.featureClass==FeatureClass.A){
-                    bestCandidates.add(candidate);
-                    possibilitiesToRemove.add(candidates);
-                    foundOne = true;
+                	adminCandidate = candidate;
+                    if (foundCity && 
+                    	(cityCandidate.geoname.population > adminCandidate.geoname.population ||
+                    		cityCandidate.geoname.primaryCountryCode == adminCandidate.geoname.primaryCountryCode)){
+                    	bestCandidates.add(cityCandidate);
+                    	possibilitiesToRemove.add(candidates);
+                    }else{              
+                    	bestCandidates.add(adminCandidate);
+                    	possibilitiesToRemove.add(candidates);
+                    }
+                   
+                    foundAdmin = true;
                     break;
                 }
             }

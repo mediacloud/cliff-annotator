@@ -10,17 +10,17 @@ import com.bericotech.clavin.resolver.ResolvedLocation;
 
 public class AboutnessUtils {
 
-	public static HashMap<String,Integer> getCityCounts(List<ResolvedLocation> resolvedLocations){     
-        HashMap<String,Integer> cityCounts = new HashMap<String,Integer>();
+	public static HashMap<ResolvedLocation,Integer> getCityCounts(List<ResolvedLocation> resolvedLocations){     
+        HashMap<ResolvedLocation,Integer> cityCounts = new HashMap<ResolvedLocation,Integer>();
         for (ResolvedLocation resolvedLocation: resolvedLocations){
             if(resolvedLocation.geoname.featureClass!=FeatureClass.P){
                 continue;
             }
-            String city = resolvedLocation.geoname.name;
-            if(!cityCounts.containsKey(city)){
-                cityCounts.put(city, 0);
+            
+            if(!cityCounts.containsKey(resolvedLocation)){
+                cityCounts.put(resolvedLocation, 0);
             }
-            cityCounts.put(city, cityCounts.get(city)+1);
+            cityCounts.put(resolvedLocation, cityCounts.get(resolvedLocation)+1);
         }
         return cityCounts;
     }
@@ -31,6 +31,7 @@ public class AboutnessUtils {
                 continue;
             }
             String state = resolvedLocation.geoname.admin1Code;
+            state = state + ", "+ resolvedLocation.geoname.primaryCountryCode;
             if(!stateCounts.containsKey(state)){
                 stateCounts.put(state, 0);
             }

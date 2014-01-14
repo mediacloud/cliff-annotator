@@ -16,7 +16,7 @@ public interface AboutnessStrategy {
             List<ResolvedLocation> resolvedLocations, String text);
     public abstract List<String> selectStates(
             List<ResolvedLocation> resolvedLocations, String text);
-    public abstract List<String> selectCities(
+    public abstract List<ResolvedLocation> selectCities(
             List<ResolvedLocation> resolvedLocations, String text);
 
 }
