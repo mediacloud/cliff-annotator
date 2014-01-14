@@ -24,6 +24,7 @@ public class TopAdminPopulatedPass extends GenericPass {
                     bestCandidates.add(candidate);
                     possibilitiesToRemove.add(candidates);
                     foundOne = true;
+                    break;
                 }
             }
             for( ResolvedLocation candidate: candidates) {
@@ -32,6 +33,7 @@ public class TopAdminPopulatedPass extends GenericPass {
                     bestCandidates.add(candidate);
                     possibilitiesToRemove.add(candidates);
                     foundOne = true;
+                    break;
                 }
             }
         }
