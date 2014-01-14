@@ -53,5 +53,21 @@ public class FrequencyOfMentionAboutnessStrategy implements AboutnessStrategy {
         if(primaryState!=null) results.add(primaryState);
         return results;
     }
+    public List<String> selectCities(List<ResolvedLocation> resolvedLocations, String text){
+        // count city mentions
+        HashMap<String,Integer> cityCounts = AboutnessUtils.getCityCounts(resolvedLocations); 
+        // find the most mentioned
+        String primaryCity = null;        
+        for(String cityName: cityCounts.keySet()){
+            if( (primaryCity==null) || (cityCounts.get(cityName) > cityCounts.get(primaryCity)) ){
+            	primaryCity = cityName;
+            }
+        }
+        logger.info("Found primary city "+primaryCity);
+        // return results
+        List<String> results = new ArrayList<String>();
+        if(primaryCity !=null) results.add(primaryCity);
+        return results;
+    }
     
 }

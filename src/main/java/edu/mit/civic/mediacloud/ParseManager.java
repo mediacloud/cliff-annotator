@@ -99,6 +99,7 @@ public class ParseManager {
             results.put("places",places);
             results.put("primaryCountries", aboutness.selectCountries(entities.getResolvedLocations(), text));
             results.put("primaryStates", aboutness.selectStates(entities.getResolvedLocations(), text));
+            results.put("primaryCities", aboutness.selectCities(entities.getResolvedLocations(), text));
 
 
             List<PersonOccurrence> resolvedPeople = entities.getPeople();

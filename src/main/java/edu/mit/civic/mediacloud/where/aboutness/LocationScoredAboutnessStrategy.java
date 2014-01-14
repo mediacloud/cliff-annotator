@@ -17,6 +17,7 @@ import com.bericotech.clavin.resolver.ResolvedLocation;
  * 
  * @author rahulb
  */
+@Deprecated
 public class LocationScoredAboutnessStrategy implements AboutnessStrategy {
 
     private static final Logger logger = LoggerFactory.getLogger(LocationScoredAboutnessStrategy.class);
@@ -54,6 +55,10 @@ public class LocationScoredAboutnessStrategy implements AboutnessStrategy {
         List<String> results = new ArrayList<String>();
         if(primaryState!=null) results.add(primaryState);
         return results;
+    }
+    //not implemented
+    public List<String> selectCities(List<ResolvedLocation> resolvedLocations, String text){
+    	return null;
     }
     
 }

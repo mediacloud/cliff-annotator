@@ -16,9 +16,19 @@ public class TopAdminPopulatedPass extends GenericPass {
         
         for( List<ResolvedLocation> candidates: possibilitiesToDo){
             boolean foundOne = false;
+            
+            //Prioritize populated city names first, then prioritize populated states/admin regions
             for( ResolvedLocation candidate: candidates) {
                 if(!foundOne && (candidate.geoname.population>0) && 
-                        (candidate.geoname.featureClass==FeatureClass.A || candidate.geoname.featureClass==FeatureClass.P)){
+                        candidate.geoname.featureClass==FeatureClass.P){
+                    bestCandidates.add(candidate);
+                    possibilitiesToRemove.add(candidates);
+                    foundOne = true;
+                }
+            }
+            for( ResolvedLocation candidate: candidates) {
+                if(!foundOne && (candidate.geoname.population>0) && 
+                        candidate.geoname.featureClass==FeatureClass.A){
                     bestCandidates.add(candidate);
                     possibilitiesToRemove.add(candidates);
                     foundOne = true;

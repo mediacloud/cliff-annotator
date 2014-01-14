@@ -4,11 +4,26 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.bericotech.clavin.gazetteer.CountryCode;
+import com.bericotech.clavin.gazetteer.FeatureClass;
 import com.bericotech.clavin.gazetteer.FeatureCode;
 import com.bericotech.clavin.resolver.ResolvedLocation;
 
 public class AboutnessUtils {
 
+	public static HashMap<String,Integer> getCityCounts(List<ResolvedLocation> resolvedLocations){     
+        HashMap<String,Integer> cityCounts = new HashMap<String,Integer>();
+        for (ResolvedLocation resolvedLocation: resolvedLocations){
+            if(resolvedLocation.geoname.featureClass!=FeatureClass.P){
+                continue;
+            }
+            String city = resolvedLocation.geoname.name;
+            if(!cityCounts.containsKey(city)){
+                cityCounts.put(city, 0);
+            }
+            cityCounts.put(city, cityCounts.get(city)+1);
+        }
+        return cityCounts;
+    }
 	public static HashMap<String,Integer> getStateCounts(List<ResolvedLocation> resolvedLocations){     
         HashMap<String,Integer> stateCounts = new HashMap<String,Integer>();
         for (ResolvedLocation resolvedLocation: resolvedLocations){

@@ -47,5 +47,9 @@ public class PercentageOfMentionsAboutnessStrategy implements AboutnessStrategy 
         }
         return states;
     }
+    //not implemented
+    public List<String> selectCities(List<ResolvedLocation> resolvedLocations, String text){
+    	return null;
+    }
     
 }
