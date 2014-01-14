@@ -14,6 +14,11 @@ public class TopAdminPopulatedPass extends GenericPass {
             List<ResolvedLocation> bestCandidates) {
         List<List<ResolvedLocation>> possibilitiesToRemove = new ArrayList<List<ResolvedLocation>>();
         
+        /*Logic is now to compare the City place with the Admin/State place. 
+         * If City has larger population then choose it. If the City and State are in the same country, 
+         * then choose the city (this will favor Paris the city over Paris the district in France). 
+         * If the City has lower population and is not in same country then choose the state.
+         */
         for( List<ResolvedLocation> candidates: possibilitiesToDo){
             boolean foundCity = false;
             boolean foundAdmin = false;
