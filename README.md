@@ -1,7 +1,7 @@
-News Parsing Server
--------------------
+CLIFF: News Parsing Server
+--------------------------
 
-A lightweight server to allow socket-based requests to the Stanford Named Entity 
+CLIFF is a lightweight server to allow socket-based requests to the Stanford Named Entity 
 Recognized and CLAVIN geoparser.  It allows you to submit unstructured text over a socket 
 and a receive in reply JSON results with information about locations mentioned, people 
 mentioned, and countries the text is "about".  The geoparsing is tuned to identify countries.
@@ -15,8 +15,8 @@ You also need to build CLAVIN in order to build the Geonames Gazetteer Index for
 The idea is that you build all that, and then create a symlink in this directory from 
 `./IndexDirectory` to the index you just built.
 
-If you are developing and using Eclipse, don't forget to do `mvn eclipse:eclipse` in this 
-directory to finish setting things up correctly.
+If you are developing and using Eclipse, don't forget to install Maven from this update site: 
+`http://download.eclipse.org/technology/m2e/releases` (we already did `mvn eclipse:eclipse`).
 
 On Ubuntu, make sure you do this:
 ```
