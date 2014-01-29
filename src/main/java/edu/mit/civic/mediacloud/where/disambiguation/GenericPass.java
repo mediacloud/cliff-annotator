@@ -36,7 +36,7 @@ public abstract class GenericPass {
         for (List<ResolvedLocation> toRemove : possibilitiesToRemove) {
             possibilitiesToDo.remove(toRemove);
         }
-        logger.info("Still have " + possibilitiesToDo.size() + " lists to do");
+        logger.debug("Still have " + possibilitiesToDo.size() + " lists to do");
     }
 
     abstract public String getDescription();
@@ -77,12 +77,12 @@ public abstract class GenericPass {
     }
 
     public static void logSelectedCandidate(ResolvedLocation candidate){
-        logger.info("  PICKED: "+candidate.location.text+"@"+candidate.location.position);
+        logger.debug("  PICKED: "+candidate.location.text+"@"+candidate.location.position);
     }
     
     public static void logResolvedLocationInfo(ResolvedLocation resolvedLocation){
         GeoName candidatePlace = resolvedLocation.geoname; 
-        logger.info("    "+candidatePlace.geonameID+" "+candidatePlace.name+
+        logger.debug("    "+candidatePlace.geonameID+" "+candidatePlace.name+
                 ", "+ candidatePlace.admin1Code+
                 ", " + candidatePlace.primaryCountryCode
                 + " / "+resolvedLocation.confidence

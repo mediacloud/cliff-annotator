@@ -17,12 +17,13 @@ import com.bericotech.clavin.resolver.ResolvedLocation;
  * 
  * @author rahulb
  */
+@Deprecated
 public class LocationScoredAboutnessStrategy implements AboutnessStrategy {
 
     private static final Logger logger = LoggerFactory.getLogger(LocationScoredAboutnessStrategy.class);
 
     @Override
-    public List<CountryCode> select(List<ResolvedLocation> resolvedLocations, String text){
+    public List<CountryCode> selectCountries(List<ResolvedLocation> resolvedLocations, String text){
         // count country mentions
         HashMap<CountryCode,Integer> countryCounts = AboutnessUtils.getScoredCountryCounts(resolvedLocations, text); 
         // find the most mentioned
@@ -37,6 +38,27 @@ public class LocationScoredAboutnessStrategy implements AboutnessStrategy {
         List<CountryCode> results = new ArrayList<CountryCode>();
         if(primaryCountry!=null) results.add(primaryCountry);
         return results;
+    }
+    
+    public List<String> selectStates(List<ResolvedLocation> resolvedLocations, String text){
+        // count country mentions
+        HashMap<String,Integer> stateCounts = AboutnessUtils.getScoredStateCounts(resolvedLocations, text); 
+        // find the most mentioned
+        String primaryState = null;        
+        for(String stateCode: stateCounts.keySet()){
+            if( (primaryState==null) || (stateCounts.get(stateCode) > stateCounts.get(primaryState)) ){
+            	primaryState = stateCode;
+            }
+        }
+        logger.info("Found primary country "+primaryState);
+        // return results
+        List<String> results = new ArrayList<String>();
+        if(primaryState!=null) results.add(primaryState);
+        return results;
+    }
+    //not implemented
+    public List<String> selectCities(List<ResolvedLocation> resolvedLocations, String text){
+    	return null;
     }
     
 }

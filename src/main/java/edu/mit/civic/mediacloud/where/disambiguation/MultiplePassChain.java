@@ -33,7 +33,7 @@ public class MultiplePassChain {
         List<ResolvedLocation> bestCandidates = new ArrayList<ResolvedLocation>();
         int round = 0;
         for(GenericPass pass:passes){
-            logger.info("Pass "+round+": "+pass.getDescription());
+            logger.debug("Pass "+round+": "+pass.getDescription());
             pass.execute(possibilities, bestCandidates);
             round += 1;
         }
@@ -42,10 +42,10 @@ public class MultiplePassChain {
     
     public void logPassTriggerStats(){
         int round = 0;
-        logger.info("Called "+callCount+" times:");
+        logger.debug("Called "+callCount+" times:");
         for(GenericPass pass:passes){
-            logger.info("  Pass "+round+": "+pass.getDescription());
-            logger.info("    triggered "+pass.getTriggerCount()+" times");
+            logger.debug("  Pass "+round+": "+pass.getDescription());
+            logger.debug("    triggered "+pass.getTriggerCount()+" times");
             round += 1;
         }
     }
