@@ -50,7 +50,7 @@
 		<groupId>junit</groupId>
 		<artifactId>junit</artifactId>
 		<version>4.11</version>
-		<scope>test</scope>
+		<!--<scope>test</scope>-->
 	</dependency>
   </dependencies>
 
@@ -73,6 +73,7 @@
           <target>1.7</target>
         </configuration>
       </plugin>
+
       <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>build-helper-maven-plugin</artifactId>
