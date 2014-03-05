@@ -1,6 +1,8 @@
 package edu.mit.civic.mediacloud;
 
 import java.io.File;
+import java.lang.Thread;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -64,23 +66,29 @@ public class ParseManager {
             results.put("version", PARSER_VERSION);
             ArrayList places = new ArrayList();
             ExtractedEntities entities = extractAndResolve(text);
+            if (entities == null){
+            	return getErrorText("No place or person entitites detected in this text.");
+            } 
             
             for (ResolvedLocation resolvedLocation: entities.getResolvedLocations()){
                 HashMap loc = writeResolvedLocationToHash(resolvedLocation);
                 places.add(loc);
             }
             results.put("places",places);
-            results.put("primaryCountries", aboutness.selectCountries(entities.getResolvedLocations(), text));
-            results.put("primaryStates", aboutness.selectStates(entities.getResolvedLocations(), text));
             
-            ArrayList primaryCities = new ArrayList();
-            
-            for (ResolvedLocation resolvedLocation: aboutness.selectCities(entities.getResolvedLocations(),text)){
-                HashMap loc = writeResolvedLocationToHash(resolvedLocation);
-                primaryCities.add(loc);
+            if (places.size() > 0){
+	            results.put("primaryCountries", aboutness.selectCountries(entities.getResolvedLocations(), text));
+	            
+	            results.put("primaryStates", aboutness.selectStates(entities.getResolvedLocations(), text));
+	            
+	            ArrayList primaryCities = new ArrayList();
+	            
+	            for (ResolvedLocation resolvedLocation: aboutness.selectCities(entities.getResolvedLocations(),text)){
+	                HashMap loc = writeResolvedLocationToHash(resolvedLocation);
+	                primaryCities.add(loc);
+	            }
+	            results.put("primaryCities",primaryCities);
             }
-            results.put("primaryCities",primaryCities);
-       
 
 
             List<PersonOccurrence> resolvedPeople = entities.getPeople();
@@ -92,7 +100,7 @@ public class ParseManager {
                 names.add(sourceInfo);
             }
             results.put("people",names);
-
+            
             // return it as JSON
             return gson.toJson(results);
         } catch (Exception e) {

@@ -35,20 +35,13 @@ public class PercentageOfMentionsAboutnessStrategy implements AboutnessStrategy 
         }
         return countries;
     }
-    public List<String> selectStates(List<ResolvedLocation> resolvedLocations, String text){
-        HashMap<String,Integer> stateCounts = AboutnessUtils.getStateCounts(resolvedLocations);
-        
-        List<String> states = new ArrayList<String>();       
-        for(String stateCode: stateCounts.keySet()){
-            double pct = ((double) stateCounts.get(stateCode).intValue()) / ((double) stateCounts.size());
-            if( pct > THRESHOLD ){
-                states.add(stateCode);
-            }
-        }
-        return states;
-    }
     //not implemented
-    public List<String> selectCities(List<ResolvedLocation> resolvedLocations, String text){
+    public List<HashMap> selectStates(List<ResolvedLocation> resolvedLocations, String text){
+        
+        return null;
+    }
+    
+    public List<ResolvedLocation> selectCities(List<ResolvedLocation> resolvedLocations, String text){
     	return null;
     }
     

@@ -1,6 +1,7 @@
 package edu.mit.civic.mediacloud.where.aboutness;
 
 import java.util.List;
+import java.util.HashMap;
 
 import com.bericotech.clavin.gazetteer.CountryCode;
 import com.bericotech.clavin.resolver.ResolvedLocation;
@@ -14,7 +15,7 @@ public interface AboutnessStrategy {
 
     public abstract List<CountryCode> selectCountries(
             List<ResolvedLocation> resolvedLocations, String text);
-    public abstract List<String> selectStates(
+    public abstract List<HashMap> selectStates(
             List<ResolvedLocation> resolvedLocations, String text);
     public abstract List<ResolvedLocation> selectCities(
             List<ResolvedLocation> resolvedLocations, String text);

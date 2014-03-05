@@ -24,18 +24,28 @@ public class AboutnessUtils {
         }
         return cityCounts;
     }
-	public static HashMap<String,Integer> getStateCounts(List<ResolvedLocation> resolvedLocations){     
-        HashMap<String,Integer> stateCounts = new HashMap<String,Integer>();
+	public static HashMap<String,HashMap> getStateCounts(List<ResolvedLocation> resolvedLocations){     
+        HashMap<String,HashMap> stateCounts = new HashMap<String,HashMap>();
         for (ResolvedLocation resolvedLocation: resolvedLocations){
             if(resolvedLocation.geoname.admin1Code==null){
                 continue;
             }
-            String state = resolvedLocation.geoname.admin1Code;
-            state = state + ", "+ resolvedLocation.geoname.primaryCountryCode;
-            if(!stateCounts.containsKey(state)){
-                stateCounts.put(state, 0);
+            String stateCode = resolvedLocation.geoname.admin1Code;
+           
+            
+            if(!stateCounts.containsKey(stateCode)){
+            	 HashMap<String, String> state = new HashMap<String, String>();
+                 state.put("stateCode", stateCode);
+                 state.put("countryCode", resolvedLocation.geoname.primaryCountryCode.toString());                 
+                 state.put("count", "1");
+                 stateCounts.put(stateCode, state);
+            } else{
+            	HashMap<String, String> state = stateCounts.get(stateCode);
+            	int currentCount = Integer.parseInt( state.get("count") );
+            	state.put("count", String.valueOf( ++currentCount ));
+            	stateCounts.put(stateCode, state);
             }
-            stateCounts.put(state, stateCounts.get(state)+1);
+      
         }
         return stateCounts;
     }

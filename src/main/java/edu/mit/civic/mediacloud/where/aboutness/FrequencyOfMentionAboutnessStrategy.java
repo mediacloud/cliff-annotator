@@ -45,25 +45,32 @@ public class FrequencyOfMentionAboutnessStrategy implements AboutnessStrategy {
         }
         return results;
     }
-    public List<String> selectStates(List<ResolvedLocation> resolvedLocations, String text){
+    public List<HashMap> selectStates(List<ResolvedLocation> resolvedLocations, String text){
         // count country mentions
-        HashMap<String,Integer> stateCounts = AboutnessUtils.getStateCounts(resolvedLocations); 
+        HashMap<String,HashMap> stateCounts = AboutnessUtils.getStateCounts(resolvedLocations); 
         // find the most mentioned
-        String primaryState = null;        
+        HashMap<String, String> primaryState = null;        
+        int highestCount = 0;
         for(String stateCode: stateCounts.keySet()){
-            if( (primaryState==null) || (stateCounts.get(stateCode) > stateCounts.get(primaryState)) ){
-            	primaryState = stateCode;
+        	HashMap<String, String> state = stateCounts.get(stateCode);
+        	int count = Integer.valueOf(state.get("count"));
+            if( (primaryState==null) || count > highestCount ){
+            	highestCount = count;
+            	primaryState = state;
             }
         }
-        logger.info("Found primary state "+primaryState);
+        logger.info("Found primary state "+primaryState.toString());
         // return results
-        List<String> results = new ArrayList<String>();
+        List<HashMap> results = new ArrayList<HashMap>();
         if(primaryState!=null) {
         	results.add(primaryState);
+        	int primaryStateCount = Integer.valueOf(primaryState.get("count"));
         	for(String stateCode: stateCounts.keySet()){
-            	
-                if( stateCode != primaryState && stateCounts.get(stateCode) == stateCounts.get(primaryState) ){
-                	results.add(stateCode);
+        		HashMap<String, String> state = stateCounts.get(stateCode);
+        		int count = Integer.valueOf(state.get("count"));
+        		
+                if( state != primaryState && count == primaryStateCount ){
+                	results.add(state);
                 } 
             }
         }
