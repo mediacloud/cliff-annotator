@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>edu.mit.civic</groupId>
-  <artifactId>clavin-server</artifactId>
+  <artifactId>CLIFF</artifactId>
   <version>0.2</version>
   <packaging>jar</packaging>
 
-  <name>clavin-server</name>
+  <name>CLIFF</name>
   <url>http://civic.mit.edu/</url>
 
   <properties>
