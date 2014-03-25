@@ -91,7 +91,8 @@ public class FrequencyOfMentionAboutnessStrategy implements AboutnessStrategy {
         	results.add(primaryCity);
         	for(ResolvedLocation city: cityCounts.keySet()){
             	
-                if( city != primaryCity && cityCounts.get(city) == cityCounts.get(primaryCity) ){
+                if( (city != primaryCity && cityCounts.get(city) == cityCounts.get(primaryCity)) ||
+                	(city != primaryCity && cityCounts.get(city) > 1)	){
                 	results.add(city);
                 } 
             }

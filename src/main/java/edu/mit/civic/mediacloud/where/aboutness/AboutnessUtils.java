@@ -2,6 +2,7 @@ package edu.mit.civic.mediacloud.where.aboutness;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import com.bericotech.clavin.gazetteer.CountryCode;
 import com.bericotech.clavin.gazetteer.FeatureClass;
@@ -16,11 +17,23 @@ public class AboutnessUtils {
             if(resolvedLocation.geoname.featureClass!=FeatureClass.P){
                 continue;
             }
-            
-            if(!cityCounts.containsKey(resolvedLocation)){
-                cityCounts.put(resolvedLocation, 0);
+            Set<ResolvedLocation> cityCountKeys = cityCounts.keySet();
+            boolean found = false;
+           
+           
+            for (ResolvedLocation cityKey: cityCountKeys){
+            	if (cityKey.geoname.geonameID == resolvedLocation.geoname.geonameID){
+            		cityCounts.put(cityKey, cityCounts.get(cityKey)+1);
+            		System.out.println("Adding count to city " + cityKey.geoname.asciiName + cityCounts.get(cityKey));
+            		found=true;
+            		break;
+            	}
             }
-            cityCounts.put(resolvedLocation, cityCounts.get(resolvedLocation)+1);
+            if(!found){
+            	cityCounts.put(resolvedLocation, 1);
+            	System.out.println("Adding city " + resolvedLocation.geoname.asciiName);
+            }
+            
         }
         return cityCounts;
     }
