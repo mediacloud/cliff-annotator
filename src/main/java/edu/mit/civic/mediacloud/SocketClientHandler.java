@@ -43,7 +43,7 @@ public class SocketClientHandler implements Runnable {
             while((line = reader.readLine()) != null){
                 boolean quit = false;
                 requestCount++;
-                String results = ParseManager.parse(line)+"\n"; 
+                String results = ParseManager.parseFromText(line)+"\n"; 
                 output.write(results.getBytes("UTF-8"));
                 output.flush();
                 parent.incrementTotalRequests();

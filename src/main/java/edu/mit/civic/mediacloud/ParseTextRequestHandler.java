@@ -15,9 +15,9 @@ import com.sun.net.httpserver.HttpHandler;
  * Let the user try out parsing some text via the web browser (returning JSON results)
  * @author rahulb
  */
-public class ParseRequestHandler implements HttpHandler {
+public class ParseTextRequestHandler implements HttpHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(ParseRequestHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(ParseTextRequestHandler.class);
 
     /**
      * TODO: handle PUT instead of get
@@ -26,7 +26,7 @@ public class ParseRequestHandler implements HttpHandler {
         String requestMethod = exchange.getRequestMethod();
         if (requestMethod.equalsIgnoreCase("GET")) {
 
-            logger.info("Parse Request");
+            logger.info("Text Parse Request");
             Headers responseHeaders = exchange.getResponseHeaders();
             responseHeaders.set("Content-Type", "application/json");
             responseHeaders.set("charset", "utf-8");
@@ -35,7 +35,9 @@ public class ParseRequestHandler implements HttpHandler {
             URI uri = exchange.getRequestURI();
             String results = "";
             try {
-                results = ParseManager.parse(uri.getQuery());
+                String input = uri.getQuery().substring(2, uri.getQuery().length());
+                logger.info("input:"+input);
+                results = ParseManager.parseFromText(input);
                 logger.info(results);
             } catch(Exception e){   // try to give the user something useful
                 logger.error(e.toString());

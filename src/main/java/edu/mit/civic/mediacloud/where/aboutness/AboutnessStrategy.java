@@ -14,10 +14,10 @@ import com.bericotech.clavin.resolver.ResolvedLocation;
 public interface AboutnessStrategy {
 
     public abstract List<CountryCode> selectCountries(
-            List<ResolvedLocation> resolvedLocations, String text);
+            List<ResolvedLocation> resolvedLocations);
     public abstract List<HashMap> selectStates(
-            List<ResolvedLocation> resolvedLocations, String text);
+            List<ResolvedLocation> resolvedLocations);
     public abstract List<ResolvedLocation> selectCities(
-            List<ResolvedLocation> resolvedLocations, String text);
+            List<ResolvedLocation> resolvedLocations);
 
 }

@@ -39,10 +39,10 @@ public class ParseServer {
 	    InetSocketAddress addr = new InetSocketAddress(WEB_PORT);
 	    try {
             webServer = HttpServer.create(addr, 0);
-            webServer.createContext("/parse", new ParseRequestHandler());
             webServer.setExecutor(Executors.newCachedThreadPool());
+            webServer.createContext("/parseText", new ParseTextRequestHandler());
+            webServer.createContext("/parseNlpJson", new ParseNlpJsonRequestHandler());
             webServer.createContext("/status", new StatusRequestHandler(this));
-            webServer.setExecutor(Executors.newCachedThreadPool());
         } catch (IOException e) {
             logger.error("Unable to start listening for web requests on port "+WEB_PORT);
             logger.error(e.toString()); 

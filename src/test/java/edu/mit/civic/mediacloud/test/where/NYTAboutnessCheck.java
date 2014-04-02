@@ -104,7 +104,7 @@ public class NYTAboutnessCheck {
                         
                         //also have a measure for making sure the main "about" country is included in their list of countries
                         AboutnessStrategy aboutness = ParseManager.getAboutness();
-                        List<CountryCode> ourAboutnessCountries = aboutness.selectCountries(resolvedLocations, doc.getHeadline() + " " + doc.getBody());
+                        List<CountryCode> ourAboutnessCountries = aboutness.selectCountries(resolvedLocations);
                         if(ourAboutnessCountries.size()>0){
                             boolean allMatched = true;
                             for(CountryCode aboutnessCountry:ourAboutnessCountries){

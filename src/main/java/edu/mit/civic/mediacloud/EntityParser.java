@@ -24,7 +24,7 @@ public class EntityParser {
     private StanfordThreeClassExtractor extractor;
     
     // resolver to match location names against gazetteer records
-    private LocationResolver resolver;
+    private LocationResolver locationResolver;
     
     // switch controlling use of fuzzy matching
     private final boolean fuzzy;
@@ -32,28 +32,29 @@ public class EntityParser {
     public EntityParser(StanfordThreeClassExtractor extractor, LocationResolver resolver,
             boolean fuzzy) {
         this.extractor = extractor;
-        this.resolver = resolver;
+        this.locationResolver = resolver;
         this.fuzzy = fuzzy;
     }
 
-    public ExtractedEntities parse(String inputText) throws Exception {
-        
+    public ExtractedEntities extractAndResolve(String inputText) throws Exception {
         logger.trace("input: {}", inputText);
+        ExtractedEntities extractedEntities = extractor.extractEntities(inputText);
+        logger.trace("extracted: {}", extractedEntities.getLocations());
+        return resolve(extractedEntities);
+    }
         
-        // first, extract location names from the text
-        ExtractedEntities entities = extractor.extractEntities(inputText);
+    public ExtractedEntities resolve(ExtractedEntities entities) throws Exception{
         
-        logger.trace("extracted: {}", entities.getLocations());
-        
-        // then, resolve the extracted location names against a
+        // resolve the extracted location names against a
         // gazetteer to produce geographic entities representing the
         // locations mentioned in the original text
-        List<ResolvedLocation> resolvedLocations = resolver.resolveLocations(entities.getLocations(), fuzzy);
+        List<ResolvedLocation> resolvedLocations = locationResolver.resolveLocations(entities.getLocations(), fuzzy);
         entities.setResolvedLocations( resolvedLocations );
         
         logger.trace("resolved: {}", resolvedLocations);
                 
         return entities;
+        
     }
     
 }

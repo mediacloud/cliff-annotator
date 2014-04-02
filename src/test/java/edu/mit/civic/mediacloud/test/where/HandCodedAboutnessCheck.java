@@ -29,7 +29,7 @@ public class HandCodedAboutnessCheck {
             //List<CountryCode> primaryCountries = ParseManager.extractAndResolve(article.text).getUniqueCountries();
             List<ResolvedLocation> resolvedLocations = ParseManager.extractAndResolve(article.text).getResolvedLocations();
             AboutnessStrategy aboutness = ParseManager.getAboutness();
-            List<CountryCode> primaryCountries = aboutness.selectCountries(resolvedLocations, article.text);
+            List<CountryCode> primaryCountries = aboutness.selectCountries(resolvedLocations);
             if(article.isAboutHandCodedCountry(primaryCountries)) {
                 correct++;
             } else {

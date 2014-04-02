@@ -1,0 +1,250 @@
+//His position on foreign policy appeals as he wants the US to immediately stop its military involvement in the Middle East, repeal the Patriot Act and limit funding to Israel.
+{
+  "corenlp": {
+    "sentences": [
+      {
+        "tokens": [
+          {
+            "word": "His",
+            "lemma": "he",
+            "pos": "PRP$",
+            "ne": "O"
+          },
+          {
+            "word": "position",
+            "lemma": "position",
+            "pos": "NN",
+            "ne": "O"
+          },
+          {
+            "word": "on",
+            "lemma": "on",
+            "pos": "IN",
+            "ne": "O"
+          },
+          {
+            "word": "foreign",
+            "lemma": "foreign",
+            "pos": "JJ",
+            "ne": "O"
+          },
+          {
+            "word": "policy",
+            "lemma": "policy",
+            "pos": "NN",
+            "ne": "O"
+          },
+          {
+            "word": "appeals",
+            "lemma": "appeal",
+            "pos": "NNS",
+            "ne": "O"
+          },
+          {
+            "word": "as",
+            "lemma": "as",
+            "pos": "IN",
+            "ne": "O"
+          },
+          {
+            "word": "he",
+            "lemma": "he",
+            "pos": "PRP",
+            "ne": "O"
+          },
+          {
+            "word": "wants",
+            "lemma": "want",
+            "pos": "VBZ",
+            "ne": "O"
+          },
+          {
+            "word": "the",
+            "lemma": "the",
+            "pos": "DT",
+            "ne": "O"
+          },
+          {
+            "word": "US",
+            "lemma": "US",
+            "pos": "NNP",
+            "ne": "LOCATION"
+          },
+          {
+            "word": "to",
+            "lemma": "to",
+            "pos": "TO",
+            "ne": "O"
+          },
+          {
+            "word": "immediately",
+            "lemma": "immediately",
+            "pos": "RB",
+            "ne": "O"
+          },
+          {
+            "word": "stop",
+            "lemma": "stop",
+            "pos": "VB",
+            "ne": "O"
+          },
+          {
+            "word": "its",
+            "lemma": "its",
+            "pos": "PRP$",
+            "ne": "O"
+          },
+          {
+            "word": "military",
+            "lemma": "military",
+            "pos": "JJ",
+            "ne": "O"
+          },
+          {
+            "word": "involvement",
+            "lemma": "involvement",
+            "pos": "NN",
+            "ne": "O"
+          },
+          {
+            "word": "in",
+            "lemma": "in",
+            "pos": "IN",
+            "ne": "O"
+          },
+          {
+            "word": "the",
+            "lemma": "the",
+            "pos": "DT",
+            "ne": "O"
+          },
+          {
+            "word": "Middle",
+            "lemma": "Middle",
+            "pos": "NNP",
+            "ne": "LOCATION"
+          },
+          {
+            "word": "East",
+            "lemma": "East",
+            "pos": "NNP",
+            "ne": "LOCATION"
+          },
+          {
+            "word": ",",
+            "lemma": ",",
+            "pos": ",",
+            "ne": "O"
+          },
+          {
+            "word": "repeal",
+            "lemma": "repeal",
+            "pos": "VBP",
+            "ne": "O"
+          },
+          {
+            "word": "the",
+            "lemma": "the",
+            "pos": "DT",
+            "ne": "O"
+          },
+          {
+            "word": "Patriot",
+            "lemma": "Patriot",
+            "pos": "NNP",
+            "ne": "MISC"
+          },
+          {
+            "word": "Act",
+            "lemma": "Act",
+            "pos": "NNP",
+            "ne": "MISC"
+          },
+          {
+            "word": "and",
+            "lemma": "and",
+            "pos": "CC",
+            "ne": "O"
+          },
+          {
+            "word": "limit",
+            "lemma": "limit",
+            "pos": "NN",
+            "ne": "O"
+          },
+          {
+            "word": "funding",
+            "lemma": "funding",
+            "pos": "NN",
+            "ne": "O"
+          },
+          {
+            "word": "to",
+            "lemma": "to",
+            "pos": "TO",
+            "ne": "O"
+          },
+          {
+            "word": "Israel",
+            "lemma": "Israel",
+            "pos": "NNP",
+            "ne": "LOCATION"
+          },
+          {
+            "word": ".",
+            "lemma": ".",
+            "pos": ".",
+            "ne": "O"
+          }
+        ],
+        "dependencies": [
+          "poss(position/NN-2,His/PRP$-1)",
+          "nsubj(repeal/VBP-23,position/NN-2)",
+          "amod(appeals/NNS-6,foreign/JJ-4)",
+          "nn(appeals/NNS-6,policy/NN-5)",
+          "prep_on(position/NN-2,appeals/NNS-6)",
+          "mark(wants/VBZ-9,as/IN-7)",
+          "nsubj(wants/VBZ-9,he/PRP-8)",
+          "dep(appeals/NNS-6,wants/VBZ-9)",
+          "det(US/NNP-11,the/DT-10)",
+          "nsubj(stop/VB-14,US/NNP-11)",
+          "aux(stop/VB-14,to/TO-12)",
+          "advmod(stop/VB-14,immediately/RB-13)",
+          "xcomp(wants/VBZ-9,stop/VB-14)",
+          "poss(involvement/NN-17,its/PRP$-15)",
+          "amod(involvement/NN-17,military/JJ-16)",
+          "dobj(stop/VB-14,involvement/NN-17)",
+          "det(East/NNP-21,the/DT-19)",
+          "nn(East/NNP-21,Middle/NNP-20)",
+          "prep_in(stop/VB-14,East/NNP-21)",
+          "det(Act/NNP-26,the/DT-24)",
+          "nn(Act/NNP-26,Patriot/NNP-25)",
+          "dobj(repeal/VBP-23,Act/NNP-26)",
+          "nn(funding/NN-29,limit/NN-28)",
+          "dobj(repeal/VBP-23,funding/NN-29)",
+          "conj_and(Act/NNP-26,funding/NN-29)",
+          "prep_to(repeal/VBP-23,Israel/NNP-31)"
+        ],
+        "sentiments": [
+          {
+            "model": "corenlp.default",
+            "prediction": "Negative",
+            "predictions": {
+              "Very negative": 0.10020882420332367,
+              "Negative": 0.6329576594515032,
+              "Neutral": 0.23005235361697077,
+              "Positive": 0.027015016120570175,
+              "Very positive": 0.00976614660763241
+            }
+          }
+        ]
+      }
+    ],
+    "statistics": {
+      "sentences:tokens:mean": 32.0,
+      "sentences:tokens:min": 32,
+      "document:tokens:total": 32,
+      "sentences:tokens:max": 32
+    }
+  }
+}

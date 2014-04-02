@@ -21,7 +21,7 @@ public class FrequencyOfMentionAboutnessStrategy implements AboutnessStrategy {
     private static final Logger logger = LoggerFactory.getLogger(FrequencyOfMentionAboutnessStrategy.class);
 
     @Override
-    public List<CountryCode> selectCountries(List<ResolvedLocation> resolvedLocations, String text){
+    public List<CountryCode> selectCountries(List<ResolvedLocation> resolvedLocations){
         // count country mentions
         HashMap<CountryCode,Integer> countryCounts = AboutnessUtils.getCountryCounts(resolvedLocations); 
         // find the most mentioned
@@ -45,7 +45,7 @@ public class FrequencyOfMentionAboutnessStrategy implements AboutnessStrategy {
         }
         return results;
     }
-    public List<HashMap> selectStates(List<ResolvedLocation> resolvedLocations, String text){
+    public List<HashMap> selectStates(List<ResolvedLocation> resolvedLocations){
         // count country mentions
         HashMap<String,HashMap> stateCounts = AboutnessUtils.getStateCounts(resolvedLocations); 
         // find the most mentioned
@@ -76,7 +76,7 @@ public class FrequencyOfMentionAboutnessStrategy implements AboutnessStrategy {
         }
         return results;
     }
-    public List<ResolvedLocation> selectCities(List<ResolvedLocation> resolvedLocations, String text){
+    public List<ResolvedLocation> selectCities(List<ResolvedLocation> resolvedLocations){
         // count city mentions
         HashMap<ResolvedLocation,Integer> cityCounts = AboutnessUtils.getCityCounts(resolvedLocations); 
         // find the most mentioned

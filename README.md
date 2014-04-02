@@ -39,7 +39,7 @@ Use
 To test it out, hit this url in a browser and you should get some JSON back.
 
 ```
-http://localhost:8080/parse?text=This is some text about New York City, and maybe about Harari as well
+http://localhost:8080/parseText?q=This is some text about New York City, and maybe about Harari as well
 ```
 
 and to get some basic status hit this url:
