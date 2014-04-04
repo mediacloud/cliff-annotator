@@ -9,7 +9,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.bericotech.clavin.extractor.LocationOccurrence;
 import com.bericotech.clavin.gazetteer.CountryCode;
 import com.bericotech.clavin.gazetteer.GeoName;
 import com.bericotech.clavin.resolver.LocationResolver;
@@ -17,18 +16,20 @@ import com.bericotech.clavin.resolver.ResolvedLocation;
 import com.google.gson.Gson;
 
 import edu.mit.civic.mediacloud.extractor.ExtractedEntities;
-import edu.mit.civic.mediacloud.extractor.PersonOccurrence;
 import edu.mit.civic.mediacloud.extractor.StanfordThreeClassExtractor;
+import edu.mit.civic.mediacloud.muck.MuckUtils;
 import edu.mit.civic.mediacloud.where.CustomLuceneLocationResolver;
 import edu.mit.civic.mediacloud.where.aboutness.AboutnessStrategy;
 import edu.mit.civic.mediacloud.where.aboutness.FrequencyOfMentionAboutnessStrategy;
+import edu.mit.civic.mediacloud.who.ResolvedPerson;
 
 /**
  * Singleton-style wrapper around a GeoParser.  Call GeoParser.locate(someText) to use this class.
  */
 public class ParseManager {
 
-    private static final String PARSER_VERSION = "0.3"; // increment each time we change an algorithm so we know when parsed results already saved in a DB are stale!
+    // increment each time we change an algorithm or json structure so we know when parsed results already saved in a DB are stale!
+    private static final String PARSER_VERSION = "0.4";
     
     private static final Logger logger = LoggerFactory.getLogger(ParseManager.class);
 
@@ -66,44 +67,12 @@ public class ParseManager {
         }
     }
     
-    @SuppressWarnings({ "rawtypes", "unchecked" })  // I'm doing JSON here... leave me alone!
     public static String parseFromNlpJson(String nlpJsonString){
         if(nlpJsonString.trim().length()==0){
             return getErrorText("No text");
         }
         try {
-            // parse it into an object
-            Gson gson = new Gson();
-            Map content = gson.fromJson(nlpJsonString, Map.class);
-            List<Map> sentences = (List<Map>) ((Map) content.get("corenlp")).get("sentences");
-            // walk the sentences grabbing entities we care about
-            ExtractedEntities entities = new ExtractedEntities();
-            for (Map sentence : sentences) {
-                String queuedEntityText = null;
-                String lastEntityType = null;
-                List<Map> tokens = (List<Map>) sentence.get("tokens");
-                for (Map token : tokens){
-                    String entityType = (String) token.get("ne"); 
-                    String tokenText = (String) token.get("word");
-                    if(entityType.equals(lastEntityType)){
-                        queuedEntityText+= " "+tokenText;
-                    } else {
-                        if(queuedEntityText!=null && lastEntityType!=null){
-                            //TODO: figure out if we need the character index here or not
-                            switch(lastEntityType){
-                            case "PERSON":
-                                entities.addPerson(new PersonOccurrence(queuedEntityText, -1));
-                                break;
-                            case "LOCATION":
-                                entities.addLocation(new LocationOccurrence(queuedEntityText, -1));
-                                break;
-                            }
-                        }
-                        queuedEntityText = tokenText;
-                    }
-                    lastEntityType = entityType;
-                }
-            }
+            ExtractedEntities entities = MuckUtils.entitiesFromJsonString(nlpJsonString);
             entities = getParserInstance().resolve(entities);;
             return parseFromEntities(entities);
         } catch (Exception e) {
@@ -130,13 +99,9 @@ public class ParseManager {
         whereResults.put("resolvedLocations",resolvedPlaces);
         
         if (resolvedPlaces.size() > 0){
-            
             whereResults.put("primaryCountries", aboutness.selectCountries(entities.getResolvedLocations()));
-            
             whereResults.put("primaryStates", aboutness.selectStates(entities.getResolvedLocations()));
-            
-            ArrayList primaryCities = new ArrayList();
-            
+            ArrayList primaryCities = new ArrayList();            
             for (ResolvedLocation resolvedLocation: aboutness.selectCities(entities.getResolvedLocations())){
                 HashMap loc = writeResolvedLocationToHash(resolvedLocation);
                 primaryCities.add(loc);
@@ -146,12 +111,12 @@ public class ParseManager {
         results.put("where",whereResults);
 
         // assemble the "who" results
-        List<PersonOccurrence> resolvedPeople = entities.getPeople();
+        List<ResolvedPerson> resolvedPeople = entities.getResolvedPeople();
         List<HashMap> whoResults = new ArrayList<HashMap>();
-        for (PersonOccurrence person: resolvedPeople){
+        for (ResolvedPerson person: resolvedPeople){
             HashMap sourceInfo = new HashMap();
-            sourceInfo.put("name", person.text);
-            sourceInfo.put("charIndex", person.position);
+            sourceInfo.put("name", person.getName());
+            sourceInfo.put("occurrenceCount", person.getOccurenceCount());
             whoResults.add(sourceInfo);
         }
         results.put("who",whoResults);
@@ -245,19 +210,6 @@ public class ParseManager {
         
         return parser;
     }
-
-    private static StanfordThreeClassExtractor getPeopleExtractorInstance() {
-        if(peopleExtractor==null){
-            try {
-                peopleExtractor = new StanfordThreeClassExtractor();
-                logger.info("Created People Extractor successfully");
-            } catch (Exception e) {
-                logger.error("Unable to create Stanford People Extractor! "+e.toString());
-            }
-        }
-        return peopleExtractor;
-    }
-
 
     public static LocationResolver getResolver() throws Exception {
         ParseManager.getParserInstance();

@@ -29,7 +29,7 @@ import com.bericotech.clavin.index.WhitespaceLowerCaseAnalyzer;
 import com.bericotech.clavin.resolver.LocationResolver;
 import com.bericotech.clavin.resolver.ResolvedLocation;
 
-import edu.mit.civic.mediacloud.where.disambiguation.DisambiguationStrategy;
+import edu.mit.civic.mediacloud.where.disambiguation.LocationDisambiguationStrategy;
 import edu.mit.civic.mediacloud.where.disambiguation.HeuristicDisambiguationStrategy;
 
 /*#####################################################################
@@ -90,7 +90,7 @@ public class CustomLuceneLocationResolver implements LocationResolver {
 			{SortField.FIELD_SCORE, new SortField("population", SortField.Type.LONG, true)});
 	
 	// my custom wrapper to let us try out multiple different disambiguation strategies
-	private DisambiguationStrategy disambiguationStrategy;
+	private LocationDisambiguationStrategy disambiguationStrategy;
 	
 	/**
 	 * Builds a {@link CustomLuceneLocationResolver} by loading a pre-built Lucene

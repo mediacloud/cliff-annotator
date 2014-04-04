@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.bericotech.clavin.resolver.ResolvedLocation;
 
+import edu.mit.civic.mediacloud.DisambiguationStrategy;
 import edu.mit.civic.mediacloud.where.CustomLuceneLocationResolver;
 
 /**
@@ -11,7 +12,7 @@ import edu.mit.civic.mediacloud.where.CustomLuceneLocationResolver;
  * 
  * @author rahulb
  */
-public interface DisambiguationStrategy {
+public interface LocationDisambiguationStrategy extends DisambiguationStrategy {
 
     /**
      * For each candidate list, select the best candidate.

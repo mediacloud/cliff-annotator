@@ -19,7 +19,7 @@ import edu.mit.civic.mediacloud.where.CustomLuceneLocationResolver;
  * Failures I've noticed: Africa Del. "Rocky Mountains" Fla doesn't give you
  * Florida names ("Bristol Palin", "Chad")
  */
-public class HeuristicDisambiguationStrategy implements DisambiguationStrategy {
+public class HeuristicDisambiguationStrategy implements LocationDisambiguationStrategy {
 
     private static final Logger logger = LoggerFactory
             .getLogger(HeuristicDisambiguationStrategy.class);

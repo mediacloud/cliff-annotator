@@ -13,8 +13,9 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({
     edu.mit.civic.mediacloud.test.where.SpecificCaseTest.class,
     edu.mit.civic.mediacloud.test.where.HandCodedDisambiguationTest.class,
-   // edu.mit.civic.mediacloud.test.demonyms.WikipediaDemonymMapTest.class
-
+    edu.mit.civic.mediacloud.test.where.substitutions.WikipediaDemonymMapTest.class,
+    edu.mit.civic.mediacloud.test.MuckUtilsTest.class,
+    edu.mit.mediacloud.test.who.disambiguation.KindaDumbDisambiguationTest.class
 })
 public class AllTestsSuite {
 }

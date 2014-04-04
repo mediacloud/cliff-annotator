@@ -10,6 +10,8 @@ import com.bericotech.clavin.resolver.ResolvedLocation;
 
 import edu.mit.civic.mediacloud.extractor.ExtractedEntities;
 import edu.mit.civic.mediacloud.extractor.StanfordThreeClassExtractor;
+import edu.mit.civic.mediacloud.who.PersonResolver;
+import edu.mit.civic.mediacloud.who.ResolvedPerson;
 
 /**
  * Patterned after com.bericotech.clavin.GeoParser
@@ -23,8 +25,8 @@ public class EntityParser {
     // entity extractor to find location names in text
     private StanfordThreeClassExtractor extractor;
     
-    // resolver to match location names against gazetteer records
     private LocationResolver locationResolver;
+    private PersonResolver personResolver;
     
     // switch controlling use of fuzzy matching
     private final boolean fuzzy;
@@ -33,6 +35,7 @@ public class EntityParser {
             boolean fuzzy) {
         this.extractor = extractor;
         this.locationResolver = resolver;
+        this.personResolver = new PersonResolver();
         this.fuzzy = fuzzy;
     }
 
@@ -50,9 +53,13 @@ public class EntityParser {
         // locations mentioned in the original text
         List<ResolvedLocation> resolvedLocations = locationResolver.resolveLocations(entities.getLocations(), fuzzy);
         entities.setResolvedLocations( resolvedLocations );
+        logger.trace("resolvedLocations: {}", resolvedLocations);
         
-        logger.trace("resolved: {}", resolvedLocations);
-                
+        // Disambiguate people
+        List<ResolvedPerson> resolvedPeople = personResolver.resolveLocations(entities.getPeople());
+        entities.setResolvedPeople( resolvedPeople );
+        logger.trace("resolvedPeople: {}", resolvedLocations);
+                        
         return entities;
         
     }
