@@ -1,4 +1,4 @@
-package edu.mit.mediacloud.test.who.disambiguation;
+package edu.mit.civic.mediacloud.test.who.disambiguation;
 
 import static org.junit.Assert.assertEquals;
 

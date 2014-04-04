@@ -15,7 +15,7 @@ import org.junit.runners.Suite.SuiteClasses;
     edu.mit.civic.mediacloud.test.where.HandCodedDisambiguationTest.class,
     edu.mit.civic.mediacloud.test.where.substitutions.WikipediaDemonymMapTest.class,
     edu.mit.civic.mediacloud.test.MuckUtilsTest.class,
-    edu.mit.mediacloud.test.who.disambiguation.KindaDumbDisambiguationTest.class
+    edu.mit.civic.mediacloud.test.who.disambiguation.KindaDumbDisambiguationTest.class
 })
 public class AllTestsSuite {
 }
