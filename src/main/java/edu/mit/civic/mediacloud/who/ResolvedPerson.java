@@ -21,9 +21,17 @@ public class ResolvedPerson {
     public void addOccurrence(PersonOccurrence occurrence){
         this.occurrences.add(occurrence);
     }
-    
+    /*
+     * Simple strategy to get the right person name just picks the longest of the set
+     */
     public String getName() {
-        return occurrences.get(0).text;
+    	String longestName = "";
+    	for(PersonOccurrence occurrence: occurrences){ 
+    		if (occurrence.text.length() > longestName.length()){
+    			longestName = occurrence.text;
+    		}
+    	}
+        return longestName;
     }
 
     public List<PersonOccurrence> getOccurrences() {

@@ -47,5 +47,23 @@ public class KindaDumbDisambiguationTest {
         List<ResolvedPerson> resolvedPeople = strategy.select(occurrences);
         assertEquals("Non-matching case duplicate not removed!", 1, resolvedPeople.size());
     }
-
+    @Test
+    public void testNotFullNameDuplicate() {
+        List<PersonOccurrence> occurrences = new ArrayList<PersonOccurrence>(); 
+        occurrences.add( new PersonOccurrence("Obama", 0));
+        occurrences.add( new PersonOccurrence("Barack Obama", 100));
+        KindaDumbDisambiguationStrategy strategy = new KindaDumbDisambiguationStrategy();
+        List<ResolvedPerson> resolvedPeople = strategy.select(occurrences);
+        assertEquals("Non-matching names duplicate not removed!", 1, resolvedPeople.size());
+    }
+    @Test
+    public void testChooseLongestName() {
+        List<PersonOccurrence> occurrences = new ArrayList<PersonOccurrence>(); 
+        occurrences.add( new PersonOccurrence("Obama", 0));
+        occurrences.add( new PersonOccurrence("Barack Obama", 100));
+        KindaDumbDisambiguationStrategy strategy = new KindaDumbDisambiguationStrategy();
+        List<ResolvedPerson> resolvedPeople = strategy.select(occurrences);
+        ResolvedPerson person = resolvedPeople.get(0);
+        assertEquals("Resolved person not choosing longest name", "Barack Obama", person.getName());
+    }
 }
