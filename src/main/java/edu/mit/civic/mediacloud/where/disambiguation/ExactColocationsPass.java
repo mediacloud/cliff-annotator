@@ -19,9 +19,19 @@ public class ExactColocationsPass extends GenericPass {
             for( ResolvedLocation candidate: candidates){
                 if(!foundOne && isExactMatch(candidate) && 
                     candidate.geoname.population>0 && inSameCountry(candidate, bestCandidates)){
-                    bestCandidates.add(candidate);
-                    possibilitiesToRemove.add(candidates);
-                    foundOne = true;
+     
+                    ResolvedLocation cityCandidate = findFirstCityCandidate(candidates);
+                    ResolvedLocation adminCandidate = findFirstAdminCandidate(candidates);
+
+                    if (chooseCityOverAdmin(cityCandidate, adminCandidate)){
+                    	bestCandidates.add(cityCandidate);
+                    	possibilitiesToRemove.add(candidates);
+                    	foundOne = true;
+                    }else if (adminCandidate != null){              
+                    	bestCandidates.add(adminCandidate);
+                    	possibilitiesToRemove.add(candidates);
+                    	foundOne = true;
+                    }
                 }
             }
         }

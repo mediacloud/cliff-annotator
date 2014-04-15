@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.bericotech.clavin.gazetteer.FeatureClass;
 import com.bericotech.clavin.gazetteer.GeoName;
 import com.bericotech.clavin.resolver.ResolvedLocation;
 
@@ -66,7 +67,46 @@ public abstract class GenericPass {
         }
         return false;
     }
+    protected boolean isCity(ResolvedLocation candidate){
+    	return candidate.geoname.population>0 && candidate.geoname.featureClass==FeatureClass.P;
     
+    }
+    protected boolean isAdminRegion(ResolvedLocation candidate){
+    	return candidate.geoname.population>0 && candidate.geoname.featureClass==FeatureClass.A;
+    }
+    protected ResolvedLocation findFirstCityCandidate(List<ResolvedLocation> candidates){
+    	for(ResolvedLocation candidate: candidates) {
+            if(isCity(candidate)){
+                return candidate;
+            }
+        }
+    	return null; 	
+    }
+    protected ResolvedLocation findFirstAdminCandidate(List<ResolvedLocation> candidates){
+    	for(ResolvedLocation candidate: candidates) {
+            if(isAdminRegion(candidate)){
+                return candidate;
+            }
+        }
+    	return null; 	
+    }
+    /* Logic is now to compare the City place with the Admin/State place. 
+     * If City has larger population then choose it. If the City and State are in the same country, 
+     * then choose the city (this will favor Paris the city over Paris the district in France). 
+     * If the City has lower population and is not in same country then choose the state.
+     */
+    protected boolean chooseCityOverAdmin(ResolvedLocation cityCandidate, ResolvedLocation adminCandidate){
+    	if (cityCandidate == null){
+    		return false;
+    	} else if (adminCandidate == null){
+    		return true;
+    	} else {
+    		return cityCandidate.geoname.population > adminCandidate.geoname.population ||
+    			cityCandidate.geoname.primaryCountryCode == adminCandidate.geoname.primaryCountryCode;
+    	}
+    }
+    
+	
     protected boolean inSameCountry(ResolvedLocation candidate, List<ResolvedLocation> list){
         for( ResolvedLocation item: list){
             if(candidate.geoname.primaryCountryCode.equals(item.geoname.primaryCountryCode)){
