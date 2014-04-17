@@ -1,8 +1,6 @@
 IndexDirectory
-target/classes
-target/surefire-reports/*
-target/test-classes/*
-target/maven-status/*
 data/nyt/*
-
 .settings/org.eclipse.jdt.core.prefs
+target/*
+*.log
+*.log.zip
