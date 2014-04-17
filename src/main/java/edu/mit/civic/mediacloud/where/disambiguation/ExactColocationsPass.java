@@ -16,12 +16,13 @@ public class ExactColocationsPass extends GenericPass {
         possibilitiesToRemove.clear();
         for( List<ResolvedLocation> candidates: possibilitiesToDo){
             boolean foundOne = false;
-            for( ResolvedLocation candidate: candidates){
+            List<ResolvedLocation> exactMatches = getExactMatches(candidates);
+            for( ResolvedLocation candidate: exactMatches){
                 if(!foundOne && isExactMatch(candidate) && 
                     candidate.geoname.population>0 && inSameCountry(candidate, bestCandidates)){
      
-                    ResolvedLocation cityCandidate = findFirstCityCandidate(candidates);
-                    ResolvedLocation adminCandidate = findFirstAdminCandidate(candidates);
+                    ResolvedLocation cityCandidate = findFirstCityCandidate(exactMatches);
+                    ResolvedLocation adminCandidate = findFirstAdminCandidate(exactMatches);
 
                     if (chooseCityOverAdmin(cityCandidate, adminCandidate)){
                     	bestCandidates.add(cityCandidate);
