@@ -23,7 +23,7 @@ public class SpecificCaseTest {
     private static final Logger logger = LoggerFactory.getLogger(SpecificCaseTest.class);
 
     private static final int STATE_MINNESOTA = 5037779;
-    private static final int CITY_BEIJING = 2038349;
+    private static final int CITY_BEIJING = 1816670;
     private static final int COUNTRY_CHINA = 1814991;
     private static final int COUNTRY_INDIA = 1269750;
     private static final int COUNTRY_AUSTRALIA = 2077456;
@@ -31,7 +31,7 @@ public class SpecificCaseTest {
     private static final int COUNTRY_US = 6252001;
     private static final int REGION_ASIA = 6255147;
     private static final int REGION_MIDDLE_EAST = 6269133;
-    private static final int CITY_LONDON = 2643741;
+    private static final int CITY_LONDON = 2643743;
     private static final int PLACE_RUSSEL_SQ_LONDON = 6954795;
     
     @Test
