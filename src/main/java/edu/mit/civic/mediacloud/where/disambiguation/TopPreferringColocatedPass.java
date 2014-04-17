@@ -23,6 +23,17 @@ public class TopPreferringColocatedPass extends GenericPass {
                     foundOne = true;
                 }
             }
+            // still nothing? pick the first city
+            if(!foundOne){
+                for( ResolvedLocation candidate: candidates) {
+                    if(!foundOne && isCity(candidate) ){
+                        bestCandidates.add(candidate);
+                        possibilitiesToRemove.add(candidates);
+                        foundOne = true;
+                    }
+                }    
+            }
+            // just pick SOMETHING!
             if(!foundOne){
                 ResolvedLocation candidate = candidates.get(0);
                 logResolvedLocationInfo(candidate);
