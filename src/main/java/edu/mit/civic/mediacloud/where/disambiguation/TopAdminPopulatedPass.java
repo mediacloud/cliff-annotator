@@ -3,7 +3,6 @@ package edu.mit.civic.mediacloud.where.disambiguation;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.bericotech.clavin.gazetteer.FeatureClass;
 import com.bericotech.clavin.resolver.ResolvedLocation;
 
 public class TopAdminPopulatedPass extends GenericPass {
@@ -20,22 +19,37 @@ public class TopAdminPopulatedPass extends GenericPass {
          * If the City has lower population and is not in same country then choose the state.
          */
         for( List<ResolvedLocation> candidates: possibilitiesToDo){
-        	      
-            ResolvedLocation cityCandidate = findFirstCityCandidate(candidates);
-            ResolvedLocation adminCandidate = findFirstAdminCandidate(candidates);
+        	
+            List<ResolvedLocation> exactMatches = getExactMatches(candidates); 
+            if(exactMatches.size()>0){
+                ResolvedLocation cityCandidate = findFirstCityCandidate(exactMatches);
+                ResolvedLocation adminCandidate = findFirstAdminCandidate(exactMatches);
 
-            if (chooseCityOverAdmin(cityCandidate, adminCandidate)){
-            	bestCandidates.add(cityCandidate);
-            	possibilitiesToRemove.add(candidates);
-            }else if (adminCandidate != null){              
-            	bestCandidates.add(adminCandidate);
-            	possibilitiesToRemove.add(candidates);
+                if (chooseCityOverAdmin(cityCandidate, adminCandidate)){
+                    bestCandidates.add(cityCandidate);
+                    possibilitiesToRemove.add(candidates);
+                }else if (adminCandidate != null){              
+                    bestCandidates.add(adminCandidate);
+                    possibilitiesToRemove.add(candidates);
+                }
+            } else {
+            
+                ResolvedLocation cityCandidate = findFirstCityCandidate(candidates);
+                ResolvedLocation adminCandidate = findFirstAdminCandidate(candidates);
+    
+                if (chooseCityOverAdmin(cityCandidate, adminCandidate)){
+                	bestCandidates.add(cityCandidate);
+                	possibilitiesToRemove.add(candidates);
+                }else if (adminCandidate != null){              
+                	bestCandidates.add(adminCandidate);
+                	possibilitiesToRemove.add(candidates);
+                }
             }
         }
 
         return possibilitiesToRemove;
     }
-
+    
     @Override
     public String getDescription() {
         return "Pick the top Admin Region or Populated Place remaining";

@@ -1,5 +1,6 @@
 package edu.mit.civic.mediacloud.where.disambiguation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -54,12 +55,22 @@ public abstract class GenericPass {
      * @param candidate
      * @return
      */
-    protected boolean isExactMatch(ResolvedLocation candidate) {
+    protected static boolean isExactMatch(ResolvedLocation candidate) {
         return candidate.geoname.name.equals(candidate.location.text);
         // return candidate.confidence==EXACT_MATCH_CONFIDENCE;
     }
+    
+    protected static List<ResolvedLocation> getExactMatches(List<ResolvedLocation> candidates){
+        ArrayList<ResolvedLocation> exactMatches = new ArrayList<ResolvedLocation>();
+        for( ResolvedLocation item: candidates){
+            if(isExactMatch(item)){
+                exactMatches.add(item);
+            }
+        }
+        return exactMatches;
+    }
 
-    protected boolean inSameSuperPlace(ResolvedLocation candidate, List<ResolvedLocation> list){
+    protected static boolean inSameSuperPlace(ResolvedLocation candidate, List<ResolvedLocation> list){
         for( ResolvedLocation item: list){
             if(candidate.geoname.admin1Code.equals(item.geoname.admin1Code)){
                 return true;
@@ -67,11 +78,11 @@ public abstract class GenericPass {
         }
         return false;
     }
-    protected boolean isCity(ResolvedLocation candidate){
+    protected static boolean isCity(ResolvedLocation candidate){
     	return candidate.geoname.population>0 && candidate.geoname.featureClass==FeatureClass.P;
     
     }
-    protected boolean isAdminRegion(ResolvedLocation candidate){
+    protected static boolean isAdminRegion(ResolvedLocation candidate){
     	return candidate.geoname.population>0 && candidate.geoname.featureClass==FeatureClass.A;
     }
     protected ResolvedLocation findFirstCityCandidate(List<ResolvedLocation> candidates){
@@ -126,7 +137,8 @@ public abstract class GenericPass {
                 ", "+ candidatePlace.admin1Code+
                 ", " + candidatePlace.primaryCountryCode
                 + " / "+resolvedLocation.confidence
-                +" / "+candidatePlace.population + " / " + candidatePlace.featureClass);
+                +" / "+candidatePlace.population + " / " + candidatePlace.featureClass
+                + " ( isExactMatch="+isExactMatch(resolvedLocation)+" )");
     }
 
     /**
