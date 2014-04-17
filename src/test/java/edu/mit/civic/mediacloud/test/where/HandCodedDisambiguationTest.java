@@ -1,7 +1,7 @@
 package edu.mit.civic.mediacloud.test.where;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
@@ -26,20 +26,25 @@ public class HandCodedDisambiguationTest {
         List<CodedArticle> articles;
         articles = TestUtils.loadExamplesFromFile(TestUtils.NYT_JSON_PATH);
         assertEquals(23, articles.size());
-        verifyArticlesMentionHandCodedCountry(articles);
+        verifyArticlesMentionHandCodedCountry(articles,"nyt");
         articles = TestUtils.loadExamplesFromFile(TestUtils.HUFFPO_JSON_PATH);
-        assertEquals(24, articles.size());
-        verifyArticlesMentionHandCodedCountry(articles);
+        assertEquals(22, articles.size());
+        verifyArticlesMentionHandCodedCountry(articles,"huff");
         articles = TestUtils.loadExamplesFromFile(TestUtils.BBC_JSON_PATH);
-        assertEquals(24, articles.size());
-        verifyArticlesMentionHandCodedCountry(articles);
+        assertEquals(25, articles.size());
+        verifyArticlesMentionHandCodedCountry(articles,"bbc");
     }
 
-    private void verifyArticlesMentionHandCodedCountry(List<CodedArticle> articles) throws Exception{
+    private void verifyArticlesMentionHandCodedCountry(List<CodedArticle> articles, String source) throws Exception{
         for(CodedArticle article: articles){
             logger.info("Testing article "+article.mediacloudId+" (looking for "+article.handCodedPlaceName+" / "+article.handCodedCountryCode+")");
             List<ResolvedLocation> resolvedLocations = ParseManager.extractAndResolve(article.text).getResolvedLocations();
-            assertTrue("Didn't find "+article.handCodedPlaceName+" ("+article.handCodedCountryCode+") in article "+article.mediacloudId,
+            String resolvedCountryCodes = "";
+            for(ResolvedLocation loc: resolvedLocations){
+                resolvedCountryCodes += loc.geoname.primaryCountryCode+" ";
+            }
+            assertTrue("Didn't find "+source+" "+article.handCodedPlaceName+" ("+article.handCodedCountryCode+") "
+                    + "in article "+article.mediacloudId+ "( found "+resolvedCountryCodes+")",
                     article.mentionsHandCodedCountry(resolvedLocations));
         }
     }
