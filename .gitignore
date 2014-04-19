@@ -4,3 +4,4 @@ data/nyt/*
 target/*
 *.log
 *.log.zip
+/target

@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +28,7 @@ import edu.mit.civic.mediacloud.who.ResolvedPerson;
 public class ParseManager {
 
     // increment each time we change an algorithm or json structure so we know when parsed results already saved in a DB are stale!
-    private static final String PARSER_VERSION = "0.4";
+    static final String PARSER_VERSION = "0.4";
     
     private static final Logger logger = LoggerFactory.getLogger(ParseManager.class);
 
@@ -44,7 +43,7 @@ public class ParseManager {
     private static AboutnessStrategy aboutness = new FrequencyOfMentionAboutnessStrategy();
     //private static AboutnessStrategy aboutness = new LocationScoredAboutnessStrategy();
     
-    private static final String PATH_TO_GEONAMES_INDEX = "./IndexDirectory";
+    private static final String PATH_TO_GEONAMES_INDEX = "/etc/cliff/IndexDirectory";
     
     // these two are the statuses used in the JSON responses
     private static final String STATUS_OK = "ok";

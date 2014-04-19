@@ -4,8 +4,8 @@
 
   <groupId>edu.mit.civic</groupId>
   <artifactId>CLIFF</artifactId>
-  <version>0.2</version>
-  <packaging>jar</packaging>
+  <packaging>war</packaging>
+  <version>0.4</version>
 
   <name>CLIFF</name>
   <url>http://civic.mit.edu/</url>
@@ -45,12 +45,16 @@
     	<artifactId>slf4j-simple</artifactId>
     	<version>1.6.1</version>
 	</dependency>
-	<!-- TEST DEPENDENCIES -->
 	<dependency>
 		<groupId>junit</groupId>
 		<artifactId>junit</artifactId>
 		<version>4.11</version>
-		<!--<scope>test</scope>-->
+		<scope>test</scope>
+	</dependency>
+	<dependency>
+		<groupId>javax.servlet</groupId>
+		<artifactId>servlet-api</artifactId>
+		<version>2.5</version>
 	</dependency>
   </dependencies>
 
@@ -74,21 +78,6 @@
         </configuration>
       </plugin>
 
-      <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>build-helper-maven-plugin</artifactId>
-          <executions>
-              <execution>
-                  <phase>generate-sources</phase>
-                  <goals><goal>add-source</goal></goals>
-                  <configuration>
-                      <sources>
-                          <source>src/test/java</source>
-                      </sources>
-                  </configuration>
-              </execution>
-          </executions>
-      </plugin>
     </plugins>
   </build>
   
