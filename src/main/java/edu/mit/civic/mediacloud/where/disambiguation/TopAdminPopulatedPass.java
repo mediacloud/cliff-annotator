@@ -21,8 +21,8 @@ public class TopAdminPopulatedPass extends GenericPass {
          */
         for( List<ResolvedLocation> candidates: possibilitiesToDo){
         	      
-            ResolvedLocation cityCandidate = findFirstCityCandidate(candidates);
-            ResolvedLocation adminCandidate = findFirstAdminCandidate(candidates);
+            ResolvedLocation cityCandidate = findFirstCityCandidate(candidates, false);
+            ResolvedLocation adminCandidate = findFirstAdminCandidate(candidates, false);
 
             if (chooseCityOverAdmin(cityCandidate, adminCandidate)){
             	bestCandidates.add(cityCandidate);

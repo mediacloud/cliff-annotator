@@ -17,12 +17,17 @@ public class ExactColocationsPass extends GenericPass {
         for( List<ResolvedLocation> candidates: possibilitiesToDo){
             boolean foundOne = false;
             for( ResolvedLocation candidate: candidates){
+            	
                 if(!foundOne && isExactMatch(candidate) && 
-                    candidate.geoname.population>0 && inSameCountry(candidate, bestCandidates)){
+                		candidate.geoname.population>0 && 
+                		(bestCandidates.size() == 0 || 
+                			(bestCandidates.size() != 0 && inSameCountry(candidate, bestCandidates)))){
+                	//	 candidate.geoname.population>0){
+                    //candidate.geoname.population>0 && inSameCountry(candidate, bestCandidates)){
      
-                    ResolvedLocation cityCandidate = findFirstCityCandidate(candidates);
-                    ResolvedLocation adminCandidate = findFirstAdminCandidate(candidates);
-
+                    ResolvedLocation cityCandidate = findFirstCityCandidate(candidates, true);
+                    ResolvedLocation adminCandidate = findFirstAdminCandidate(candidates, true);
+                    
                     if (chooseCityOverAdmin(cityCandidate, adminCandidate)){
                     	bestCandidates.add(cityCandidate);
                     	possibilitiesToRemove.add(candidates);

@@ -55,6 +55,8 @@ public abstract class GenericPass {
      * @return
      */
     protected boolean isExactMatch(ResolvedLocation candidate) {
+    	logger.debug(candidate.geoname.name + " EQUALS " + candidate.location.text + " ? " + candidate.geoname.name.equals(candidate.location.text));
+    	
         return candidate.geoname.name.equals(candidate.location.text);
         // return candidate.confidence==EXACT_MATCH_CONFIDENCE;
     }
@@ -74,18 +76,26 @@ public abstract class GenericPass {
     protected boolean isAdminRegion(ResolvedLocation candidate){
     	return candidate.geoname.population>0 && candidate.geoname.featureClass==FeatureClass.A;
     }
-    protected ResolvedLocation findFirstCityCandidate(List<ResolvedLocation> candidates){
+    protected ResolvedLocation findFirstCityCandidate(List<ResolvedLocation> candidates, boolean exactMatchRequired){
     	for(ResolvedLocation candidate: candidates) {
             if(isCity(candidate)){
-                return candidate;
+            	if (exactMatchRequired && isExactMatch(candidate)){
+            		return candidate;
+            	} else if (!exactMatchRequired){
+            		return candidate;
+            	}
             }
         }
     	return null; 	
     }
-    protected ResolvedLocation findFirstAdminCandidate(List<ResolvedLocation> candidates){
+    protected ResolvedLocation findFirstAdminCandidate(List<ResolvedLocation> candidates, boolean exactMatchRequired){
     	for(ResolvedLocation candidate: candidates) {
             if(isAdminRegion(candidate)){
-                return candidate;
+            	if (exactMatchRequired && isExactMatch(candidate)){
+            		return candidate;
+            	} else if (!exactMatchRequired){
+            		return candidate;
+            	}
             }
         }
     	return null; 	
@@ -108,6 +118,7 @@ public abstract class GenericPass {
     
 	
     protected boolean inSameCountry(ResolvedLocation candidate, List<ResolvedLocation> list){
+    	
         for( ResolvedLocation item: list){
             if(candidate.geoname.primaryCountryCode.equals(item.geoname.primaryCountryCode)){
                 return true;
