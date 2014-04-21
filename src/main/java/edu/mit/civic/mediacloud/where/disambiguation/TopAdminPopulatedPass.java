@@ -22,8 +22,8 @@ public class TopAdminPopulatedPass extends GenericPass {
         	
             List<ResolvedLocation> exactMatches = getExactMatches(candidates); 
             if(exactMatches.size()>0){
-                ResolvedLocation cityCandidate = findFirstCityCandidate(exactMatches);
-                ResolvedLocation adminCandidate = findFirstAdminCandidate(exactMatches);
+                ResolvedLocation cityCandidate = findFirstCityCandidate(exactMatches,true);
+                ResolvedLocation adminCandidate = findFirstAdminCandidate(exactMatches,true);
 
                 if (chooseCityOverAdmin(cityCandidate, adminCandidate)){
                     bestCandidates.add(cityCandidate);
@@ -34,8 +34,8 @@ public class TopAdminPopulatedPass extends GenericPass {
                 }
             } else {
             
-                ResolvedLocation cityCandidate = findFirstCityCandidate(candidates);
-                ResolvedLocation adminCandidate = findFirstAdminCandidate(candidates);
+                ResolvedLocation cityCandidate = findFirstCityCandidate(candidates,false);
+                ResolvedLocation adminCandidate = findFirstAdminCandidate(candidates,false);
     
                 if (chooseCityOverAdmin(cityCandidate, adminCandidate)){
                 	bestCandidates.add(cityCandidate);
