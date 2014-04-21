@@ -43,8 +43,8 @@ Also add this to your `~/.m2/settings.xml`:
 
 * Building and Deploying
 
-First make sure tomcat is running (ie. `catalina run`). Now run `mvn tomcat7:deploy` to deploy the app, 
-or `mvn tomcat7:redeploy` to redeploy once you've already got the app deployed.
+First make sure tomcat is running (ie. `catalina run`). Now run `mvn tomcat7:deploy -DskipTests` to deploy the app, 
+or `mvn tomcat7:redeploy -DskipTests` to redeploy once you've already got the app deployed.
 
 Using
 -----
@@ -64,4 +64,4 @@ Releasing
 ---------
 
 CLIFF is setup to be run inside a Java servlet container (ie. Tomcat7).  To create the 
-WAR file, run `mvn package`.
+WAR file, run `mvn package -DskipTests`.
