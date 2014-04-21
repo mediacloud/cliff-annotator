@@ -28,7 +28,7 @@ import edu.mit.civic.mediacloud.who.ResolvedPerson;
 public class ParseManager {
 
     // increment each time we change an algorithm or json structure so we know when parsed results already saved in a DB are stale!
-    static final String PARSER_VERSION = "0.4";
+    static final String PARSER_VERSION = "0.5";
     
     private static final Logger logger = LoggerFactory.getLogger(ParseManager.class);
 
