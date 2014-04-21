@@ -16,34 +16,52 @@ You need to build CLAVIN in order to build the Geonames Gazetteer Index for geop
 The idea is that you build all that, and then create a symlink at `/etc/cliff/IndexDirectory` 
 to the CLAVIN index you just built.
 
-Execution
----------
+Deployment
+----------
 
-CLIFF is setup to be run inside a Java servlet container (ie. Tomcat).  You can run it inside 
-of Eclipse like this.
+* Setup
 
-Use
----
+CLIFF is setup to be run inside a Java servlet container (ie. Tomca7t).  For development we use the 
+[Maven Tomcat plugin](http://tomcat.apache.org/maven-plugin.html).  To deploy, add this to your 
+`%TOMCAT_PATH%/conf/tomcat-users.xml` file:
+```xml
+  <role rolename="manager"/>
+  <role rolename="manager-gui"/>
+  <role rolename="manager-script"/>
+  <user username="cliff" password="beer" roles="manager,manager-gui,manager-script"/>
+```
+Also add this to your `~/.m2/settings.xml`:
+```xml
+  <servers>
+    <server>
+	  <id>CliffTomcatServer</id>
+      <username>cliff</username>
+      <password>beer</password>
+    </server>
+  </servers>
+```
+
+* Building and Deploying
+
+First make sure tomcat is running (ie. `catalina run`). Now run `mvn tomcat7:deploy` to deploy the app, 
+or `mvn tomcat7:redeploy` to redeploy once you've already got the app deployed.
+
+Using
+-----
 
 To test it out, hit this url in a browser and you should get some JSON back:
 
 ```
-http://localhost:8080/CLIFF-0.4/parse/text?q=This is some text about New York City, and maybe about Harari as well
+http://localhost:8080/CLIFF/parse/text?q=This is some text about New York City, and maybe about Accra as well
 ```
 
 Testing
 -------
 
-```
-mvn test
-```
+We have a number of unit tests that can be run with `mvn test`.
 
 Releasing
 ---------
 
-CLIFF is setup to be run inside a Java servlet container (ie. Tomcat).  To create the 
+CLIFF is setup to be run inside a Java servlet container (ie. Tomcat7).  To create the 
 WAR file, run `mvn package`.
-
-Copy `target/CLIFF-[version].war` to your Tomcat release dir.  Our default development 
-environment is running Tomcat installed via HomeBrew on Mac OS X.  With that in mind, 
-you can simply run `deploy-to-tomcat.sh` and that will copy over the WAR over for you.
