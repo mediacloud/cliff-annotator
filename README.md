@@ -19,11 +19,11 @@ to the CLAVIN index you just built.
 Deployment
 ----------
 
-* Setup
+# Setup
 
-CLIFF is setup to be run inside a Java servlet container (ie. Tomca7t).  For development we use the 
-[Maven Tomcat plugin](http://tomcat.apache.org/maven-plugin.html).  To deploy, add this to your 
-`%TOMCAT_PATH%/conf/tomcat-users.xml` file:
+CLIFF is setup to be run inside a Java servlet container (ie. Tomca7t).  For development 
+we use the [Maven Tomcat plugin](http://tomcat.apache.org/maven-plugin.html).  To deploy, 
+add this to your `%TOMCAT_PATH%/conf/tomcat-users.xml` file:
 ```xml
   <role rolename="manager"/>
   <role rolename="manager-gui"/>
@@ -41,10 +41,11 @@ Also add this to your `~/.m2/settings.xml`:
   </servers>
 ```
 
-* Building and Deploying
+# Building and Deploying
 
-First make sure tomcat is running (ie. `catalina run`). Now run `mvn tomcat7:deploy -DskipTests` to deploy the app, 
-or `mvn tomcat7:redeploy -DskipTests` to redeploy once you've already got the app deployed.
+First make sure tomcat is running (ie. `catalina run`). Now run `mvn tomcat7:deploy -DskipTests` 
+to deploy the app, or `mvn tomcat7:redeploy -DskipTests` to redeploy once you've already got 
+the app deployed.
 
 Using
 -----
