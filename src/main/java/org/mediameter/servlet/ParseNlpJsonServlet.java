@@ -30,17 +30,19 @@ public class ParseNlpJsonServlet extends HttpServlet{
         response.setCharacterEncoding("UTF-8");
 
         String results = null;
-        try {
-            String text = request.getParameter("q");
-            results = ParseManager.parseFromNlpJson(text);
-            logger.info(results);
-        } catch(Exception e){   // try to give the user something useful
-            logger.error(e.toString());
-            results = ParseManager.getErrorText(e.toString());
+        String text = request.getParameter("q");
+        if(text==null){
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+        } else {
+            try {
+                results = ParseManager.parseFromNlpJson(text);
+                logger.info(results);
+            } catch(Exception e){   // try to give the user something useful
+                logger.error(e.toString());
+                results = ParseManager.getErrorText(e.toString());
+            }
+            response.getWriter().write(results);
         }
-        
-        response.getWriter().write(results);
-
 	}
 	
 }
