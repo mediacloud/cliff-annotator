@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.mediameter.extractor.ExtractedEntities;
+import org.mediameter.extractor.OrganizationOccurrence;
 import org.mediameter.extractor.PersonOccurrence;
 
 import com.bericotech.clavin.extractor.LocationOccurrence;
@@ -47,6 +48,9 @@ public class MuckUtils {
                             break;
                         case "LOCATION":
                             entities.addLocation(new LocationOccurrence(queuedEntityText, -1));
+                            break;
+                        case "ORGANIZATION":
+                            entities.addOrganization(new OrganizationOccurrence(queuedEntityText, -1));
                             break;
                         }
                     }
