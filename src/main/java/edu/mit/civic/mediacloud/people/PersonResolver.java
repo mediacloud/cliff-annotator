@@ -1,10 +1,10 @@
-package edu.mit.civic.mediacloud.who;
+package edu.mit.civic.mediacloud.people;
 
 import java.util.List;
 
 import edu.mit.civic.mediacloud.extractor.PersonOccurrence;
-import edu.mit.civic.mediacloud.who.disambiguation.PersonDisambiguationStrategy;
-import edu.mit.civic.mediacloud.who.disambiguation.KindaDumbDisambiguationStrategy;
+import edu.mit.civic.mediacloud.people.disambiguation.KindaDumbDisambiguationStrategy;
+import edu.mit.civic.mediacloud.people.disambiguation.PersonDisambiguationStrategy;
 
 public class PersonResolver {
 

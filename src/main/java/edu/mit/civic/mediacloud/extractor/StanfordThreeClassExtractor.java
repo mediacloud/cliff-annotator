@@ -10,9 +10,9 @@ import org.slf4j.LoggerFactory;
 
 import com.bericotech.clavin.extractor.LocationOccurrence;
 
-import edu.mit.civic.mediacloud.where.substitutions.AbstractSubstitutionMap;
-import edu.mit.civic.mediacloud.where.substitutions.CustomSubstitutionMap;
-import edu.mit.civic.mediacloud.where.substitutions.WikipediaDemonymMap;
+import edu.mit.civic.mediacloud.places.substitutions.AbstractSubstitutionMap;
+import edu.mit.civic.mediacloud.places.substitutions.CustomSubstitutionMap;
+import edu.mit.civic.mediacloud.places.substitutions.WikipediaDemonymMap;
 import edu.stanford.nlp.ie.AbstractSequenceClassifier;
 import edu.stanford.nlp.ie.crf.CRFClassifier;
 import edu.stanford.nlp.util.CoreMap;

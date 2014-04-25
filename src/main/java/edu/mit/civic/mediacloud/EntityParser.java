@@ -10,8 +10,8 @@ import com.bericotech.clavin.resolver.ResolvedLocation;
 
 import edu.mit.civic.mediacloud.extractor.ExtractedEntities;
 import edu.mit.civic.mediacloud.extractor.StanfordThreeClassExtractor;
-import edu.mit.civic.mediacloud.who.PersonResolver;
-import edu.mit.civic.mediacloud.who.ResolvedPerson;
+import edu.mit.civic.mediacloud.people.PersonResolver;
+import edu.mit.civic.mediacloud.people.ResolvedPerson;
 
 /**
  * Patterned after com.bericotech.clavin.GeoParser

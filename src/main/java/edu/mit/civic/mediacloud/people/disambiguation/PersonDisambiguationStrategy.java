@@ -1,10 +1,10 @@
-package edu.mit.civic.mediacloud.who.disambiguation;
+package edu.mit.civic.mediacloud.people.disambiguation;
 
 import java.util.List;
 
 import edu.mit.civic.mediacloud.DisambiguationStrategy;
 import edu.mit.civic.mediacloud.extractor.PersonOccurrence;
-import edu.mit.civic.mediacloud.who.ResolvedPerson;
+import edu.mit.civic.mediacloud.people.ResolvedPerson;
 
 /**
  * Wrapper around disambiguation strategies, so we can try and compare different ones

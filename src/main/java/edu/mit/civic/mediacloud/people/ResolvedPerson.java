@@ -1,4 +1,4 @@
-package edu.mit.civic.mediacloud.who;
+package edu.mit.civic.mediacloud.people;
 
 import java.util.ArrayList;
 import java.util.List;

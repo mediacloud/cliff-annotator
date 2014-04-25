@@ -1,4 +1,4 @@
-package edu.mit.civic.mediacloud.where.substitutions;
+package edu.mit.civic.mediacloud.places.substitutions;
 
 import java.io.BufferedReader;
 import java.io.IOException;

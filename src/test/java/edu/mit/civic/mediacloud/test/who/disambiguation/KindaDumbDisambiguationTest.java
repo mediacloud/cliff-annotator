@@ -9,8 +9,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import edu.mit.civic.mediacloud.extractor.PersonOccurrence;
-import edu.mit.civic.mediacloud.who.ResolvedPerson;
-import edu.mit.civic.mediacloud.who.disambiguation.KindaDumbDisambiguationStrategy;
+import edu.mit.civic.mediacloud.people.ResolvedPerson;
+import edu.mit.civic.mediacloud.people.disambiguation.KindaDumbDisambiguationStrategy;
 
 public class KindaDumbDisambiguationTest {
     

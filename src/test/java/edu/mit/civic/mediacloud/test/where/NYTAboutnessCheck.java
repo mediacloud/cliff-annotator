@@ -23,13 +23,15 @@ import com.nytlabs.corpus.NYTCorpusDocumentParser;
 
 import edu.mit.civic.mediacloud.ParseManager;
 import edu.mit.civic.mediacloud.extractor.ExtractedEntities;
-import edu.mit.civic.mediacloud.where.aboutness.AboutnessStrategy;
-import edu.mit.civic.mediacloud.where.substitutions.AbstractSubstitutionMap;
-import edu.mit.civic.mediacloud.where.substitutions.CustomSubstitutionMap;
+import edu.mit.civic.mediacloud.places.aboutness.AboutnessStrategy;
+import edu.mit.civic.mediacloud.places.substitutions.AbstractSubstitutionMap;
+import edu.mit.civic.mediacloud.places.substitutions.CustomSubstitutionMap;
 
 /**
  * Print out the accuracy of our Aboutness algorithm against the NYT Not a unit
- * test, because we don't have a threshold at which this is "correct"
+ * test, because we don't have a threshold at which this is "correct". To run this,
+ * Unzip some of the NYT corpus to the "data" folder, so you end up with something like
+ * "data/nyt/1987/01/01".  This will walk anything under "data/nyt" and test it.
  * 
  * @author rahulb
  * 
@@ -137,7 +139,7 @@ public class NYTAboutnessCheck {
     }
 
     /**
-     * The ���locations��� field specifies a list of geographic descriptors drawn
+     * The 'locations' field specifies a list of geographic descriptors drawn
      * from a normalized controlled vocabulary that correspond to places
      * mentioned in the article. These tags are hand-assigned by The New York
      * Times Indexing Service.

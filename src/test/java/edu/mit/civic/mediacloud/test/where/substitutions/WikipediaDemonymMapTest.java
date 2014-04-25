@@ -5,8 +5,8 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.mit.civic.mediacloud.where.substitutions.AbstractSubstitutionMap;
-import edu.mit.civic.mediacloud.where.substitutions.WikipediaDemonymMap;
+import edu.mit.civic.mediacloud.places.substitutions.AbstractSubstitutionMap;
+import edu.mit.civic.mediacloud.places.substitutions.WikipediaDemonymMap;
 
 public class WikipediaDemonymMapTest {
 

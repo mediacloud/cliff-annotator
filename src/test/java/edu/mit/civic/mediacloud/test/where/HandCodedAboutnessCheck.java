@@ -9,7 +9,7 @@ import com.bericotech.clavin.gazetteer.CountryCode;
 import com.bericotech.clavin.resolver.ResolvedLocation;
 
 import edu.mit.civic.mediacloud.ParseManager;
-import edu.mit.civic.mediacloud.where.aboutness.AboutnessStrategy;
+import edu.mit.civic.mediacloud.places.aboutness.AboutnessStrategy;
 
 /**
  * Print out the accuracy of our Aboutness algorithm against the hand-coded bake-off data.

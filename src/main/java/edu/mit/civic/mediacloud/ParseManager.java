@@ -17,10 +17,10 @@ import com.google.gson.Gson;
 import edu.mit.civic.mediacloud.extractor.ExtractedEntities;
 import edu.mit.civic.mediacloud.extractor.StanfordThreeClassExtractor;
 import edu.mit.civic.mediacloud.muck.MuckUtils;
-import edu.mit.civic.mediacloud.where.CustomLuceneLocationResolver;
-import edu.mit.civic.mediacloud.where.aboutness.AboutnessStrategy;
-import edu.mit.civic.mediacloud.where.aboutness.FrequencyOfMentionAboutnessStrategy;
-import edu.mit.civic.mediacloud.who.ResolvedPerson;
+import edu.mit.civic.mediacloud.people.ResolvedPerson;
+import edu.mit.civic.mediacloud.places.CustomLuceneLocationResolver;
+import edu.mit.civic.mediacloud.places.aboutness.AboutnessStrategy;
+import edu.mit.civic.mediacloud.places.aboutness.FrequencyOfMentionAboutnessStrategy;
 
 /**
  * Singleton-style wrapper around a GeoParser.  Call GeoParser.locate(someText) to use this class.
@@ -89,36 +89,38 @@ public class ParseManager {
         results.put("version", PARSER_VERSION);
         
         // assemble the "where" results
-        HashMap whereResults = new HashMap();
+        HashMap placeResults = new HashMap();
         ArrayList resolvedPlaces = new ArrayList();
         for (ResolvedLocation resolvedLocation: entities.getResolvedLocations()){
             HashMap loc = writeResolvedLocationToHash(resolvedLocation);
             resolvedPlaces.add(loc);
         }
-        whereResults.put("resolvedLocations",resolvedPlaces);
+        placeResults.put("all",resolvedPlaces);
         
+        HashMap aboutResults = new HashMap();
         if (resolvedPlaces.size() > 0){
-            whereResults.put("primaryCountries", aboutness.selectCountries(entities.getResolvedLocations()));
-            whereResults.put("primaryStates", aboutness.selectStates(entities.getResolvedLocations()));
+            aboutResults.put("countries", aboutness.selectCountries(entities.getResolvedLocations()));
+            aboutResults.put("states", aboutness.selectStates(entities.getResolvedLocations()));
             ArrayList primaryCities = new ArrayList();            
             for (ResolvedLocation resolvedLocation: aboutness.selectCities(entities.getResolvedLocations())){
                 HashMap loc = writeResolvedLocationToHash(resolvedLocation);
                 primaryCities.add(loc);
             }
-            whereResults.put("primaryCities",primaryCities);
+            aboutResults.put("cities",primaryCities);
         }
-        results.put("where",whereResults);
+        placeResults.put("about",aboutResults);
+        results.put("places",placeResults);
 
         // assemble the "who" results
         List<ResolvedPerson> resolvedPeople = entities.getResolvedPeople();
-        List<HashMap> whoResults = new ArrayList<HashMap>();
+        List<HashMap> personResults = new ArrayList<HashMap>();
         for (ResolvedPerson person: resolvedPeople){
             HashMap sourceInfo = new HashMap();
             sourceInfo.put("name", person.getName());
-            sourceInfo.put("occurrenceCount", person.getOccurenceCount());
-            whoResults.add(sourceInfo);
+            sourceInfo.put("count", person.getOccurenceCount());
+            personResults.add(sourceInfo);
         }
-        results.put("who",whoResults);
+        results.put("people",personResults);
         
         // return it as JSON
         return gson.toJson(results);

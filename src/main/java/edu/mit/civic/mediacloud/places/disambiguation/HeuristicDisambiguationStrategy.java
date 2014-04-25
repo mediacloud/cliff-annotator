@@ -1,4 +1,4 @@
-package edu.mit.civic.mediacloud.where.disambiguation;
+package edu.mit.civic.mediacloud.places.disambiguation;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import com.bericotech.clavin.resolver.ResolvedLocation;
 
-import edu.mit.civic.mediacloud.where.CustomLuceneLocationResolver;
+import edu.mit.civic.mediacloud.places.CustomLuceneLocationResolver;
 
 /**
  * Employ a variety of heuristics for picking the best candidate, based on what

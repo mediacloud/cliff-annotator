@@ -1,4 +1,4 @@
-package edu.mit.civic.mediacloud.where.disambiguation;
+package edu.mit.civic.mediacloud.places.disambiguation;
 
 import java.util.ArrayList;
 import java.util.List;

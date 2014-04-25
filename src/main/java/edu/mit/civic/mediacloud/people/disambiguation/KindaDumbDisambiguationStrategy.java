@@ -1,4 +1,4 @@
-package edu.mit.civic.mediacloud.who.disambiguation;
+package edu.mit.civic.mediacloud.people.disambiguation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import edu.mit.civic.mediacloud.extractor.PersonOccurrence;
-import edu.mit.civic.mediacloud.who.ResolvedPerson;
+import edu.mit.civic.mediacloud.people.ResolvedPerson;
 
 /**
  * Use simple case-insensitive text matching to match person occurrences

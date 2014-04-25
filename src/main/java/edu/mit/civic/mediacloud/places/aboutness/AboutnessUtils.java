@@ -1,4 +1,4 @@
-package edu.mit.civic.mediacloud.where.aboutness;
+package edu.mit.civic.mediacloud.places.aboutness;
 
 import java.util.HashMap;
 import java.util.List;
