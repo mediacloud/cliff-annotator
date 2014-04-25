@@ -1,4 +1,4 @@
-package edu.mit.civic.mediacloud.orgs.disambiguate;
+package edu.mit.civic.mediacloud.orgs.disambiguation;
 
 import java.util.List;
 

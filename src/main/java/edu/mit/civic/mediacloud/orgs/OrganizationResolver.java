@@ -3,8 +3,8 @@ package edu.mit.civic.mediacloud.orgs;
 import java.util.List;
 
 import edu.mit.civic.mediacloud.extractor.OrganizationOccurrence;
-import edu.mit.civic.mediacloud.orgs.disambiguate.OrganizationDisambiguationStrategy;
-import edu.mit.civic.mediacloud.orgs.disambiguate.RemoveDuplicatesDisambiguationStrategy;
+import edu.mit.civic.mediacloud.orgs.disambiguation.OrganizationDisambiguationStrategy;
+import edu.mit.civic.mediacloud.orgs.disambiguation.RemoveDuplicatesDisambiguationStrategy;
 
 public class OrganizationResolver {
 
