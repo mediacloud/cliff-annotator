@@ -98,8 +98,8 @@ public class StanfordThreeClassExtractor{
                     entities.addLocation( getLocationOccurrence(entityName, position) );
                 }
                 if (extractedEntity.first.equalsIgnoreCase("ORGANIZATION")) {
-                    // TODO: do something clever with these
-                    //logger.info("  "+text.substring(extractedEntity.second(), extractedEntity.third()));
+                    OrganizationOccurrence organization = new OrganizationOccurrence(entityName, position);
+                    entities.addOrganization( organization );
                 }
             }
         }

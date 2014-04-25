@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import edu.mit.civic.mediacloud.extractor.ExtractedEntities;
 import edu.mit.civic.mediacloud.extractor.StanfordThreeClassExtractor;
 import edu.mit.civic.mediacloud.muck.MuckUtils;
+import edu.mit.civic.mediacloud.orgs.ResolvedOrganization;
 import edu.mit.civic.mediacloud.people.ResolvedPerson;
 import edu.mit.civic.mediacloud.places.CustomLuceneLocationResolver;
 import edu.mit.civic.mediacloud.places.aboutness.AboutnessStrategy;
@@ -28,7 +29,7 @@ import edu.mit.civic.mediacloud.places.aboutness.FrequencyOfMentionAboutnessStra
 public class ParseManager {
 
     // increment each time we change an algorithm or json structure so we know when parsed results already saved in a DB are stale!
-    static final String PARSER_VERSION = "0.5";
+    static final String PARSER_VERSION = "0.6";
     
     private static final Logger logger = LoggerFactory.getLogger(ParseManager.class);
 
@@ -121,7 +122,18 @@ public class ParseManager {
             personResults.add(sourceInfo);
         }
         results.put("people",personResults);
-        
+
+        // assemble the org results
+        List<ResolvedOrganization> resolvedOrganizations = entities.getResolvedOrganizations();
+        List<HashMap> organizationResults = new ArrayList<HashMap>();
+        for (ResolvedOrganization organization: resolvedOrganizations){
+            HashMap sourceInfo = new HashMap();
+            sourceInfo.put("name", organization.getName());
+            sourceInfo.put("count", organization.getOccurenceCount());
+            organizationResults.add(sourceInfo);
+        }
+        results.put("organizations",organizationResults);
+
         // return it as JSON
         return gson.toJson(results);
     }

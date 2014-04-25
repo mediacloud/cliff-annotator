@@ -10,6 +10,8 @@ import com.bericotech.clavin.resolver.ResolvedLocation;
 
 import edu.mit.civic.mediacloud.extractor.ExtractedEntities;
 import edu.mit.civic.mediacloud.extractor.StanfordThreeClassExtractor;
+import edu.mit.civic.mediacloud.orgs.OrganizationResolver;
+import edu.mit.civic.mediacloud.orgs.ResolvedOrganization;
 import edu.mit.civic.mediacloud.people.PersonResolver;
 import edu.mit.civic.mediacloud.people.ResolvedPerson;
 
@@ -27,6 +29,7 @@ public class EntityParser {
     
     private LocationResolver locationResolver;
     private PersonResolver personResolver;
+    private OrganizationResolver organizationResolver;
     
     // switch controlling use of fuzzy matching
     private final boolean fuzzy;
@@ -36,6 +39,7 @@ public class EntityParser {
         this.extractor = extractor;
         this.locationResolver = resolver;
         this.personResolver = new PersonResolver();
+        this.organizationResolver = new OrganizationResolver();
         this.fuzzy = fuzzy;
     }
 
@@ -56,10 +60,15 @@ public class EntityParser {
         logger.trace("resolvedLocations: {}", resolvedLocations);
         
         // Disambiguate people
-        List<ResolvedPerson> resolvedPeople = personResolver.resolveLocations(entities.getPeople());
+        List<ResolvedPerson> resolvedPeople = personResolver.resolve(entities.getPeople());
         entities.setResolvedPeople( resolvedPeople );
         logger.trace("resolvedPeople: {}", resolvedLocations);
-                        
+
+        // Disambiguate organizations
+        List<ResolvedOrganization> resolvedOrganizations = organizationResolver.resolve(entities.getOrganizations());
+        entities.setResolvedOrganizations( resolvedOrganizations );
+        logger.trace("resolvedOrganizations: {}", resolvedOrganizations);
+
         return entities;
         
     }

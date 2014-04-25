@@ -14,7 +14,7 @@ public class PersonResolver {
         this.disambiguationStrategy = new KindaDumbDisambiguationStrategy();
     }
     
-    public List<ResolvedPerson> resolveLocations(List<PersonOccurrence> people){
+    public List<ResolvedPerson> resolve(List<PersonOccurrence> people){
         return disambiguationStrategy.select(people);
     }
     

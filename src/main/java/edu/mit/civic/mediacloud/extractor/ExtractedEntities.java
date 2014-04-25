@@ -2,12 +2,12 @@ package edu.mit.civic.mediacloud.extractor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import com.bericotech.clavin.extractor.LocationOccurrence;
 import com.bericotech.clavin.gazetteer.CountryCode;
 import com.bericotech.clavin.resolver.ResolvedLocation;
 
+import edu.mit.civic.mediacloud.orgs.ResolvedOrganization;
 import edu.mit.civic.mediacloud.people.ResolvedPerson;
 
 /**
@@ -22,11 +22,20 @@ public class ExtractedEntities {
     private List<PersonOccurrence> people;
     private List<ResolvedPerson> resolvedPeople;
 
+    private List<OrganizationOccurrence> organizations;
+    private List<ResolvedOrganization> resolvedOrganizations;
+
     public ExtractedEntities(){
-        people = new ArrayList<PersonOccurrence>();
-        resolvedLocations = new ArrayList<ResolvedLocation>();
         locations = new ArrayList<LocationOccurrence>();
         resolvedPeople = new ArrayList<ResolvedPerson>();
+        people = new ArrayList<PersonOccurrence>();
+        resolvedLocations = new ArrayList<ResolvedLocation>();
+        organizations = new ArrayList<OrganizationOccurrence>();
+        resolvedOrganizations = new ArrayList<ResolvedOrganization>();
+    }
+
+    public void addOrganization(OrganizationOccurrence organization) {
+        organizations.add(organization);
     }
 
     public void addPerson(PersonOccurrence person) {
@@ -45,12 +54,20 @@ public class ExtractedEntities {
         return locations;
     }
 
+    public List<OrganizationOccurrence> getOrganizations() {
+        return organizations;
+    }
+
     public void setResolvedLocations(List<ResolvedLocation> locs) {
         resolvedLocations = locs;
     }
 
     public List<ResolvedLocation> getResolvedLocations() {
         return resolvedLocations;
+    }
+
+    public List<ResolvedOrganization> getResolvedOrganizations() {
+        return resolvedOrganizations;
     }
 
     public List<CountryCode> getUniqueCountries(){
@@ -77,6 +94,10 @@ public class ExtractedEntities {
 
     public List<ResolvedPerson> getResolvedPeople() {
         return resolvedPeople;
+    }
+
+    public void setResolvedOrganizations(List<ResolvedOrganization> resolvedOrganizations) {
+        this.resolvedOrganizations = resolvedOrganizations;
     }
     
 }
