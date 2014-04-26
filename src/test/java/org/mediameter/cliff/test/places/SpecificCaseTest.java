@@ -32,6 +32,13 @@ public class SpecificCaseTest {
     private static final int REGION_MIDDLE_EAST = 6269133;
     private static final int CITY_LONDON = 2643743;
     private static final int PLACE_RUSSEL_SQ_LONDON = 6954795;
+    private static final int CITY_SAO_PAULO = 3448439;
+    
+    @Test
+    public void testSaoPauloAccents() throws Exception {
+        verifyPlacesInFile("src/test/resources/sample-docs/sao-paulo.txt",
+                new int[] {3448439}, true);
+    }
     
     @Test
     public void testRussellSq() throws Exception {
