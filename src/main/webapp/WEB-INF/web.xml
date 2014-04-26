@@ -7,7 +7,7 @@
 
      <servlet>
          <servlet-name>ParseTextServlet</servlet-name>
-         <servlet-class>org.mediameter.servlet.ParseTextServlet</servlet-class>
+         <servlet-class>org.mediameter.cliff.servlet.ParseTextServlet</servlet-class>
      </servlet>
      <servlet-mapping>
          <servlet-name>ParseTextServlet</servlet-name>
@@ -16,7 +16,7 @@
 
      <servlet>
          <servlet-name>ParseNlpJsonServlet</servlet-name>
-         <servlet-class>org.mediameter.servlet.ParseNlpJsonServlet</servlet-class>
+         <servlet-class>org.mediameter.cliff.servlet.ParseNlpJsonServlet</servlet-class>
      </servlet>
      <servlet-mapping>
          <servlet-name>ParseNlpJsonServlet</servlet-name>
