@@ -1,11 +1,11 @@
 CLIFF: News Parsing Server
 --------------------------
 
-CLIFF is a lightweight server to allow socket-based requests to the Stanford Named Entity 
-Recognized and CLAVIN geoparser.  It allows you to submit unstructured text over a socket 
-and a receive in reply JSON results with information about locations mentioned, people 
-mentioned, and countries the text is "about".  The geoparsing is tuned to identify cities 
-and countries.
+CLIFF is a lightweight server to allow HTTP requests to the Stanford Named Entity 
+Recognized and a modified CLAVIN geoparser.  It allows you to submit unstructured text 
+over HTTP and a receive in reply JSON results with information about organizations 
+mentioned, locations mentioned, people mentioned, and countries the text is "about".  
+The geoparsing is tuned to identify cities and countries.
 
 Developing
 ----------
@@ -21,7 +21,7 @@ Deployment
 
 # Setup
 
-CLIFF is setup to be run inside a Java servlet container (ie. Tomca7t).  For development 
+CLIFF is setup to be run inside a Java servlet container (ie. Tomcat7).  For development 
 we use the [Maven Tomcat plugin](http://tomcat.apache.org/maven-plugin.html).  To deploy, 
 add this to your `%TOMCAT_PATH%/conf/tomcat-users.xml` file:
 ```xml
@@ -40,6 +40,7 @@ Also add this to your `~/.m2/settings.xml`:
     </server>
   </servers>
 ```
+That lets the Maven Tomcat plugin upload the WAR it builds over the website control panel.
 
 # Building and Deploying
 
@@ -64,5 +65,4 @@ We have a number of unit tests that can be run with `mvn test`.
 Releasing
 ---------
 
-CLIFF is setup to be run inside a Java servlet container (ie. Tomcat7).  To create the 
-WAR file, run `mvn package -DskipTests`.
+To create the WAR file, run `mvn package -DskipTests`.
