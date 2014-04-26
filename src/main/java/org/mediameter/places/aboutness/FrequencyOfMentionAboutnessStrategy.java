@@ -45,14 +45,15 @@ public class FrequencyOfMentionAboutnessStrategy implements AboutnessStrategy {
         }
         return results;
     }
-    public List<HashMap> selectStates(List<ResolvedLocation> resolvedLocations){
+
+    public List<HashMap<String, String>> selectStates(List<ResolvedLocation> resolvedLocations){
         // count country mentions
-        HashMap<String,HashMap> stateCounts = AboutnessUtils.getStateCounts(resolvedLocations); 
+        HashMap<String,HashMap<String, String>> stateCounts = AboutnessUtils.getStateCounts(resolvedLocations); 
         // find the most mentioned
         HashMap<String, String> primaryState = null;        
         int highestCount = 0;
         for(String stateCode: stateCounts.keySet()){
-        	HashMap<String, String> state = stateCounts.get(stateCode);
+            HashMap<String, String> state = stateCounts.get(stateCode);
         	int count = Integer.valueOf(state.get("count"));
             if( (primaryState==null) || count > highestCount ){
             	highestCount = count;
@@ -61,13 +62,13 @@ public class FrequencyOfMentionAboutnessStrategy implements AboutnessStrategy {
         }
         logger.info("Found primary state "+primaryState.toString());
         // return results
-        List<HashMap> results = new ArrayList<HashMap>();
+        List<HashMap<String, String>> results = new ArrayList<HashMap<String, String>>();
         if(primaryState!=null) {
         	results.add(primaryState);
-        	int primaryStateCount = Integer.valueOf(primaryState.get("count"));
+        	int primaryStateCount = Integer.valueOf(primaryState.get("count").toString());
         	for(String stateCode: stateCounts.keySet()){
-        		HashMap<String, String> state = stateCounts.get(stateCode);
-        		int count = Integer.valueOf(state.get("count"));
+        	    HashMap<String, String> state = stateCounts.get(stateCode);
+        		int count = Integer.valueOf(state.get("count").toString());
         		
                 if( state != primaryState && count == primaryStateCount ){
                 	results.add(state);

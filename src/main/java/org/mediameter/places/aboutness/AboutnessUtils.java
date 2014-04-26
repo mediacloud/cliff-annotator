@@ -6,7 +6,6 @@ import java.util.Set;
 
 import com.bericotech.clavin.gazetteer.CountryCode;
 import com.bericotech.clavin.gazetteer.FeatureClass;
-import com.bericotech.clavin.gazetteer.FeatureCode;
 import com.bericotech.clavin.resolver.ResolvedLocation;
 
 public class AboutnessUtils {
@@ -37,8 +36,9 @@ public class AboutnessUtils {
         }
         return cityCounts;
     }
-	public static HashMap<String,HashMap> getStateCounts(List<ResolvedLocation> resolvedLocations){     
-        HashMap<String,HashMap> stateCounts = new HashMap<String,HashMap>();
+
+	public static HashMap<String,HashMap<String, String>> getStateCounts(List<ResolvedLocation> resolvedLocations){     
+        HashMap<String,HashMap<String, String>> stateCounts = new HashMap<String,HashMap<String, String>>();
         for (ResolvedLocation resolvedLocation: resolvedLocations){
             if(resolvedLocation.geoname.admin1Code==null){
                 continue;
