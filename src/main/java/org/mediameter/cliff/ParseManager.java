@@ -20,7 +20,6 @@ import com.bericotech.clavin.gazetteer.CountryCode;
 import com.bericotech.clavin.gazetteer.GeoName;
 import com.bericotech.clavin.resolver.LocationResolver;
 import com.bericotech.clavin.resolver.ResolvedLocation;
-import com.google.gson.Gson;
 
 /**
  * Singleton-style wrapper around a GeoParser.  Call GeoParser.locate(someText) to use this class.
@@ -36,8 +35,6 @@ public class ParseManager {
     
     public static StanfordThreeClassExtractor peopleExtractor = null;
 
-    private static Gson gson = new Gson();
-    
     private static LocationResolver resolver;   // HACK: pointer to keep around for stats logging
     
     private static AboutnessStrategy aboutness = new FrequencyOfMentionAboutnessStrategy();
@@ -54,40 +51,55 @@ public class ParseManager {
      * @param text  unstructured text that you want to parse for location mentions
      * @return      json string with details about locations mentioned
      */
-    public static String parseFromText(String text) {
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public static HashMap parseFromText(String text) {
+        long startTime = System.currentTimeMillis();
+        HashMap results = null;
         if(text.trim().length()==0){
             return getErrorText("No text");
         }
         try {
             ExtractedEntities entities = extractAndResolve(text);
-            return parseFromEntities(entities);
+            results = parseFromEntities(entities);
         } catch (Exception e) {
-            return getErrorText(e.toString());
+            results = getErrorText(e.toString());
         }
+        long endTime = System.currentTimeMillis();
+        long elapsedMillis = endTime - startTime;
+        results.put("milliseconds", elapsedMillis);
+        return results;
     }
     
-    public static String parseFromNlpJson(String nlpJsonString){
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public static HashMap parseFromNlpJson(String nlpJsonString){
+        long startTime = System.currentTimeMillis();
+        HashMap results = null;
         if(nlpJsonString.trim().length()==0){
             return getErrorText("No text");
         }
         try {
             ExtractedEntities entities = MuckUtils.entitiesFromJsonString(nlpJsonString);
             entities = getParserInstance().resolve(entities);;
-            return parseFromEntities(entities);
+            results = parseFromEntities(entities);
         } catch (Exception e) {
-            return getErrorText(e.toString());
+            results = getErrorText(e.toString());
         } 
+        long endTime = System.currentTimeMillis();
+        long elapsedMillis = endTime - startTime;
+        results.put("milliseconds", elapsedMillis);
+        return results;
     }
     
     @SuppressWarnings({ "rawtypes", "unchecked" })  // I'm generating JSON... don't whine!
-    public static String parseFromEntities(ExtractedEntities entities){
+    public static HashMap parseFromEntities(ExtractedEntities entities){
         if (entities == null){
             return getErrorText("No place or person entitites detected in this text.");
         } 
-        HashMap results = new HashMap();
-        results.put("status",STATUS_OK);
-        results.put("version", PARSER_VERSION);
+        HashMap response = new HashMap();
+        response.put("status",STATUS_OK);
+        response.put("version", PARSER_VERSION);
         
+        HashMap results = new HashMap();
         // assemble the "where" results
         HashMap placeResults = new HashMap();
         ArrayList resolvedPlaces = new ArrayList();
@@ -133,8 +145,8 @@ public class ParseManager {
         }
         results.put("organizations",organizationResults);
 
-        // return it as JSON
-        return gson.toJson(results);
+        response.put("results",results);
+        return response;
     }
     
     @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -185,11 +197,12 @@ public class ParseManager {
      * @return
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })  // I'm generating JSON... don't whine!
-    public static String getErrorText(String msg){
+    public static HashMap getErrorText(String msg){
         HashMap info = new HashMap();
+        info.put("version", PARSER_VERSION);
         info.put("status",STATUS_ERROR);
         info.put("details",msg);
-        return gson.toJson(info);
+        return info;
     }
     
     public static void logStats(){
