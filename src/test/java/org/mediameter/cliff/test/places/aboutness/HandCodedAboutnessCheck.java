@@ -1,9 +1,11 @@
-package org.mediameter.cliff.test.places;
+package org.mediameter.cliff.test.places.aboutness;
 
 import java.util.List;
 
 import org.mediameter.cliff.ParseManager;
 import org.mediameter.cliff.places.aboutness.AboutnessStrategy;
+import org.mediameter.cliff.test.places.CodedArticle;
+import org.mediameter.cliff.test.places.TestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +20,7 @@ import com.bericotech.clavin.resolver.ResolvedLocation;
  */
 public class HandCodedAboutnessCheck {
 
-    private static final Logger logger = LoggerFactory.getLogger(HandCodedDisambiguationTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(HandCodedAboutnessCheck.class);
 
     private static double getAboutnessAccuracy(String filePath) throws Exception{
         int correct = 0;

@@ -1,4 +1,4 @@
-package org.mediameter.cliff.test.places;
+package org.mediameter.cliff.test.places.aboutness;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,8 +37,7 @@ import com.nytlabs.corpus.NYTCorpusDocumentParser;
  */
 public class NYTAboutnessCheck {
 
-    private static final Logger logger = LoggerFactory
-            .getLogger(HandCodedDisambiguationTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(NYTAboutnessCheck.class);
 
     private static final String NYT_BASE_DIR = "data/nyt/";
     
