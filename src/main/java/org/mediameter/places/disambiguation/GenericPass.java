@@ -19,7 +19,7 @@ public abstract class GenericPass {
 
     private static final Logger logger = LoggerFactory.getLogger(GenericPass.class);
 
-    private static final double EXACT_MATCH_CONFIDENCE = 1.0;
+    //private static final double EXACT_MATCH_CONFIDENCE = 1.0;
 
     private int triggerCount = 0;
     
