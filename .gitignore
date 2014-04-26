@@ -5,3 +5,5 @@ target/*
 *.log
 *.log.zip
 /target
+data/gdelt/*.CSV
+data/gdelt/*.zip
