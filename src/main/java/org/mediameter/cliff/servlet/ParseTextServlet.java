@@ -1,6 +1,7 @@
 package org.mediameter.cliff.servlet;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -26,8 +27,9 @@ public class ParseTextServlet extends HttpServlet{
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
 
         logger.info("Text Parse Request");
-        response.setContentType("application/json;charse=UTF=8");
-        response.setCharacterEncoding("UTF-8");
+        request.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        response.setContentType("application/json;charset=UTF=8");
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
         String results = null;
         String text = request.getParameter("q");

@@ -37,7 +37,7 @@ public class SpecificCaseTest {
     @Test
     public void testSaoPauloAccents() throws Exception {
         verifyPlacesInFile("src/test/resources/sample-docs/sao-paulo.txt",
-                new int[] {3448439}, true);
+                new int[] {CITY_SAO_PAULO}, true);
     }
     
     @Test
