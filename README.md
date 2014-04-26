@@ -1,5 +1,5 @@
-CLIFF: News Parsing Server
---------------------------
+CLIFF: Extract Named Entities and Geoparsing the News
+-----------------------------------------------------
 
 CLIFF is a lightweight server to allow HTTP requests to the Stanford Named Entity 
 Recognized and a modified CLAVIN geoparser.  It allows you to submit unstructured text 
