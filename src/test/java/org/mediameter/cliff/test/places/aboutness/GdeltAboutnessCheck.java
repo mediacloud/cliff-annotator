@@ -1,7 +1,10 @@
 package org.mediameter.cliff.test.places.aboutness;
 
+import java.util.ArrayList;
+
 import org.mediameter.cliff.ParseManager;
 import org.mediameter.cliff.test.gdelt.GdeltCsv;
+import org.mediameter.cliff.test.gdelt.GdeltEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +18,8 @@ public class GdeltAboutnessCheck {
     private static final Logger logger = LoggerFactory.getLogger(GdeltAboutnessCheck.class);
         
     public GdeltAboutnessCheck() throws Exception {
-        GdeltCsv.allEvents();
+        ArrayList<GdeltEvent> events = GdeltCsv.allEvents();
+        //TODO: run through events grabbing source text, running that through CLIFF, and checking results
     }
 
     /**
@@ -30,8 +34,10 @@ public class GdeltAboutnessCheck {
      */
 
     public static void main(String[] args) throws Exception {
+        logger.info("Starting GdeltAboutnessCheck");
         GdeltAboutnessCheck checker = new GdeltAboutnessCheck();
-        ParseManager.logStats();
+        //ParseManager.logStats();
+        logger.info("Done with GdeltAboutnessCheck");
     }
 
 }

@@ -3,8 +3,8 @@ package org.mediameter.cliff.test.gdelt;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,23 +27,49 @@ public class GdeltCsv {
         ActionGeo_ADM1Code,ActionGeo_Lat,ActionGeo_Long,ActionGeo_FeatureID,DATEADDED,SOURCEURL};
     
     private static File[] allDailyDownloadFiles(){
-        File[] files = new File(BASE_DIR).listFiles();
+        File[] files = new File(BASE_DIR).listFiles(new FilenameFilter() {
+            public boolean accept(File dir, String name) {
+                return name.toLowerCase().endsWith(".csv");
+            }
+        });
+        logger.info("  Found "+files.length+" GDELT csv files in "+BASE_DIR);
         return files;
     }
     
     public static ArrayList<GdeltEvent> allEvents() throws Exception {
         ArrayList<GdeltEvent> events = new ArrayList<GdeltEvent>();
         for(File csvFile : allDailyDownloadFiles() ){
+            logger.info("Loading GDELT events from "+csvFile.getName());
             BufferedReader in = new BufferedReader( new FileReader(csvFile) );
             String str = null;
+            int fileEventCount = 0;
             while ((str = in.readLine()) != null) {
                 if (str.trim().length() == 0) {
                         continue;
                 }
                 String[] values = str.split("\\t");
-                logger.debug(values[COLUMNS.SOURCEURL.ordinal()]);
+                GdeltActor actor1 = new GdeltActor(
+                        values[COLUMNS.Actor1Geo_CountryCode.ordinal()], 
+                        values[COLUMNS.Actor1Geo_ADM1Code.ordinal()], 
+                        values[COLUMNS.Actor1Geo_Lat.ordinal()], 
+                        values[COLUMNS.Actor1Geo_Long.ordinal()], 
+                        values[COLUMNS.Actor1Geo_FeatureID.ordinal()], 
+                        values[COLUMNS.Actor1Geo_Type.ordinal()], 
+                        values[COLUMNS.Actor1Geo_FullName.ordinal()]);
+                GdeltActor actor2 = new GdeltActor(
+                        values[COLUMNS.Actor2Geo_CountryCode.ordinal()], 
+                        values[COLUMNS.Actor2Geo_ADM1Code.ordinal()], 
+                        values[COLUMNS.Actor2Geo_Lat.ordinal()], 
+                        values[COLUMNS.Actor2Geo_Long.ordinal()], 
+                        values[COLUMNS.Actor2Geo_FeatureID.ordinal()], 
+                        values[COLUMNS.Actor2Geo_Type.ordinal()], 
+                        values[COLUMNS.Actor2Geo_FullName.ordinal()]);
+                GdeltEvent event = new GdeltEvent(actor1, actor2, values[COLUMNS.SOURCEURL.ordinal()]);
+                events.add(event);
+                fileEventCount++;
             }
             in.close();
+            logger.info("  loaded "+fileEventCount+" events");
         }
         return events;
     }
