@@ -107,7 +107,7 @@ public class ParseManager {
             HashMap loc = writeResolvedLocationToHash(resolvedLocation);
             resolvedPlaces.add(loc);
         }
-        placeResults.put("all",resolvedPlaces);
+        placeResults.put("mentions",resolvedPlaces);
         
         HashMap aboutResults = new HashMap();
         if (resolvedPlaces.size() > 0){
