@@ -2,16 +2,17 @@ package org.mediameter.cliff.test.places.aboutness;
 
 import java.util.ArrayList;
 
-import org.mediameter.cliff.ParseManager;
 import org.mediameter.cliff.test.gdelt.GdeltCsv;
 import org.mediameter.cliff.test.gdelt.GdeltEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Load some GDELT daily download files and test our geoparsing against them.  This prints out
+ * accuract percentages, so it isn't a unit test per-say, because there isn't a magic threshold.
+ * We just want to know how we're doing in comparison.
  * 
  * @author rahulb
- * 
  */
 public class GdeltAboutnessCheck {
 
@@ -21,17 +22,6 @@ public class GdeltAboutnessCheck {
         ArrayList<GdeltEvent> events = GdeltCsv.allEvents();
         //TODO: run through events grabbing source text, running that through CLIFF, and checking results
     }
-
-    /**
-     * The 'locations' field specifies a list of geographic descriptors drawn
-     * from a normalized controlled vocabulary that correspond to places
-     * mentioned in the article. These tags are hand-assigned by The New York
-     * Times Indexing Service.
-     * 
-     * @param filePath
-     * @return
-     * @throws Exception
-     */
 
     public static void main(String[] args) throws Exception {
         logger.info("Starting GdeltAboutnessCheck");
