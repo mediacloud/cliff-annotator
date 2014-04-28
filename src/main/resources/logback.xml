@@ -13,7 +13,7 @@
   </appender>
 
   <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <File>log/cliff.log</File>
+    <File>cliff.log</File>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
       <FileNamePattern>log/cliff.%d{yyyy-MM-dd_HH-mm}.log.zip</FileNamePattern>
     </rollingPolicy>
