@@ -12,8 +12,6 @@ import org.slf4j.LoggerFactory;
 public class GdeltCsv {
 
     private static final Logger logger = LoggerFactory.getLogger(GdeltCsv.class);
-
-    private static String BASE_DIR = "data/gdelt/";
     
     public enum COLUMNS { GLOBALEVENTID,SQLDATE,MonthYear,Year,FractionDate,Actor1Code,Actor1Name,
         Actor1CountryCode,Actor1KnownGroupCode,Actor1EthnicCode,Actor1Religion1Code,Actor1Religion2Code,
@@ -26,19 +24,19 @@ public class GdeltCsv {
         Actor2Geo_Long,Actor2Geo_FeatureID,ActionGeo_Type,ActionGeo_FullName,ActionGeo_CountryCode,
         ActionGeo_ADM1Code,ActionGeo_Lat,ActionGeo_Long,ActionGeo_FeatureID,DATEADDED,SOURCEURL};
     
-    private static File[] allDailyDownloadFiles(){
-        File[] files = new File(BASE_DIR).listFiles(new FilenameFilter() {
+    private static File[] allDailyDownloadFiles(String baseDir){
+        File[] files = new File(baseDir).listFiles(new FilenameFilter() {
             public boolean accept(File dir, String name) {
                 return name.toLowerCase().endsWith(".csv");
             }
         });
-        logger.info("  Found "+files.length+" GDELT csv files in "+BASE_DIR);
+        logger.info("  Found "+files.length+" GDELT csv files in "+baseDir);
         return files;
     }
     
-    public static ArrayList<GdeltEvent> allEvents() throws Exception {
+    public static ArrayList<GdeltEvent> allEvents(String baseDir) throws Exception {
         ArrayList<GdeltEvent> events = new ArrayList<GdeltEvent>();
-        for(File csvFile : allDailyDownloadFiles() ){
+        for(File csvFile : allDailyDownloadFiles(baseDir) ){
             logger.info("Loading GDELT events from "+csvFile.getName());
             BufferedReader in = new BufferedReader( new FileReader(csvFile) );
             String str = null;

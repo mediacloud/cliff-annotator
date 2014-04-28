@@ -17,9 +17,11 @@ import org.slf4j.LoggerFactory;
 public class GdeltAboutnessCheck {
 
     private static final Logger logger = LoggerFactory.getLogger(GdeltAboutnessCheck.class);
+
+    private static String BASE_DIR = "data/gdelt/";
         
     public GdeltAboutnessCheck() throws Exception {
-        ArrayList<GdeltEvent> events = GdeltCsv.allEvents();
+        ArrayList<GdeltEvent> events = GdeltCsv.allEvents(BASE_DIR);
         //TODO: run through events grabbing source text, running that through CLIFF, and checking results
     }
 
