@@ -24,6 +24,8 @@ public class StanfordThreeClassExtractor{
 
     public final static Logger logger = LoggerFactory.getLogger(StanfordThreeClassExtractor.class);
 
+    public static final String SUBSTITUTION_MAP = "custom-substitutions.csv";
+
     // the actual named entity recognizer (NER) object
     private AbstractSequenceClassifier<CoreMap> namedEntityRecognizer;
     
@@ -43,7 +45,7 @@ public class StanfordThreeClassExtractor{
     public StanfordThreeClassExtractor() throws ClassCastException, IOException, ClassNotFoundException {
         this("all.3class.distsim.crf.ser.gz", "all.3class.distsim.prop" );
         demonyms = new WikipediaDemonymMap();
-        customSubstitutions = new CustomSubstitutionMap();
+        customSubstitutions = new CustomSubstitutionMap(SUBSTITUTION_MAP);
     }
     
     /**

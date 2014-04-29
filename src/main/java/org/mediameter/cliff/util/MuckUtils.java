@@ -1,4 +1,4 @@
-package org.mediameter.cliff.muck;
+package org.mediameter.cliff.util;
 
 import java.util.List;
 import java.util.Map;

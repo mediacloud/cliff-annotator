@@ -1,0 +1,19 @@
+package org.mediameter.cliff.util;
+
+import com.neovisionaries.i18n.CountryCode;
+
+/**
+ * Helpers to work with ISO3166 country codes and ids.
+ *  
+ * @author rahulb
+ */
+public class ISO3166Utils {
+    
+    public static String alpha3toalpha2(String alpha3) throws UnknownCountryException {
+        CountryCode countryCode = CountryCode.getByCode(alpha3);
+        if(null==countryCode){
+            throw new UnknownCountryException("Can't find country "+alpha3);
+        }
+        return countryCode.getAlpha2();
+    }
+}

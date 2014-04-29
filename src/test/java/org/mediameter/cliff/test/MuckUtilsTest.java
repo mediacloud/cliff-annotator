@@ -9,7 +9,7 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.mediameter.cliff.extractor.ExtractedEntities;
-import org.mediameter.cliff.muck.MuckUtils;
+import org.mediameter.cliff.util.MuckUtils;
 
 public class MuckUtilsTest {
     

@@ -12,22 +12,20 @@ import org.slf4j.LoggerFactory;
 public class CustomSubstitutionMap extends AbstractSubstitutionMap {
 
     private static final Logger logger = LoggerFactory.getLogger(CustomSubstitutionMap.class);
-
-    public static final String RESOURCE_NAME = "custom-substitutions.csv";
         
-    public CustomSubstitutionMap(){
+    public CustomSubstitutionMap(String fileName){
         try {
-            loadFromFile();
+            loadFromFile(fileName);
         } catch (IOException e) {
             // TODO Auto-generated catch block
             logger.error("Unable to load demonym list! "+e);
         }
     }
     
-    private void loadFromFile() throws IOException{
-        logger.info("Loading custom substitutions from "+RESOURCE_NAME);
+    private void loadFromFile(String fileName) throws IOException{
+        logger.info("Loading custom substitutions from "+fileName);
         map = new HashMap<String,String>();
-        BufferedReader br = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream(RESOURCE_NAME)));
+        BufferedReader br = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream(fileName)));
         // drop the table header rows
         br.readLine();
         // now walk each line

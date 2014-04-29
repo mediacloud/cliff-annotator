@@ -7,12 +7,12 @@ import java.util.List;
 
 import org.mediameter.cliff.extractor.ExtractedEntities;
 import org.mediameter.cliff.extractor.StanfordThreeClassExtractor;
-import org.mediameter.cliff.muck.MuckUtils;
 import org.mediameter.cliff.orgs.ResolvedOrganization;
 import org.mediameter.cliff.people.ResolvedPerson;
 import org.mediameter.cliff.places.CustomLuceneLocationResolver;
 import org.mediameter.cliff.places.aboutness.AboutnessStrategy;
 import org.mediameter.cliff.places.aboutness.FrequencyOfMentionAboutnessStrategy;
+import org.mediameter.cliff.util.MuckUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
