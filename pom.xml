@@ -8,7 +8,7 @@
   <version>0.6</version>
 
   <name>CLIFF</name>
-  <url>http://civic.mit.edu/</url>
+  <url>http://cliff.mediameter.org/</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
