@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.mediameter.cliff.places.substitutions.AbstractSubstitutionMap;
+import org.mediameter.cliff.places.substitutions.Blacklist;
 import org.mediameter.cliff.places.substitutions.CustomSubstitutionMap;
 import org.mediameter.cliff.places.substitutions.WikipediaDemonymMap;
 import org.slf4j.Logger;
@@ -24,7 +25,8 @@ public class StanfordThreeClassExtractor{
 
     public final static Logger logger = LoggerFactory.getLogger(StanfordThreeClassExtractor.class);
 
-    public static final String SUBSTITUTION_MAP = "custom-substitutions.csv";
+    public static final String CUSTOM_SUBSTITUTION_FILE = "custom-substitutions.csv";
+    public static final String LOCATION_BLACKLIST_FILE = "location-blacklist.txt";
 
     // the actual named entity recognizer (NER) object
     private AbstractSequenceClassifier<CoreMap> namedEntityRecognizer;
@@ -33,6 +35,7 @@ public class StanfordThreeClassExtractor{
     
     private AbstractSubstitutionMap demonyms;
     private AbstractSubstitutionMap customSubstitutions;
+    private Blacklist locationBlacklist;
     
     /**
      * Default constructor. Instantiates a {@link StanfordThreeClassExtractor}
@@ -45,7 +48,8 @@ public class StanfordThreeClassExtractor{
     public StanfordThreeClassExtractor() throws ClassCastException, IOException, ClassNotFoundException {
         this("all.3class.distsim.crf.ser.gz", "all.3class.distsim.prop" );
         demonyms = new WikipediaDemonymMap();
-        customSubstitutions = new CustomSubstitutionMap(SUBSTITUTION_MAP);
+        customSubstitutions = new CustomSubstitutionMap(CUSTOM_SUBSTITUTION_FILE);
+        locationBlacklist = new Blacklist(LOCATION_BLACKLIST_FILE);
     }
     
     /**
@@ -97,7 +101,11 @@ public class StanfordThreeClassExtractor{
                     entities.addPerson( person );
                 }
                 if (extractedEntity.first.equalsIgnoreCase("LOCATION")) {
-                    entities.addLocation( getLocationOccurrence(entityName, position) );
+                    if(!locationBlacklist.contains(entityName)){
+                        entities.addLocation( getLocationOccurrence(entityName, position) );
+                    } else {
+                       logger.debug("Removed blacklisted location "+entityName);
+                    }
                 }
                 if (extractedEntity.first.equalsIgnoreCase("ORGANIZATION")) {
                     OrganizationOccurrence organization = new OrganizationOccurrence(entityName, position);

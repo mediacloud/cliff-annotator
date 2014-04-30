@@ -1,6 +1,7 @@
 package org.mediameter.cliff.test.places;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.util.Arrays;
@@ -33,6 +34,12 @@ public class SpecificCaseTest {
     private static final int CITY_LONDON = 2643743;
     private static final int PLACE_RUSSEL_SQ_LONDON = 6954795;
     private static final int CITY_SAO_PAULO = 3448439;
+
+    @Test
+    public void testReddit() {
+        List<ResolvedLocation> results = ParseManager.extractAndResolve("This is about Reddit the website.").getResolvedLocations();
+        assertEquals("Found "+results.size()+" places, should have been none!",0,results.size());
+    }
     
     @Test
     public void testSaoPauloAccents() throws Exception {

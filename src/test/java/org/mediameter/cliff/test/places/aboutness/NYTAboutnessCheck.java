@@ -48,7 +48,7 @@ public class NYTAboutnessCheck {
     private int articlesWeGotRight = 0;
     private int aboutnessArticlesWeGotRight = 0;
 
-    private AbstractSubstitutionMap customSubstitutions = new CustomSubstitutionMap(StanfordThreeClassExtractor.SUBSTITUTION_MAP); 
+    private AbstractSubstitutionMap customSubstitutions = new CustomSubstitutionMap(StanfordThreeClassExtractor.CUSTOM_SUBSTITUTION_FILE); 
     
     public NYTAboutnessCheck() throws IOException {
         FileVisitor<Path> fileProcessor = new ProcessFile();
