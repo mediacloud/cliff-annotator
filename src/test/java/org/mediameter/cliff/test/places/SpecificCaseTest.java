@@ -36,6 +36,13 @@ public class SpecificCaseTest {
     private static final int CITY_SAO_PAULO = 3448439;
 
     @Test
+    public void testAmazon(){
+        List<ResolvedLocation> results = ParseManager.extractAndResolve("This is about the Amazon.").getResolvedLocations();
+        assertEquals("Found "+results.size()+" places, should have been 1!",1,results.size());
+        assertEquals(3407729,results.get(0).geoname.geonameID);
+    }
+    
+    @Test
     public void testReddit() {
         List<ResolvedLocation> results = ParseManager.extractAndResolve("This is about Reddit the website.").getResolvedLocations();
         assertEquals("Found "+results.size()+" places, should have been none!",0,results.size());
