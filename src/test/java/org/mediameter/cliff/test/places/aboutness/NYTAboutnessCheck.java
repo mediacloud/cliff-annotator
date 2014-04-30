@@ -85,9 +85,9 @@ public class NYTAboutnessCheck {
                         resolvedLocations = ParseManager.getResolver().resolveLocations(locationOccurrences,false);
                         resolvedLocations.addAll(rawResolvedLocations);
                         List<CountryCode> countriesTheyCoded = ExtractedEntities.getUniqueCountries(resolvedLocations);
-                        // now geoparse it ourselves
+                   
+                        // now geoparse it ourselves and see 
                         List<CountryCode> countriesWeFound = ParseManager.extractAndResolve(doc.getHeadline() + " " + doc.getBody()).getUniqueCountries();
-                       
                         if(countriesWeFound.size()>0){
                             boolean allMatched = true;
                             for(CountryCode countryTheyCoded:countriesTheyCoded){

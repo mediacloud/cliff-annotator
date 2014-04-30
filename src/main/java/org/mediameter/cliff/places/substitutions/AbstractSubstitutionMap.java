@@ -17,5 +17,12 @@ public abstract class AbstractSubstitutionMap {
     public String getSubstitution(String candidate) {
         return map.get(candidate.toLowerCase());
     }
+    
+    public String substituteIfNeeded(String candidate){
+        if (contains(candidate)){
+            return getSubstitution(candidate);
+        }
+        return candidate;
+    }
         
 }

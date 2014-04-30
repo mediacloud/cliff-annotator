@@ -8,7 +8,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.mediameter.cliff.test.places.aboutness.NYTAboutnessCheck;
 import org.mediameter.cliff.util.ISO3166Utils;
 import org.mediameter.cliff.util.UnknownCountryException;
 import org.slf4j.Logger;
@@ -23,6 +22,7 @@ import com.bericotech.clavin.gazetteer.CountryCode;
 
 /**
  * RCV1 doc wrapper
+ * @see http://about.reuters.com/researchandstandards/corpus/LREC_camera_ready.pdf
  * @author rahulb
  *
  */
@@ -31,6 +31,9 @@ public class ReutersCorpusDocument {
     private static final Logger logger = LoggerFactory.getLogger(ReutersCorpusDocument.class);
 
     private static String CODES_TAG = "codes";
+    private static String CODES_TAG_CLASS_ATTR = "class";
+    private static String CODE_TAG = "code";
+    private static String CODE_TAG_CODE_ATTR = "code";
     
     private String id;
     private String title;
@@ -107,7 +110,7 @@ public class ReutersCorpusDocument {
         return getHeadline() + ". " + getDateline()+"." +getText();
     }
 
-    public static ReutersCorpusDocument fromFile(String path) throws IOException, ParserConfigurationException, SAXException {
+    public static ReutersCorpusDocument fromFile(String path,RegionSubstitutionMap subsitutions) throws IOException, ParserConfigurationException, SAXException {
         ReutersCorpusDocument reutersDoc = new ReutersCorpusDocument();
         // load the xml file
         File fXmlFile = new File(path);
@@ -132,21 +135,21 @@ public class ReutersCorpusDocument {
             Node codesNode = codesNodeList.item(codesIdx);
             if (codesNode.getNodeType() == Node.ELEMENT_NODE) {
                 Element codesElement = (Element) codesNode;
-                if("bip:countries:1.0".equals(codesElement.getAttribute("class"))){
-                    NodeList codeNodeList = codesElement.getElementsByTagName("code");
+                if("bip:countries:1.0".equals(codesElement.getAttribute(CODES_TAG_CLASS_ATTR))){
+                    NodeList codeNodeList = codesElement.getElementsByTagName(CODE_TAG);
                     for (int codeIdx = 0; codeIdx < codeNodeList.getLength(); codeIdx++) {
                         Node codeNode = codeNodeList.item(codeIdx);
                         if (codeNode.getNodeType() == Node.ELEMENT_NODE) {
                             Element codeElement = (Element) codeNode;
-                            String reutersCountryCode = codeElement.getAttribute("code");
-                            try {
-                                switch(reutersCountryCode){
-                                case "RUSS": reutersCountryCode="RUS";break;                                    
-                                }
-                                reutersDoc.addCountryCode( ISO3166Utils.alpha3toalpha2(reutersCountryCode) );
-                            } catch (UnknownCountryException e) {
-                                logger.error("Unkown country in reuters data - "+reutersCountryCode);
+                            String reutersRegion = codeElement.getAttribute(CODE_TAG_CODE_ATTR);
+                            // fix errors listed in the paper (section 4.1.3):
+                            // http://about.reuters.com/researchandstandards/corpus/LREC_camera_ready.pdf
+                            switch(reutersRegion){
+                            case "CZ - CANAL ZONE": reutersRegion = "PANA"; break;
+                            case "CZECH - CZECHOSLOVAKIA": reutersRegion = "CZREP"; break;
+                            case "GDR - EAST GERMANY": reutersRegion = "GFR"; break;
                             }
+                            reutersDoc.addCountryCode( subsitutions.getCountryCode(reutersRegion).toString() );
                         }
                     }
                 }

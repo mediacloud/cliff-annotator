@@ -13,6 +13,7 @@ import java.util.List;
 import org.mediameter.cliff.ParseManager;
 import org.mediameter.cliff.extractor.ExtractedEntities;
 import org.mediameter.cliff.places.aboutness.AboutnessStrategy;
+import org.mediameter.cliff.test.reuters.RegionSubstitutionMap;
 import org.mediameter.cliff.test.reuters.ReutersCorpusDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,13 +31,18 @@ public class ReutersAboutnessCheck {
 
     private static final Logger logger = LoggerFactory.getLogger(ReutersAboutnessCheck.class);
 
+    public static final String REGIONS_FILE = "reuters_region_codes.txt";
+
     private static String BASE_DIR = "data/reuters/";
 
     private int articlesWithLocations = 0;
     private int aboutnessArticlesWeGotRight = 0;
     private int mentionsArticlesWeGotRight = 0;
     
+    private RegionSubstitutionMap substitutions;
+    
     public ReutersAboutnessCheck() throws IOException{
+        substitutions = new RegionSubstitutionMap(REGIONS_FILE);
         FileVisitor<Path> fileProcessor = new ProcessFile();
         Files.walkFileTree(Paths.get(BASE_DIR), fileProcessor);
         double success = (double)mentionsArticlesWeGotRight/(double)articlesWithLocations; 
@@ -54,7 +60,7 @@ public class ReutersAboutnessCheck {
                 ReutersCorpusDocument doc;
                 try {
                     
-                    doc = ReutersCorpusDocument.fromFile(aFile.toString());
+                    doc = ReutersCorpusDocument.fromFile(aFile.toString(),substitutions);
                     if(doc.hasCodedCountries()){
                         ExtractedEntities entities =  ParseManager.extractAndResolve(doc.getCompiledText());
                         
