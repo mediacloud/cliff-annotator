@@ -26,6 +26,12 @@ public class ParseTextServlet extends HttpServlet{
     private static Gson gson = new Gson();
     
 	public ParseTextServlet() {
+	}
+
+
+	@Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
+	    doGet(request,response);
 	}	
 	
 	@Override

@@ -28,9 +28,14 @@ public class ParseNlpJsonServlet extends HttpServlet{
     public ParseNlpJsonServlet() {
 	}	
 	
-	@SuppressWarnings("rawtypes")
     @Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
+        doGet(request,response);
+    }   
+
+    @Override
+    @SuppressWarnings("rawtypes")
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
 
         logger.info("JSON Parse Request from "+request.getRemoteAddr());
         request.setCharacterEncoding(StandardCharsets.UTF_8.name());
