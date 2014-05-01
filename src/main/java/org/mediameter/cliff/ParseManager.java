@@ -26,8 +26,12 @@ import com.bericotech.clavin.resolver.ResolvedLocation;
  */
 public class ParseManager {
 
-    // increment each time we change an algorithm or json structure so we know when parsed results already saved in a DB are stale!
-    static final String PARSER_VERSION = "0.7";
+    /**
+     * Major: new features or capabilities
+     * Minor: change in json result format
+     * Revision: minor change or bug fix
+     */
+    static final String PARSER_VERSION = "0.7.1";
     
     private static final Logger logger = LoggerFactory.getLogger(ParseManager.class);
 
