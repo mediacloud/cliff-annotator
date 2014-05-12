@@ -56,7 +56,7 @@ public abstract class GenericPass {
      * @return
      */
     static boolean isExactMatch(ResolvedLocation candidate) {
-    	logger.debug(candidate.geoname.name + " EQUALS " + candidate.location.text + " ? " + candidate.geoname.name.equals(candidate.location.text));
+    	//logger.debug(candidate.geoname.name + " EQUALS " + candidate.location.text + " ? " + candidate.geoname.name.equals(candidate.location.text));
         return candidate.geoname.name.equals(candidate.location.text);
         // return candidate.confidence==EXACT_MATCH_CONFIDENCE;
     }
