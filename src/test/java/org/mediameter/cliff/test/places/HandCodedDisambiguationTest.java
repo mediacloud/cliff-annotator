@@ -1,7 +1,7 @@
 package org.mediameter.cliff.test.places;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -21,17 +21,22 @@ public class HandCodedDisambiguationTest {
     private static final Logger logger = LoggerFactory.getLogger(HandCodedDisambiguationTest.class);
 
     @Test
-    public void testMentionsHandCodedCountry() throws Exception {
-        List<CodedArticle> articles;
-        articles = TestUtils.loadExamplesFromFile(TestUtils.NYT_JSON_PATH);
-        assertEquals(23, articles.size());
-        verifyArticlesMentionHandCodedCountry(articles,"nyt");
-        articles = TestUtils.loadExamplesFromFile(TestUtils.HUFFPO_JSON_PATH);
+    public void testHuffPoHandCodedArticles() throws Exception {
+        List<CodedArticle> articles = TestUtils.loadExamplesFromFile(TestUtils.HUFFPO_JSON_PATH);
         assertEquals(22, articles.size());
         verifyArticlesMentionHandCodedCountry(articles,"huff");
-        articles = TestUtils.loadExamplesFromFile(TestUtils.BBC_JSON_PATH);
+    }
+
+    @Test
+    public void testBbcHandCodedArticles() throws Exception{
+        List<CodedArticle> articles = TestUtils.loadExamplesFromFile(TestUtils.BBC_JSON_PATH);
         assertEquals(25, articles.size());
-        verifyArticlesMentionHandCodedCountry(articles,"bbc");
+    }
+    
+    @Test
+    public void testNytHandCodedArticles() throws Exception{
+        List<CodedArticle> articles = TestUtils.loadExamplesFromFile(TestUtils.NYT_JSON_PATH);
+        assertEquals(23, articles.size());
     }
 
     private void verifyArticlesMentionHandCodedCountry(List<CodedArticle> articles, String source) throws Exception{

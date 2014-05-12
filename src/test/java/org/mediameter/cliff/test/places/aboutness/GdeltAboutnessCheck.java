@@ -54,7 +54,11 @@ public class GdeltAboutnessCheck {
                     cache.put(url.toString(), text);
                     logger.debug("Fetched from web:"+url.toString());
                 }
-                if(text.length()<100) continue; //assume we didn't fetch/extract it right
+                if(text.length()<100){
+                    logger.debug("  Skipping because it is too short");
+                    continue; //assume we didn't fetch/extract it right
+                }
+                //logger.debug(text);
                 ExtractedEntities entities = ParseManager.extractAndResolve(text);
                 List<CountryCode> countries = entities.getUniqueCountries();
                 if( countries.contains(event.getActor1().getCountryCodeObj()) && countries.contains(event.getActor2().getCountryCodeObj())){

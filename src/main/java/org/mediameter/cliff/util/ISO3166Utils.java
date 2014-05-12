@@ -13,7 +13,7 @@ public class ISO3166Utils {
         if(alpha3.length()==0) return " ";
         CountryCode countryCode = CountryCode.getByCode(alpha3);
         if(null==countryCode){
-            throw new UnknownCountryException("Can't find country "+alpha3);
+            throw new UnknownCountryException("Can't find country "+alpha3, alpha3);
         }
         return countryCode.getAlpha2();
     }

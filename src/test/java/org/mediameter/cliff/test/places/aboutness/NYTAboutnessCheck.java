@@ -14,7 +14,7 @@ import java.util.List;
 
 import org.mediameter.cliff.ParseManager;
 import org.mediameter.cliff.extractor.ExtractedEntities;
-import org.mediameter.cliff.extractor.StanfordThreeClassExtractor;
+import org.mediameter.cliff.extractor.StanfordNamedEntityExtractor;
 import org.mediameter.cliff.places.aboutness.AboutnessStrategy;
 import org.mediameter.cliff.places.substitutions.AbstractSubstitutionMap;
 import org.mediameter.cliff.places.substitutions.CustomSubstitutionMap;
@@ -48,7 +48,7 @@ public class NYTAboutnessCheck {
     private int articlesWeGotRight = 0;
     private int aboutnessArticlesWeGotRight = 0;
 
-    private AbstractSubstitutionMap customSubstitutions = new CustomSubstitutionMap(StanfordThreeClassExtractor.CUSTOM_SUBSTITUTION_FILE); 
+    private AbstractSubstitutionMap customSubstitutions = new CustomSubstitutionMap(StanfordNamedEntityExtractor.CUSTOM_SUBSTITUTION_FILE); 
     
     public NYTAboutnessCheck() throws IOException {
         FileVisitor<Path> fileProcessor = new ProcessFile();

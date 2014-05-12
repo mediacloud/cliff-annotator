@@ -45,26 +45,30 @@ public class GdeltCsv {
                 if (str.trim().length() == 0) {
                         continue;
                 }
-                String[] values = str.split("\\t");
-                GdeltActor actor1 = new GdeltActor(
-                        values[COLUMNS.Actor1CountryCode.ordinal()], 
-                        values[COLUMNS.Actor1Geo_ADM1Code.ordinal()], 
-                        values[COLUMNS.Actor1Geo_Lat.ordinal()], 
-                        values[COLUMNS.Actor1Geo_Long.ordinal()], 
-                        values[COLUMNS.Actor1Geo_FeatureID.ordinal()], 
-                        values[COLUMNS.Actor1Geo_Type.ordinal()], 
-                        values[COLUMNS.Actor1Geo_FullName.ordinal()]);
-                GdeltActor actor2 = new GdeltActor(
-                        values[COLUMNS.Actor2CountryCode.ordinal()], 
-                        values[COLUMNS.Actor2Geo_ADM1Code.ordinal()], 
-                        values[COLUMNS.Actor2Geo_Lat.ordinal()], 
-                        values[COLUMNS.Actor2Geo_Long.ordinal()], 
-                        values[COLUMNS.Actor2Geo_FeatureID.ordinal()], 
-                        values[COLUMNS.Actor2Geo_Type.ordinal()], 
-                        values[COLUMNS.Actor2Geo_FullName.ordinal()]);
-                GdeltEvent event = new GdeltEvent(actor1, actor2, values[COLUMNS.SOURCEURL.ordinal()]);
-                events.add(event);
-                fileEventCount++;
+                try{
+                    String[] values = str.split("\\t");
+                    GdeltActor actor1 = new GdeltActor(
+                            values[COLUMNS.Actor1CountryCode.ordinal()], 
+                            values[COLUMNS.Actor1Geo_ADM1Code.ordinal()], 
+                            values[COLUMNS.Actor1Geo_Lat.ordinal()], 
+                            values[COLUMNS.Actor1Geo_Long.ordinal()], 
+                            values[COLUMNS.Actor1Geo_FeatureID.ordinal()], 
+                            values[COLUMNS.Actor1Geo_Type.ordinal()], 
+                            values[COLUMNS.Actor1Geo_FullName.ordinal()]);
+                    GdeltActor actor2 = new GdeltActor(
+                            values[COLUMNS.Actor2CountryCode.ordinal()], 
+                            values[COLUMNS.Actor2Geo_ADM1Code.ordinal()], 
+                            values[COLUMNS.Actor2Geo_Lat.ordinal()], 
+                            values[COLUMNS.Actor2Geo_Long.ordinal()], 
+                            values[COLUMNS.Actor2Geo_FeatureID.ordinal()], 
+                            values[COLUMNS.Actor2Geo_Type.ordinal()], 
+                            values[COLUMNS.Actor2Geo_FullName.ordinal()]);
+                    GdeltEvent event = new GdeltEvent(actor1, actor2, values[COLUMNS.SOURCEURL.ordinal()]);
+                    events.add(event);
+                    fileEventCount++;
+                } catch(org.mediameter.cliff.util.UnknownCountryException uce){
+                    logger.error("Uknown country "+uce.getAlpha3()+" SKIPPING this event");
+                }
             }
             in.close();
             logger.info("  loaded "+fileEventCount+" events");

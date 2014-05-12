@@ -3,7 +3,7 @@ package org.mediameter.cliff;
 import java.util.List;
 
 import org.mediameter.cliff.extractor.ExtractedEntities;
-import org.mediameter.cliff.extractor.StanfordThreeClassExtractor;
+import org.mediameter.cliff.extractor.StanfordNamedEntityExtractor;
 import org.mediameter.cliff.orgs.OrganizationResolver;
 import org.mediameter.cliff.orgs.ResolvedOrganization;
 import org.mediameter.cliff.people.PersonResolver;
@@ -24,7 +24,7 @@ public class EntityParser {
     private static final Logger logger = LoggerFactory.getLogger(EntityParser.class);
     
     // entity extractor to find location names in text
-    private StanfordThreeClassExtractor extractor;
+    private StanfordNamedEntityExtractor extractor;
     
     private LocationResolver locationResolver;
     private PersonResolver personResolver;
@@ -33,7 +33,7 @@ public class EntityParser {
     // switch controlling use of fuzzy matching
     private final boolean fuzzy;
 
-    public EntityParser(StanfordThreeClassExtractor extractor, LocationResolver resolver,
+    public EntityParser(StanfordNamedEntityExtractor extractor, LocationResolver resolver,
             boolean fuzzy) {
         this.extractor = extractor;
         this.locationResolver = resolver;

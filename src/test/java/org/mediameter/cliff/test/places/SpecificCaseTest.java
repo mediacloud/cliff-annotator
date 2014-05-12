@@ -32,8 +32,10 @@ public class SpecificCaseTest {
     private static final int REGION_ASIA = 6255147;
     private static final int REGION_MIDDLE_EAST = 6269133;
     private static final int CITY_LONDON = 2643743;
-    private static final int PLACE_RUSSEL_SQ_LONDON = 6954795;
     private static final int CITY_SAO_PAULO = 3448439;
+    private static final int PROVINCE_BALI = 1650535;
+    private static final int COUNTRY_SINGAPORE = 1880251;
+    private static final int COUNTRY_INDONESIA = 1643084;
 
     @Test
     public void testAmazon(){
@@ -47,6 +49,12 @@ public class SpecificCaseTest {
         List<ResolvedLocation> results = ParseManager.extractAndResolve("This is about Reddit the website.").getResolvedLocations();
         assertEquals("Found "+results.size()+" places, should have been none!",0,results.size());
     }
+ 
+    @Test
+    public void testDemonymInArticle() throws Exception{
+        verifyPlacesInFile("src/test/resources/sample-docs/demonym-article.txt",
+                new int[] {PROVINCE_BALI,COUNTRY_INDONESIA,COUNTRY_SINGAPORE}, true);
+    }
     
     @Test
     public void testSaoPauloAccents() throws Exception {
@@ -58,7 +66,7 @@ public class SpecificCaseTest {
     public void testRussellSq() throws Exception {
         // picks the right Russel Sq (the one in GB) after we find London in the article
         verifyPlacesInFile("src/test/resources/sample-docs/russel-sq-london.txt",
-                new int[] {CITY_LONDON, PLACE_RUSSEL_SQ_LONDON}, true);
+                new int[] {CITY_LONDON}, true);
     }
     
     @Test
@@ -108,7 +116,7 @@ public class SpecificCaseTest {
         File inputFile = new File(pathToFile);
         String inputString = TextUtils.fileToString(inputFile);
         List<ResolvedLocation> results = ParseManager.extractAndResolve(inputString).getResolvedLocations();
-        //for(ResolvedLocation resolvedLocation: results){ logger.info("  "+resolvedLocation.toString()); }
+        for(ResolvedLocation resolvedLocation: results){ logger.info("  "+resolvedLocation.toString()); }
         for(int placeId: places){
             assertTrue("Didn't find "+placeId+" in list of places ("+places.length+" places found)",TestUtils.resultsContainsPlaceId(results, placeId));
         }

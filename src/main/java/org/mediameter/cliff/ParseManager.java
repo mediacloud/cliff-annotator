@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.mediameter.cliff.extractor.ExtractedEntities;
-import org.mediameter.cliff.extractor.StanfordThreeClassExtractor;
+import org.mediameter.cliff.extractor.StanfordNamedEntityExtractor;
 import org.mediameter.cliff.orgs.ResolvedOrganization;
 import org.mediameter.cliff.people.ResolvedPerson;
 import org.mediameter.cliff.places.CustomLuceneLocationResolver;
@@ -37,7 +37,7 @@ public class ParseManager {
 
     public static EntityParser parser = null;
     
-    public static StanfordThreeClassExtractor peopleExtractor = null;
+    public static StanfordNamedEntityExtractor peopleExtractor = null;
 
     private static LocationResolver resolver;   // HACK: pointer to keep around for stats logging
     
@@ -225,7 +225,7 @@ public class ParseManager {
         if(parser==null){
 
             // use the Stanford NER location extractor?
-            StanfordThreeClassExtractor locationExtractor = new StanfordThreeClassExtractor();                
+            StanfordNamedEntityExtractor locationExtractor = new StanfordNamedEntityExtractor();                
             
             int numberOfResultsToFetch = 10;
             boolean useFuzzyMatching = false;

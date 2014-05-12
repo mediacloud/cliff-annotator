@@ -27,6 +27,13 @@ public class DemonymTest {
     }
 
     @Test
+    public void testAustralian(){
+        List<ResolvedLocation> results = ParseManager.extractAndResolve("This is about an Australian person.").getResolvedLocations();
+        assertEquals("Found "+results.size()+" places, should have been 1!",1,results.size());
+        assertEquals(COUNTRY_AUSTRALIA,results.get(0).geoname.geonameID);
+    }
+
+    @Test
     public void testAmerican(){
         List<ResolvedLocation> results = ParseManager.extractAndResolve("This is about an American person.").getResolvedLocations();
         assertEquals("Found "+results.size()+" places, should have been 1!",1,results.size());
