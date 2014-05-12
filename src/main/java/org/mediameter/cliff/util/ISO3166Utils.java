@@ -9,7 +9,8 @@ import com.neovisionaries.i18n.CountryCode;
  */
 public class ISO3166Utils {
     
-    public static String alpha3toalpha2(String alpha3) throws UnknownCountryException {
+    public static String alpha3toAlpha2(String alpha3) throws UnknownCountryException {
+        if(alpha3.length()==0) return " ";
         CountryCode countryCode = CountryCode.getByCode(alpha3);
         if(null==countryCode){
             throw new UnknownCountryException("Can't find country "+alpha3);

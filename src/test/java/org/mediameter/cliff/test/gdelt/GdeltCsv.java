@@ -47,7 +47,7 @@ public class GdeltCsv {
                 }
                 String[] values = str.split("\\t");
                 GdeltActor actor1 = new GdeltActor(
-                        values[COLUMNS.Actor1Geo_CountryCode.ordinal()], 
+                        values[COLUMNS.Actor1CountryCode.ordinal()], 
                         values[COLUMNS.Actor1Geo_ADM1Code.ordinal()], 
                         values[COLUMNS.Actor1Geo_Lat.ordinal()], 
                         values[COLUMNS.Actor1Geo_Long.ordinal()], 
@@ -55,7 +55,7 @@ public class GdeltCsv {
                         values[COLUMNS.Actor1Geo_Type.ordinal()], 
                         values[COLUMNS.Actor1Geo_FullName.ordinal()]);
                 GdeltActor actor2 = new GdeltActor(
-                        values[COLUMNS.Actor2Geo_CountryCode.ordinal()], 
+                        values[COLUMNS.Actor2CountryCode.ordinal()], 
                         values[COLUMNS.Actor2Geo_ADM1Code.ordinal()], 
                         values[COLUMNS.Actor2Geo_Lat.ordinal()], 
                         values[COLUMNS.Actor2Geo_Long.ordinal()], 

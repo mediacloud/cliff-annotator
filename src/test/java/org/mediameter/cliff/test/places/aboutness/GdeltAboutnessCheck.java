@@ -1,11 +1,24 @@
 package org.mediameter.cliff.test.places.aboutness;
 
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
+import org.mediameter.cliff.ParseManager;
+import org.mediameter.cliff.extractor.ExtractedEntities;
 import org.mediameter.cliff.test.gdelt.GdeltCsv;
 import org.mediameter.cliff.test.gdelt.GdeltEvent;
+import org.mediameter.cliff.test.util.FileSystemCache;
+import org.mediameter.cliff.test.util.HTMLFetcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.bericotech.clavin.gazetteer.CountryCode;
+
+import de.l3s.boilerpipe.document.TextDocument;
+import de.l3s.boilerpipe.extractors.ArticleExtractor;
+import de.l3s.boilerpipe.sax.BoilerpipeSAXInput;
+import de.l3s.boilerpipe.sax.HTMLDocument;
 
 /**
  * Load some GDELT daily download files and test our geoparsing against them.  This prints out
@@ -21,8 +34,42 @@ public class GdeltAboutnessCheck {
     private static String BASE_DIR = "data/gdelt/";
         
     public GdeltAboutnessCheck() throws Exception {
+        FileSystemCache cache = new FileSystemCache("gdelt-articles");
         ArrayList<GdeltEvent> events = GdeltCsv.allEvents(BASE_DIR);
         //TODO: run through events grabbing source text, running that through CLIFF, and checking results
+        int mentionedSuccesses = 0;
+        int mentionedFailures = 0;
+        for(GdeltEvent event:events){
+            logger.debug("-------------------------------------------------------------------------------------------");
+            URL url = new URL(event.getSourceUrl());
+            try{
+                String text;
+                if(cache.contains(url.toString())){
+                    text = cache.get(url.toString());
+                    logger.debug("Fetched from cache:"+url.toString());
+                } else {
+                    HTMLDocument htmlDoc = HTMLFetcher.fetch(url);
+                    TextDocument doc = new BoilerpipeSAXInput(htmlDoc.toInputSource()).getTextDocument();
+                    text = ArticleExtractor.INSTANCE.getText(doc);
+                    cache.put(url.toString(), text);
+                    logger.debug("Fetched from web:"+url.toString());
+                }
+                if(text.length()<100) continue; //assume we didn't fetch/extract it right
+                ExtractedEntities entities = ParseManager.extractAndResolve(text);
+                List<CountryCode> countries = entities.getUniqueCountries();
+                if( countries.contains(event.getActor1().getCountryCodeObj()) && countries.contains(event.getActor2().getCountryCodeObj())){
+                    mentionedSuccesses = mentionedSuccesses + 1;
+                } else {
+                    mentionedFailures++;
+                    logger.error(" We found "+countries+" - GDELT Says:"+event.getActor1().getCountryCodeObj()+" and "+event.getActor2().getCountryCodeObj());
+                }
+            } catch(Exception e){
+                logger.warn("Skipping url "+event.getSourceUrl()+" because "+e.toString());
+            }
+        }
+        
+        double aboutnessSuccess = (double)mentionedSuccesses/(double)(mentionedSuccesses+mentionedFailures); 
+        logger.info("Checked "+(mentionedSuccesses+mentionedFailures)+" Articles - Mentions success rate: "+aboutnessSuccess);
     }
 
     public static void main(String[] args) throws Exception {
