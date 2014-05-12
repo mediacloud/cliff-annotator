@@ -66,13 +66,13 @@ public class StanfordThreeClassExtractor{
     //@SuppressWarnings("unchecked")
     public StanfordThreeClassExtractor(String NERmodel, String NERprop) throws IOException, ClassCastException, ClassNotFoundException {
         
-        InputStream mpis = this.getClass().getClassLoader().getResourceAsStream("models/" + NERprop);
+        InputStream mpis = this.getClass().getClassLoader().getResourceAsStream("classifiers/" + NERprop);
         Properties mp = new Properties();
         mp.load(mpis);
         
         
         namedEntityRecognizer = (AbstractSequenceClassifier<CoreMap>) 
-                CRFClassifier.getJarClassifier("/models/" + NERmodel, mp);
+                CRFClassifier.getJarClassifier("/classifiers/" + NERmodel, mp);
                         
     }
 
