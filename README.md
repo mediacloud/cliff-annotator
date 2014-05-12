@@ -16,10 +16,7 @@ You need to build CLAVIN in order to build the Geonames Gazetteer Index for geop
 The idea is that you build all that, and then create a symlink at `/etc/cliff/IndexDirectory` 
 to the CLAVIN index you just built.
 
-Deployment
-----------
-
-# Setup
+# Tomcat Setup
 
 CLIFF is setup to be run inside a Java servlet container (ie. Tomcat7).  For development 
 we use the [Maven Tomcat plugin](http://tomcat.apache.org/maven-plugin.html).  To deploy, 
@@ -42,7 +39,7 @@ Also add this to your `~/.m2/settings.xml`:
 ```
 That lets the Maven Tomcat plugin upload the WAR it builds over the website control panel.
 
-# Building and Deploying
+# Building and Deploying to Tomcat
 
 First make sure tomcat is running (ie. `catalina run`). Now run `mvn tomcat7:deploy -DskipTests` 
 to deploy the app, or `mvn tomcat7:redeploy -DskipTests` to redeploy once you've already got 
@@ -57,6 +54,8 @@ To test it out, hit this url in a browser and you should get some JSON back:
 http://localhost:8080/CLIFF/parse/text?q=This is some text about New York City, and maybe about Accra as well
 ```
 
+Of course, when you use this in a script you should do an HTTP POST, not a GET!
+
 Testing
 -------
 
@@ -66,3 +65,12 @@ Releasing
 ---------
 
 To create the WAR file, run `mvn package -DskipTests`.
+
+Deploying on Ubuntu
+-------------------
+
+1. First make sure you have java7: `sudo apt-get install openjdk-7-jdk`
+2. First install tomcat7: `sudo apt-get install tomcat7`.
+3. Point tomcat at the correct java: open `/etc/default/tomcat7` then uncomment and change the `JAVA_HOME` var to `/usr/lib/jvm/java-7-openjdk-amd64`
+4. Increase tomcat's memory: open `/etc/default/tomcat7` and change the `JAVA_OPTS` var to inclue something like `-Xmx4024m`
+5. Put your war in the right place: on Ubuntu this is `/var/lib/tomcat7/webapps/`
