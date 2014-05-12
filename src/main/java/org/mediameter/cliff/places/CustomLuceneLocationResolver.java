@@ -163,7 +163,7 @@ public class CustomLuceneLocationResolver implements LocationResolver {
 	  	    	for (int i = 0; i < results.scoreDocs.length; i++) {
 	  	    		// add each matching location to the list of candidates
 	  	    		ResolvedLocation location = new ResolvedLocation(indexSearcher.doc(results.scoreDocs[i].doc), locationName, false);
-			  	    logger.debug("{}", location);
+			  	    logger.debug("Candidate: {}", location);
 			  	    candidateMatches.add(location);
 	  	    	}
 	  	    } else if (fuzzy) { // only if fuzzy matching is turned on
