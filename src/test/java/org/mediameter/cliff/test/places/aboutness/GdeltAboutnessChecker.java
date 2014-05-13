@@ -27,13 +27,16 @@ import de.l3s.boilerpipe.sax.HTMLDocument;
  * 
  * @author rahulb
  */
-public class GdeltAboutnessCheck {
+public class GdeltAboutnessChecker {
 
-    private static final Logger logger = LoggerFactory.getLogger(GdeltAboutnessCheck.class);
+    private static final Logger logger = LoggerFactory.getLogger(GdeltAboutnessChecker.class);
 
     private static String BASE_DIR = "data/gdelt/";
         
-    public GdeltAboutnessCheck() throws Exception {
+    public GdeltAboutnessChecker(){
+    }
+    
+    public void check() throws Exception {
         FileSystemCache cache = new FileSystemCache("gdelt-articles");
         ArrayList<GdeltEvent> events = GdeltCsv.allEvents(BASE_DIR);
         //TODO: run through events grabbing source text, running that through CLIFF, and checking results
@@ -41,8 +44,8 @@ public class GdeltAboutnessCheck {
         int mentionedFailures = 0;
         for(GdeltEvent event:events){
             logger.debug("-------------------------------------------------------------------------------------------");
-            URL url = new URL(event.getSourceUrl());
             try{
+                URL url = new URL(event.getSourceUrl());
                 String text;
                 if(cache.contains(url.toString())){
                     text = cache.get(url.toString());
@@ -77,10 +80,14 @@ public class GdeltAboutnessCheck {
     }
 
     public static void main(String[] args) throws Exception {
-        logger.info("Starting GdeltAboutnessCheck");
-        GdeltAboutnessCheck checker = new GdeltAboutnessCheck();
-        //ParseManager.logStats();
-        logger.info("Done with GdeltAboutnessCheck");
+        long startTime = System.currentTimeMillis();
+        logger.info("Starting GdeltAboutnessChecker");
+        GdeltAboutnessChecker checker = new GdeltAboutnessChecker();
+        checker.check();
+        ParseManager.logStats();
+        long endTime = System.currentTimeMillis();
+        long elapsedMillis = endTime - startTime;
+        logger.info("Done with GdeltAboutnessChecker ("+elapsedMillis+" milliseconds)");
     }
 
 }

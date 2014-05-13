@@ -18,9 +18,9 @@ import com.bericotech.clavin.resolver.ResolvedLocation;
  * @author rahulb
  *
  */
-public class HandCodedAboutnessCheck {
+public class HandCodedAboutnessChecker {
 
-    private static final Logger logger = LoggerFactory.getLogger(HandCodedAboutnessCheck.class);
+    private static final Logger logger = LoggerFactory.getLogger(HandCodedAboutnessChecker.class);
 
     private static double getAboutnessAccuracy(String filePath) throws Exception{
         int correct = 0;

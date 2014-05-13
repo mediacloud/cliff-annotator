@@ -27,9 +27,9 @@ import com.bericotech.clavin.gazetteer.CountryCode;
  * 
  * @author rahulb
  */
-public class ReutersAboutnessCheck {
+public class ReutersAboutnessChecker {
 
-    private static final Logger logger = LoggerFactory.getLogger(ReutersAboutnessCheck.class);
+    private static final Logger logger = LoggerFactory.getLogger(ReutersAboutnessChecker.class);
 
     public static final String REGIONS_FILE = "reuters_region_codes.txt";
 
@@ -41,8 +41,11 @@ public class ReutersAboutnessCheck {
     
     private RegionSubstitutionMap substitutions;
     
-    public ReutersAboutnessCheck() throws IOException{
+    public ReutersAboutnessChecker() {
         substitutions = new RegionSubstitutionMap(REGIONS_FILE);
+    }
+
+    public void check() throws IOException{
         FileVisitor<Path> fileProcessor = new ProcessFile();
         Files.walkFileTree(Paths.get(BASE_DIR), fileProcessor);
         double success = (double)mentionsArticlesWeGotRight/(double)articlesWithLocations; 
@@ -119,10 +122,14 @@ public class ReutersAboutnessCheck {
     }
     
     public static void main(String[] args) throws Exception {
-        logger.info("Starting ReutersAboutnessCheck");
-        ReutersAboutnessCheck checker = new ReutersAboutnessCheck();
+        long startTime = System.currentTimeMillis();
+        logger.info("Starting ReutersAboutnessChecker");
+        ReutersAboutnessChecker checker = new ReutersAboutnessChecker();
+        checker.check();
         ParseManager.logStats();
-        logger.info("Done with ReutersAboutnessCheck");
+        long endTime = System.currentTimeMillis();
+        long elapsedMillis = endTime - startTime;
+        logger.info("Done with ReutersAboutnessChecker ("+elapsedMillis+" milliseconds)");
     }
 
 }

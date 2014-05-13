@@ -36,9 +36,9 @@ import com.nytlabs.corpus.NYTCorpusDocumentParser;
  * @author rahulb
  * 
  */
-public class NYTAboutnessCheck {
+public class NYTAboutnessChecker {
 
-    private static final Logger logger = LoggerFactory.getLogger(NYTAboutnessCheck.class);
+    private static final Logger logger = LoggerFactory.getLogger(NYTAboutnessChecker.class);
 
     private static final String NYT_BASE_DIR = "data/nyt/";
     
@@ -50,13 +50,16 @@ public class NYTAboutnessCheck {
 
     private AbstractSubstitutionMap customSubstitutions = new CustomSubstitutionMap(StanfordNamedEntityExtractor.CUSTOM_SUBSTITUTION_FILE); 
     
-    public NYTAboutnessCheck() throws IOException {
+    public NYTAboutnessChecker(){
+    }
+    
+    public void check() throws IOException {
         FileVisitor<Path> fileProcessor = new ProcessFile();
         Files.walkFileTree(Paths.get(NYT_BASE_DIR), fileProcessor);
         double success = (double)articlesWeGotRight/(double)articlesWithLocations; 
         double aboutnessSuccess = (double)aboutnessArticlesWeGotRight/(double)articlesWithLocations; 
         logger.info("Checked "+articlesWithLocations+" Articles - Base success rate: "+success);
-        logger.info("Checked "+articlesWithLocations+" Articles - Aboutness success rate: "+aboutnessSuccess);
+        logger.info("Checked "+articlesWithLocations+" Articles - Aboutness success rate: "+aboutnessSuccess);        
     }
 
     private final class ProcessFile extends SimpleFileVisitor<Path> {
@@ -149,8 +152,14 @@ public class NYTAboutnessCheck {
      */
 
     public static void main(String[] args) throws Exception {
-        NYTAboutnessCheck checker = new NYTAboutnessCheck();
+        long startTime = System.currentTimeMillis();
+        logger.info("Starting NYTAboutnessChecker");
+        NYTAboutnessChecker checker = new NYTAboutnessChecker();
+        checker.check();
         ParseManager.logStats();
+        long endTime = System.currentTimeMillis();
+        long elapsedMillis = endTime - startTime;
+        logger.info("Done with NYTAboutnessChecker ("+elapsedMillis+" milliseconds)");
     }
 
 }
