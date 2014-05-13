@@ -193,7 +193,7 @@ public class CustomLuceneLocationResolver implements LocationResolver {
 	  	    		// drats, foiled again! no fuzzy matches found either!
 	  	    		// in this case, we'll return an empty list of
 	  	    		// candidate matches
-		  	    	logger.debug("No match found for: '{}'", locationName);
+		  	    	logger.debug("No match found for: '{}'", locationName.text);
 	  	    	}
 	  	    } else {
   	    		// no matches found and fuzzy matching is turned off
