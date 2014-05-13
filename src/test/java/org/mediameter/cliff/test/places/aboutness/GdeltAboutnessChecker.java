@@ -67,8 +67,8 @@ public class GdeltAboutnessChecker {
                 if( countries.contains(event.getActor1().getCountryCodeObj()) && countries.contains(event.getActor2().getCountryCodeObj())){
                     mentionedSuccesses = mentionedSuccesses + 1;
                 } else {
-                    mentionedFailures++;
                     logger.error(" We found "+countries+" - GDELT Says:"+event.getActor1().getCountryCodeObj()+" and "+event.getActor2().getCountryCodeObj());
+                    mentionedFailures++;
                 }
             } catch(Exception e){
                 logger.warn("Skipping url "+event.getSourceUrl()+" because "+e.toString());
