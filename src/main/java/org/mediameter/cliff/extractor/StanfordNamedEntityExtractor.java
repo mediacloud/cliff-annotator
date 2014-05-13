@@ -26,8 +26,6 @@ public class StanfordNamedEntityExtractor{
 
     public static final String CUSTOM_SUBSTITUTION_FILE = "custom-substitutions.csv";
     public static final String LOCATION_BLACKLIST_FILE = "location-blacklist.txt";
-
-    public static final boolean MANUALLY_REPLACE_DEMONYMS = false;   // slows it down a bunch!
     
     // the actual named entity recognizer (NER) object
     private AbstractSequenceClassifier<CoreMap> namedEntityRecognizer;
@@ -38,6 +36,7 @@ public class StanfordNamedEntityExtractor{
     
     private Model model;
     
+    // Don't change the order of this, unless you also change the default in the cliff.properties file
     public enum Model {
         ENGLISH_ALL_3CLASS, ENGLISH_CONLL_4CLASS 
     }
@@ -92,10 +91,11 @@ public class StanfordNamedEntityExtractor{
     /**
      * Get extracted locations from a plain-text body.
      * 
-     * @param text      Text content to perform extraction on.
-     * @return          List of Location Occurrences.
+     * @param text                      Text content to perform extraction on.
+     * @param manuallyReplaceDemonyms   Can slow down performance quite a bit
+     * @return          All the entities mentioned
      */
-    public ExtractedEntities extractEntities(String textToParse) {
+    public ExtractedEntities extractEntities(String textToParse,boolean manuallyReplaceDemonyms) {
         ExtractedEntities entities = new ExtractedEntities();
 
         if (textToParse==null || textToParse.length()==0){
@@ -103,13 +103,10 @@ public class StanfordNamedEntityExtractor{
             return entities; 
         }
 
-        String text = "";
-        if(isUsing4ClassModel()){
-            text = textToParse;
-        } else {
-            if(MANUALLY_REPLACE_DEMONYMS){
-                text = demonyms.replaceAll(textToParse);
-            }
+        String text = textToParse;
+        if(manuallyReplaceDemonyms){
+            text = demonyms.replaceAll(textToParse);
+            logger.debug(text);
         }
         
         // extract entities as <Entity Type, Start Index, Stop Index>
@@ -136,12 +133,10 @@ public class StanfordNamedEntityExtractor{
                     OrganizationOccurrence organization = new OrganizationOccurrence(entityName, position);
                     entities.addOrganization( organization );
                     break;
-                case "MISC":
-                    if(isUsing4ClassModel()){
-                        if (demonyms.contains(entityName)) {
-                            logger.debug("Found and adding a MISC demonym "+entityName);
-                            entities.addLocation( getLocationOccurrence(entityName, position) );
-                        }
+                case "MISC":    // if you're using the slower 4class model
+                    if (demonyms.contains(entityName)) {
+                        logger.debug("Found and adding a MISC demonym "+entityName);
+                        entities.addLocation( getLocationOccurrence(entityName, position) );
                     }
                     break;
                 default:
@@ -151,10 +146,6 @@ public class StanfordNamedEntityExtractor{
         }
 
         return entities;
-    }
-    
-    private boolean isUsing4ClassModel(){
-        return this.model==Model.ENGLISH_CONLL_4CLASS;
     }
     
     private LocationOccurrence getLocationOccurrence(String entityName, int position){

@@ -42,9 +42,9 @@ public class EntityParser {
         this.fuzzy = fuzzy;
     }
 
-    public ExtractedEntities extractAndResolve(String inputText) throws Exception {
+    public ExtractedEntities extractAndResolve(String inputText, boolean manuallyReplaceDemonyms) throws Exception {
         logger.trace("input: {}", inputText);
-        ExtractedEntities extractedEntities = extractor.extractEntities(inputText);
+        ExtractedEntities extractedEntities = extractor.extractEntities(inputText,manuallyReplaceDemonyms);
         logger.trace("extracted: {}", extractedEntities.getLocations());
         return resolve(extractedEntities);
     }

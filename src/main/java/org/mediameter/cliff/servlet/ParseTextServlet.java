@@ -45,11 +45,16 @@ public class ParseTextServlet extends HttpServlet{
 
         HashMap results = null;
         String text = request.getParameter("q");
+        String replaceAllDemonymsStr = request.getParameter("replaceAllDemonyms");
+        boolean manuallyReplaceDemonyms = (replaceAllDemonymsStr==null) ? false : Boolean.parseBoolean(replaceAllDemonymsStr);
+        logger.debug("q="+text);
+        logger.debug("replaceAllDemonyms="+manuallyReplaceDemonyms);
+        
         if(text==null){
             response.sendError(HttpServletResponse.SC_BAD_REQUEST);
         } else {
             try {
-                results = ParseManager.parseFromText(text);
+                results = ParseManager.parseFromText(text,manuallyReplaceDemonyms);
             } catch(Exception e){   // try to give the user something useful
                 logger.error(e.toString());
                 results = ParseManager.getErrorText(e.toString());

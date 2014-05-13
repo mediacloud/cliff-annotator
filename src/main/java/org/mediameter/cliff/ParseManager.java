@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.mediameter.cliff.extractor.CliffConfig;
 import org.mediameter.cliff.extractor.ExtractedEntities;
 import org.mediameter.cliff.extractor.StanfordNamedEntityExtractor;
+import org.mediameter.cliff.extractor.StanfordNamedEntityExtractor.Model;
 import org.mediameter.cliff.orgs.ResolvedOrganization;
 import org.mediameter.cliff.people.ResolvedPerson;
 import org.mediameter.cliff.places.CustomLuceneLocationResolver;
@@ -56,14 +58,14 @@ public class ParseManager {
      * @return      json string with details about locations mentioned
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public static HashMap parseFromText(String text) {
+    public static HashMap parseFromText(String text,boolean manuallyReplaceDemonyms) {
         long startTime = System.currentTimeMillis();
         HashMap results = null;
         if(text.trim().length()==0){
             return getErrorText("No text");
         }
         try {
-            ExtractedEntities entities = extractAndResolve(text);
+            ExtractedEntities entities = extractAndResolve(text,manuallyReplaceDemonyms);
             results = parseFromEntities(entities);
         } catch (Exception e) {
             results = getErrorText(e.toString());
@@ -186,9 +188,14 @@ public class ParseManager {
     	return loc;
     	
     }
+    
     public static ExtractedEntities extractAndResolve(String text){
+        return extractAndResolve(text, false);
+    }
+    
+    public static ExtractedEntities extractAndResolve(String text,boolean manuallyReplaceDemonyms){
         try {
-            return getParserInstance().extractAndResolve(text);
+            return getParserInstance().extractAndResolve(text,manuallyReplaceDemonyms);
         } catch (Exception e) {
             logger.error("Lucene Resolving Error: "+e.toString());
         }
@@ -225,7 +232,9 @@ public class ParseManager {
         if(parser==null){
 
             // use the Stanford NER location extractor?
-            StanfordNamedEntityExtractor locationExtractor = new StanfordNamedEntityExtractor();                
+            String modelToUse = CliffConfig.getInstance().getNerModelName();
+            logger.debug("Creating extractor with "+modelToUse);
+            StanfordNamedEntityExtractor locationExtractor = new StanfordNamedEntityExtractor(Model.valueOf(modelToUse));                
             
             int numberOfResultsToFetch = 10;
             boolean useFuzzyMatching = false;
