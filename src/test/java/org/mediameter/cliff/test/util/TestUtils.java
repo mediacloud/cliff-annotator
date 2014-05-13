@@ -1,13 +1,20 @@
-package org.mediameter.cliff.test.places;
+package org.mediameter.cliff.test.util;
+
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.mediameter.cliff.ParseManager;
+import org.mediameter.cliff.test.places.CodedArticle;
+import org.slf4j.Logger;
 
 import com.bericotech.clavin.gazetteer.CountryCode;
 import com.bericotech.clavin.resolver.ResolvedLocation;
+import com.bericotech.clavin.util.TextUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -18,6 +25,24 @@ public class TestUtils {
     public static String NYT_JSON_PATH = "src/test/resources/sample-docs/nyt.json";
     public static String HUFFPO_JSON_PATH = "src/test/resources/sample-docs/huffpo.json";
     public static String BBC_JSON_PATH = "src/test/resources/sample-docs/bbc.json";
+
+    public static void verifyPlacesInFile(String pathToFile, int[] places, Logger logger) throws Exception{
+        TestUtils.verifyPlacesInFile(pathToFile, places, false,logger);
+    }
+    
+    public static void verifyPlacesInFile(String pathToFile, int[] places, boolean andNoOthers, Logger logger) throws Exception{
+        logger.info("Looking for "+Arrays.toString(places)+" in "+pathToFile);
+        File inputFile = new File(pathToFile);
+        String inputString = TextUtils.fileToString(inputFile);
+        List<ResolvedLocation> results = ParseManager.extractAndResolve(inputString).getResolvedLocations();
+        for(ResolvedLocation resolvedLocation: results){ logger.info("  "+resolvedLocation.toString()); }
+        for(int placeId: places){
+            assertTrue("Didn't find "+placeId+" in list of places ("+places.length+" places found)",TestUtils.resultsContainsPlaceId(results, placeId));
+        }
+        if(andNoOthers){
+            assertTrue("There are some results that were unexecpted! Found "+results.size()+" but expected "+places.length+".",results.size()==places.length);
+        }
+    }
     
     public static boolean resultsContainsPlaceId(List<ResolvedLocation> results, int placeId){
         if(placeId==0) return true;

@@ -1,4 +1,4 @@
-package org.mediameter.cliff.test.places;
+package org.mediameter.cliff.test.places.disambiguation;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.junit.Test;
 import org.mediameter.cliff.ParseManager;
+import org.mediameter.cliff.test.places.CodedArticle;
+import org.mediameter.cliff.test.util.TestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -5,7 +5,7 @@ import java.util.List;
 import org.mediameter.cliff.ParseManager;
 import org.mediameter.cliff.places.aboutness.AboutnessStrategy;
 import org.mediameter.cliff.test.places.CodedArticle;
-import org.mediameter.cliff.test.places.TestUtils;
+import org.mediameter.cliff.test.util.TestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
