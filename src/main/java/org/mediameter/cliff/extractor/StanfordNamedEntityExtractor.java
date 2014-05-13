@@ -30,12 +30,16 @@ public class StanfordNamedEntityExtractor{
 
     // the actual named entity recognizer (NER) object
     private AbstractSequenceClassifier<CoreMap> namedEntityRecognizer;
-    
-    private static final boolean SUBSITUE_DEMONYMS = true; 
-    
+        
     private AbstractSubstitutionMap demonyms;
     private AbstractSubstitutionMap customSubstitutions;
     private Blacklist locationBlacklist;
+    
+    private Model model;
+    
+    public enum Model {
+        ENGLISH_ALL_3CLASS, ENGLISH_CONLL_4CLASS 
+    }
     
     /**
      * Default constructor. Instantiates a {@link StanfordNamedEntityExtractor}
@@ -46,8 +50,19 @@ public class StanfordNamedEntityExtractor{
      * @throws ClassNotFoundException
      */
     public StanfordNamedEntityExtractor() throws ClassCastException, IOException, ClassNotFoundException {
-        //this("english.all.3class.distsim.crf.ser.gz", "english.all.3class.distsim.prop" );
-        this("english.conll.4class.distsim.crf.ser.gz", "english.conll.4class.distsim.prop");
+        this(Model.ENGLISH_ALL_3CLASS);
+    }
+    
+    public StanfordNamedEntityExtractor(Model modelToUse) throws ClassCastException, IOException, ClassNotFoundException {
+        model = modelToUse;
+        switch(model){
+        case ENGLISH_ALL_3CLASS:
+            initializeWithModelFiles("english.all.3class.distsim.crf.ser.gz", "english.all.3class.distsim.prop" );
+            break;
+        case ENGLISH_CONLL_4CLASS:
+            initializeWithModelFiles("english.conll.4class.distsim.crf.ser.gz", "english.conll.4class.distsim.prop"); // makes it take about 30% longer :-(
+            break;
+        }
         demonyms = new WikipediaDemonymMap();
         customSubstitutions = new CustomSubstitutionMap(CUSTOM_SUBSTITUTION_FILE);
         locationBlacklist = new Blacklist(LOCATION_BLACKLIST_FILE);
@@ -65,16 +80,12 @@ public class StanfordNamedEntityExtractor{
      * @throws ClassCastException 
      */
     //@SuppressWarnings("unchecked")
-    public StanfordNamedEntityExtractor(String NERmodel, String NERprop) throws IOException, ClassCastException, ClassNotFoundException {
-
+    private void initializeWithModelFiles(String NERmodel, String NERprop) throws IOException, ClassCastException, ClassNotFoundException {
         InputStream mpis = this.getClass().getClassLoader().getResourceAsStream("models/" + NERprop);
         Properties mp = new Properties();
         mp.load(mpis);
-        
-        
         namedEntityRecognizer = (AbstractSequenceClassifier<CoreMap>) 
                 CRFClassifier.getJarClassifier("/models/" + NERmodel, mp);
-                        
     }
 
     /**
@@ -114,9 +125,11 @@ public class StanfordNamedEntityExtractor{
                     entities.addOrganization( organization );
                     break;
                 case "MISC":
-                    if (SUBSITUE_DEMONYMS && demonyms.contains(entityName)) {
-                        logger.debug("Found and adding a MISC demonym "+entityName);
-                        entities.addLocation( getLocationOccurrence(entityName, position) );
+                    if(isUsing4ClassModel()){
+                        if (demonyms.contains(entityName)) {
+                            logger.debug("Found and adding a MISC demonym "+entityName);
+                            entities.addLocation( getLocationOccurrence(entityName, position) );
+                        }
                     }
                     break;
                 default:
@@ -128,9 +141,13 @@ public class StanfordNamedEntityExtractor{
         return entities;
     }
     
+    private boolean isUsing4ClassModel(){
+        return this.model==Model.ENGLISH_CONLL_4CLASS;
+    }
+    
     private LocationOccurrence getLocationOccurrence(String entityName, int position){
         String fixedName = entityName;
-        if (SUBSITUE_DEMONYMS && demonyms.contains(entityName)) {
+        if (demonyms.contains(entityName)) {
             fixedName = demonyms.getSubstitution(entityName); 
             logger.debug("Demonym substitution: "+entityName+" to "+fixedName);
         } else if(customSubstitutions.contains(entityName)) {
