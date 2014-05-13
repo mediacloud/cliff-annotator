@@ -25,14 +25,14 @@ public class WikipediaDemonymMapTest {
     public void testAmerican(){
         String result = demonyms.getSubstitution("American");
         assertTrue("Doesn't contain American",demonyms.contains("American"));
-        assertTrue("American didn't map to USA ("+result+")",result.equals("united states"));
+        assertTrue("American didn't map to USA ("+result+")",result.equals("United States"));
     }
     
     @Test
     public void testBritsh(){
         String result = demonyms.getSubstitution("British");
         assertTrue("Doesn't contain British",demonyms.contains("British"));
-        assertTrue("British didn't map to UK ("+result+")",result.equals("united kingdom"));
+        assertTrue("British didn't map to UK ("+result+")",result.equals("United Kingdom"));
     }
     
 

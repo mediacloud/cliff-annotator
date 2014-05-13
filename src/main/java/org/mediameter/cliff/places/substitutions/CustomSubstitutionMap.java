@@ -48,7 +48,7 @@ public class CustomSubstitutionMap extends AbstractSubstitutionMap {
                 original = columns[0].toLowerCase().trim();
                 replacement = columns[1].toLowerCase().trim();
             }
-            map.put( original, replacement ); 
+            put( original, replacement ); 
         }         
         logger.debug(this.toString());
     }

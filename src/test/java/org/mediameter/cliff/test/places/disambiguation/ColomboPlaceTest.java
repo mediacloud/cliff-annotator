@@ -13,7 +13,7 @@ public class ColomboPlaceTest {
     @Test
     public void testColombo() throws Exception {
         TestUtils.verifyPlacesInFile("src/test/resources/sample-docs/autralia-sri-lanka.txt", 
-                new int[] {TestPlaces.COUNTRY_AUSTRALIA,TestPlaces.CITY_CAIRNS, TestPlaces.COUNTRY_SRI_LANKA}, true, logger );        
+                new int[] {TestPlaces.COUNTRY_AUSTRALIA,TestPlaces.CITY_CAIRNS, TestPlaces.CITY_COLOMBO_SRI_LANKA}, false, logger );        
     }
 
 }

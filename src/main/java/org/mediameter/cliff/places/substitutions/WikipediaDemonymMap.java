@@ -6,6 +6,9 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +20,7 @@ public class WikipediaDemonymMap extends AbstractSubstitutionMap {
     public static final String RESOURCE_NAME = "wikipedia-demonyms.tsv";
     
     public WikipediaDemonymMap(){
+        this.ignoreCase = false;
         try {
             loadFromFile();
         } catch (IOException e) {
@@ -46,10 +50,22 @@ public class WikipediaDemonymMap extends AbstractSubstitutionMap {
            demonyms.addAll( Arrays.asList(adjectivals) );
            // add demonyms to map
            for(String demonym:demonyms){
-               map.put(demonym.toLowerCase().trim(), countryName.toLowerCase().trim());
-               //logger.debug("added "+demonym+" to "+countryName);
+               put(demonym, countryName);
+               logger.debug("added "+demonym+" to "+countryName);
            }
         }         
+    }
+
+    public String replaceAll(String textToParse) {
+        Iterator<Entry<String, String>> it = map.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<String,String> pair = (Map.Entry<String,String>)it.next();
+            if(textToParse.contains(pair.getKey())){
+                logger.debug("    substituting demonym: "+pair.getKey()+" -> "+pair.getValue());
+                textToParse = textToParse.replaceAll(pair.getKey(), pair.getValue());
+            }
+        }
+        return textToParse;
     }
 
 }

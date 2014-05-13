@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Properties;
 
-import org.mediameter.cliff.places.substitutions.AbstractSubstitutionMap;
 import org.mediameter.cliff.places.substitutions.Blacklist;
 import org.mediameter.cliff.places.substitutions.CustomSubstitutionMap;
 import org.mediameter.cliff.places.substitutions.WikipediaDemonymMap;
@@ -28,11 +27,13 @@ public class StanfordNamedEntityExtractor{
     public static final String CUSTOM_SUBSTITUTION_FILE = "custom-substitutions.csv";
     public static final String LOCATION_BLACKLIST_FILE = "location-blacklist.txt";
 
+    public static final boolean MANUALLY_REPLACE_DEMONYMS = false;   // slows it down a bunch!
+    
     // the actual named entity recognizer (NER) object
     private AbstractSequenceClassifier<CoreMap> namedEntityRecognizer;
         
-    private AbstractSubstitutionMap demonyms;
-    private AbstractSubstitutionMap customSubstitutions;
+    private WikipediaDemonymMap demonyms;
+    private CustomSubstitutionMap customSubstitutions;
     private Blacklist locationBlacklist;
     
     private Model model;
@@ -94,11 +95,22 @@ public class StanfordNamedEntityExtractor{
      * @param text      Text content to perform extraction on.
      * @return          List of Location Occurrences.
      */
-    public ExtractedEntities extractEntities(String text) {
-        if (text == null)
-            throw new IllegalArgumentException("text input to extractEntities should not be null");
-
+    public ExtractedEntities extractEntities(String textToParse) {
         ExtractedEntities entities = new ExtractedEntities();
+
+        if (textToParse==null || textToParse.length()==0){
+            logger.warn("input to extractEntities was null or zero!");
+            return entities; 
+        }
+
+        String text = "";
+        if(isUsing4ClassModel()){
+            text = textToParse;
+        } else {
+            if(MANUALLY_REPLACE_DEMONYMS){
+                text = demonyms.replaceAll(textToParse);
+            }
+        }
         
         // extract entities as <Entity Type, Start Index, Stop Index>
         List<Triple<String, Integer, Integer>> extractedEntities = 
