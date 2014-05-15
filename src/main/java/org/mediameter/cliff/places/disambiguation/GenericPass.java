@@ -121,8 +121,8 @@ public abstract class GenericPass {
     	} else if (adminCandidate == null){
     		return true;
     	} else {
-    		return cityCandidate.geoname.population > adminCandidate.geoname.population ||
-    			cityCandidate.geoname.primaryCountryCode == adminCandidate.geoname.primaryCountryCode;
+    		return (cityCandidate.geoname.population > adminCandidate.geoname.population) ||
+    			(cityCandidate.geoname.primaryCountryCode == adminCandidate.geoname.primaryCountryCode);
     	}
     }
     
