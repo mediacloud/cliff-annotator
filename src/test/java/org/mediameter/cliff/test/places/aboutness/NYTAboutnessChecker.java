@@ -76,14 +76,14 @@ public class NYTAboutnessChecker {
                     // load the document and geolocate the places NYT tagged
                     List<ResolvedLocation> rawResolvedLocations = new ArrayList<ResolvedLocation>();
                     List<LocationOccurrence> locationOccurrences = new ArrayList<LocationOccurrence>();
-                    for (String locationName: doc.getLocations()){
-                        if(customSubstitutions.contains(locationName)){
-                            locationName = customSubstitutions.getSubstitution(locationName); 
-                        }
-                        locationOccurrences.add( new LocationOccurrence(locationName,0) );
-                        rawResolvedLocations.addAll( ParseManager.extractAndResolve(locationName).getResolvedLocations() );
-                    }
                     try {
+                        for (String locationName: doc.getLocations()){
+                            if(customSubstitutions.contains(locationName)){
+                                locationName = customSubstitutions.getSubstitution(locationName); 
+                            }
+                            locationOccurrences.add( new LocationOccurrence(locationName,0) );
+                            rawResolvedLocations.addAll( ParseManager.extractAndResolve(locationName).getResolvedLocations() );
+                        }
                         List<ResolvedLocation> resolvedLocations;
                         resolvedLocations = ParseManager.getResolver().resolveLocations(locationOccurrences,false);
                         resolvedLocations.addAll(rawResolvedLocations);

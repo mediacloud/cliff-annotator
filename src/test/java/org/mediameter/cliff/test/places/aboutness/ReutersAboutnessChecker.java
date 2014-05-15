@@ -41,7 +41,7 @@ public class ReutersAboutnessChecker {
     
     private RegionSubstitutionMap substitutions;
     
-    public ReutersAboutnessChecker() {
+    public ReutersAboutnessChecker() throws Exception {
         substitutions = new RegionSubstitutionMap(REGIONS_FILE);
     }
 

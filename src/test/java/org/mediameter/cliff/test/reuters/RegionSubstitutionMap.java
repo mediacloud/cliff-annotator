@@ -17,12 +17,12 @@ public class RegionSubstitutionMap extends CustomSubstitutionMap {
 
     private HashMap<String,CountryCode> regionToCountryCode; 
     
-    public RegionSubstitutionMap(String fileName){
+    public RegionSubstitutionMap(String fileName) throws Exception{
         super(fileName,"\t",';',false,false);
         createCountryCodeMap();
     }
     
-    private void createCountryCodeMap(){
+    private void createCountryCodeMap() throws Exception{
         regionToCountryCode = new HashMap<String,CountryCode>();
         for(String region:map.keySet()){
             ExtractedEntities entities = ParseManager.extractAndResolve(map.get(region));

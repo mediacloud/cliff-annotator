@@ -24,28 +24,28 @@ public class DemonymPlaceTest {
     }
     
     @Test
-    public void testChinese(){
+    public void testChinese() throws Exception{
         List<ResolvedLocation> results = ParseManager.extractAndResolve("This is about a Chinese person.").getResolvedLocations();
         assertEquals("Found "+results.size()+" places, should have been 1!",1,results.size());
         assertEquals(TestPlaces.COUNTRY_CHINA,results.get(0).geoname.geonameID);
     }
 
     @Test
-    public void testAustralian(){
+    public void testAustralian() throws Exception{
         List<ResolvedLocation> results = ParseManager.extractAndResolve("This is about an Australian person.").getResolvedLocations();
         assertEquals("Found "+results.size()+" places, should have been 1!",1,results.size());
         assertEquals(TestPlaces.COUNTRY_AUSTRALIA,results.get(0).geoname.geonameID);
     }
 
     @Test
-    public void testAmerican(){
+    public void testAmerican() throws Exception{
         List<ResolvedLocation> results = ParseManager.extractAndResolve("This is about an American person.").getResolvedLocations();
         assertEquals("Found "+results.size()+" places, should have been 1!",1,results.size());
         assertEquals(TestPlaces.COUNTRY_US,results.get(0).geoname.geonameID);
     }
 
     @Test
-    public void testIndonesian(){
+    public void testIndonesian() throws Exception{
         List<ResolvedLocation> results = ParseManager.extractAndResolve("This is about an Indonesian person.").getResolvedLocations();
         assertEquals("Found "+results.size()+" places, should have been 1!",1,results.size());
         assertEquals(TestPlaces.COUNTRY_INDONESIA,results.get(0).geoname.geonameID);

@@ -189,17 +189,12 @@ public class ParseManager {
     	
     }
     
-    public static ExtractedEntities extractAndResolve(String text){
+    public static ExtractedEntities extractAndResolve(String text) throws Exception{
         return extractAndResolve(text, false);
     }
     
-    public static ExtractedEntities extractAndResolve(String text,boolean manuallyReplaceDemonyms){
-        try {
-            return getParserInstance().extractAndResolve(text,manuallyReplaceDemonyms);
-        } catch (Exception e) {
-            logger.error("Lucene Resolving Error: "+e.toString());
-        }
-        return new ExtractedEntities();
+    public static ExtractedEntities extractAndResolve(String text,boolean manuallyReplaceDemonyms) throws Exception{
+        return getParserInstance().extractAndResolve(text,manuallyReplaceDemonyms);
     }
 
     /**
