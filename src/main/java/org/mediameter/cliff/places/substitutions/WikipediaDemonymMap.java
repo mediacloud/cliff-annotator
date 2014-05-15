@@ -48,7 +48,7 @@ public class WikipediaDemonymMap extends AbstractSubstitutionMap {
            demonyms.addAll( Arrays.asList(adjectivals) );
            // add demonyms to map
            for(String demonym:demonyms){
-               put(demonym, countryName);
+               put(demonym.trim(), countryName.trim());
                logger.debug("added "+demonym+" to "+countryName);
            }
         }         
