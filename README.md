@@ -64,7 +64,8 @@ We have a number of unit tests that can be run with `mvn test`.
 Releasing
 ---------
 
-To create the WAR file, run `mvn package -DskipTests`.
+First update the version numbers in the `pom.xml` file, and in `org.mediameter.cliff.ParseManager`. Then to 
+create the WAR file, run `mvn package -DskipTests`.
 
 Deploying on Ubuntu
 -------------------
