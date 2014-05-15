@@ -14,13 +14,13 @@ public class CustomSubstitutionMap extends AbstractSubstitutionMap {
     private static final Logger logger = LoggerFactory.getLogger(CustomSubstitutionMap.class);
         
     public CustomSubstitutionMap(String fileName){
-        try {
-            loadFromFile(fileName,",",';',true,true);
-        } catch (IOException e) {
-            logger.error("Unable to load substitution list! "+e);
-        }
+        this(fileName,",",';',true,true);
     }
 
+    public CustomSubstitutionMap(String fileName, boolean ignoreCase){
+        this(fileName,",",';',true,ignoreCase);
+    }
+    
     public CustomSubstitutionMap(String fileName,String separator,char comment,boolean skipFirstRow, boolean ignoreCase){
         try {
             loadFromFile(fileName, separator, comment,skipFirstRow,ignoreCase);
@@ -30,7 +30,7 @@ public class CustomSubstitutionMap extends AbstractSubstitutionMap {
     }
     
     protected void loadFromFile(String fileName,String separator,char comment,boolean skipFirstRow,boolean ignoreCase) throws IOException{
-        logger.info("Loading custom substitutions from "+fileName);
+        logger.info("Loading custom substitutions from "+fileName+" ignoreCase="+ignoreCase);
         map = new HashMap<String,String>();
         BufferedReader br = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream(fileName)));
         // drop the table header rows

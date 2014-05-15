@@ -8,7 +8,7 @@ public class UnknownCountryException extends Exception {
         this.alpha3 = alpha3;
     }
     
-    public String getAlpha3(){
+    public String getCountryCode(){
         return this.alpha3;
     }
 

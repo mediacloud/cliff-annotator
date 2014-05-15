@@ -44,12 +44,13 @@ public class GdeltAboutnessChecker {
         int mentionedFailures = 0;
         for(GdeltEvent event:events){
             logger.debug("-------------------------------------------------------------------------------------------");
+            logger.debug("Checking event "+event);
             try{
-                URL url = new URL(event.getSourceUrl());
+                URL url = event.getSourceUrl();
                 String text;
                 if(cache.contains(url.toString())){
                     text = cache.get(url.toString());
-                    logger.debug("Fetched from cache:"+url.toString());
+                    logger.debug("  Fetched from cache:"+url.toString());
                 } else {
                     HTMLDocument htmlDoc = HTMLFetcher.fetch(url);
                     TextDocument doc = new BoilerpipeSAXInput(htmlDoc.toInputSource()).getTextDocument();
@@ -61,17 +62,17 @@ public class GdeltAboutnessChecker {
                     logger.debug("  Skipping because it is too short");
                     continue; //assume we didn't fetch/extract it right
                 }
-                //logger.debug(text);
-                ExtractedEntities entities = ParseManager.extractAndResolve(text);
+                logger.debug(text);
+                ExtractedEntities entities = ParseManager.extractAndResolve(text, true);
                 List<CountryCode> countries = entities.getUniqueCountries();
                 if( countries.contains(event.getActor1().getCountryCodeObj()) && countries.contains(event.getActor2().getCountryCodeObj())){
                     mentionedSuccesses = mentionedSuccesses + 1;
                 } else {
-                    logger.error(" We found "+countries+" - GDELT Says:"+event.getActor1().getCountryCodeObj()+" and "+event.getActor2().getCountryCodeObj());
+                    logger.error("  We found "+countries+" - GDELT Says:"+event.getActor1().getCountryCodeObj()+" and "+event.getActor2().getCountryCodeObj());
                     mentionedFailures++;
                 }
             } catch(Exception e){
-                logger.warn("Skipping url "+event.getSourceUrl()+" because "+e.toString());
+                logger.warn("  Skipping url "+event.getSourceUrl()+" because "+e.toString());
             }
         }
         

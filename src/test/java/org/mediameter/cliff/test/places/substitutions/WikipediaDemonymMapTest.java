@@ -18,7 +18,7 @@ public class WikipediaDemonymMapTest {
 
     @Test
     public void testCount() {
-        assertTrue("Wrong number of keys ("+demonyms.getSize()+")", demonyms.getSize()==532);
+        assertTrue("Wrong number of keys ("+demonyms.getSize()+")", demonyms.getSize()==533);
     }
     
     @Test
@@ -34,6 +34,20 @@ public class WikipediaDemonymMapTest {
         assertTrue("Doesn't contain British",demonyms.contains("British"));
         assertTrue("British didn't map to UK ("+result+")",result.equals("United Kingdom"));
     }
-    
+
+    @Test
+    public void testSalvadoran(){
+        String result = demonyms.getSubstitution("Salvadoran");
+        assertTrue("Doesn't contain Salvadoran",demonyms.contains("Salvadoran"));
+        assertTrue("Salvadoran didn't map to UK ("+result+")",result.equals("El Salvador"));
+    }
+
+    @Test
+    public void testEnglishman(){
+        String result = demonyms.getSubstitution("Englishman");
+        assertTrue("Doesn't contain Englishman",demonyms.contains("Englishman"));
+        assertTrue("Englishman didn't map to UK ("+result+")",result.equals("England"));
+    }
+
 
 }
