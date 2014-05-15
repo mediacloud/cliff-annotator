@@ -26,12 +26,14 @@ public class StanfordNamedEntityExtractor{
 
     public static final String CUSTOM_SUBSTITUTION_FILE = "custom-substitutions.csv";
     public static final String LOCATION_BLACKLIST_FILE = "location-blacklist.txt";
+    public static final String PERSON_TO_PLACE_FILE = "person-to-place-replacements.csv";
     
     // the actual named entity recognizer (NER) object
     private AbstractSequenceClassifier<CoreMap> namedEntityRecognizer;
         
     private WikipediaDemonymMap demonyms;
     private CustomSubstitutionMap customSubstitutions;
+    private CustomSubstitutionMap personToPlaceSubstitutions;
     private Blacklist locationBlacklist;
     
     private Model model;
@@ -66,6 +68,7 @@ public class StanfordNamedEntityExtractor{
         demonyms = new WikipediaDemonymMap();
         customSubstitutions = new CustomSubstitutionMap(CUSTOM_SUBSTITUTION_FILE);
         locationBlacklist = new Blacklist(LOCATION_BLACKLIST_FILE);
+        personToPlaceSubstitutions = new CustomSubstitutionMap(PERSON_TO_PLACE_FILE,false);
     }
     
     /**
@@ -119,8 +122,13 @@ public class StanfordNamedEntityExtractor{
                 int position = extractedEntity.second();
                 switch(extractedEntity.first){
                 case "PERSON":
-                    PersonOccurrence person = new PersonOccurrence(entityName, position);
-                    entities.addPerson( person );
+                    if(personToPlaceSubstitutions.contains(entityName)){
+                        entities.addLocation( getLocationOccurrence(personToPlaceSubstitutions.getSubstitution(entityName), position) );
+                        logger.debug("Changed person "+entityName+" to a place");
+                    } else {
+                        PersonOccurrence person = new PersonOccurrence(entityName, position);
+                        entities.addPerson( person );
+                    }
                     break;
                 case "LOCATION":
                     if(!locationBlacklist.contains(entityName)){
