@@ -33,7 +33,7 @@ public class ParseManager {
      * Minor: change in json result format
      * Revision: minor change or bug fix
      */
-    static final String PARSER_VERSION = "0.7.1";
+    static final String PARSER_VERSION = "1.0.0rc";
     
     private static final Logger logger = LoggerFactory.getLogger(ParseManager.class);
 
