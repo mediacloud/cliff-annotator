@@ -53,8 +53,9 @@ file.
 #### ner.modelToUse
 
 Controls which Stanford NER Model to use while extracting entities:
- 
-|Value|Default|Model|Notes|
+
+| Value | Default | Model | Notes |
+| ----- | ------- | ----- | ----- |
 |ENGLISH_ALL_3CLASS|*|english.all.3class.distsim.crf|Quick, but doesn't catch all demonyms|
 |ENGLISH_CONLL_4CLASS||english.conll.4class.distsim.crf|Catches most demonyms, but is about 30% slower|
 
