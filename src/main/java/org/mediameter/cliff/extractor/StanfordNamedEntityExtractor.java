@@ -108,8 +108,8 @@ public class StanfordNamedEntityExtractor{
 
         String text = textToParse;
         if(manuallyReplaceDemonyms){    // this is a noticeable performance hit
+            logger.debug("Replacing all demonyms by hand");
             text = demonyms.replaceAll(textToParse);
-            logger.debug(text);
         }
         
         // extract entities as <Entity Type, Start Index, Stop Index>
