@@ -8,10 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.queryparser.analyzing.AnalyzingQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.NumericRangeQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
@@ -76,7 +78,7 @@ public class CustomLuceneLocationResolver implements LocationResolver {
 	private FSDirectory index;
 	private IndexSearcher indexSearcher;
 	private static Analyzer indexAnalyzer;
-	
+		
 	// maximum number of matches to be fetched from Lucene index
 	// (i.e., search depth) -- use a value of 1 to simply retrieve the
 	// matching geo entity having the highest population
@@ -125,7 +127,21 @@ public class CustomLuceneLocationResolver implements LocationResolver {
 		//set up the disambiguator
 		disambiguationStrategy = new HeuristicDisambiguationStrategy();
 	}
-		
+	
+	public GeoName getByGeoNameId(int geoNameId) throws IOException, UnknownGeoNameIdException{
+	    // for searching by geoname id
+	    Query q = NumericRangeQuery.newIntRange("geonameID", 1, geoNameId, geoNameId, true, true);
+	    TopDocs results = indexSearcher.search(q, 1);
+        if (results.scoreDocs.length > 0) {
+            Document luceneDoc = indexSearcher.doc(results.scoreDocs[0].doc);
+            GeoName geoname = GeoName.parseFromGeoNamesRecord(luceneDoc.get("geoname"));
+            logger.debug("GeoName: {}", geoname);
+            return geoname;
+        }
+        throw new UnknownGeoNameIdException(geoNameId);
+	}
+    
+	
 	/**
 	 * Finds all matches (capped at {@link CustomLuceneLocationResolver#maxHitDepth})
 	 * in the Lucene index for a given location name.
