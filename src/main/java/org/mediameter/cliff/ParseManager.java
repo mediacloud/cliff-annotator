@@ -33,7 +33,7 @@ public class ParseManager {
      * Minor: change in json result format
      * Revision: minor change or bug fix
      */
-    static final String PARSER_VERSION = "1.0.0";
+    static final String PARSER_VERSION = "1.1.0";
     
     private static final Logger logger = LoggerFactory.getLogger(ParseManager.class);
 
@@ -46,7 +46,7 @@ public class ParseManager {
     private static AboutnessStrategy aboutness = new FrequencyOfMentionAboutnessStrategy();
     //private static AboutnessStrategy aboutness = new LocationScoredAboutnessStrategy();
     
-    private static final String PATH_TO_GEONAMES_INDEX = "/etc/cliff/IndexDirectory";
+    public static final String PATH_TO_GEONAMES_INDEX = "/etc/cliff/IndexDirectory";
     
     // these two are the statuses used in the JSON responses
     private static final String STATUS_OK = "ok";
