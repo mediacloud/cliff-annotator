@@ -1,15 +1,11 @@
 package org.mediameter.cliff.places;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.bericotech.clavin.gazetteer.CountryCode;
-import com.bericotech.clavin.gazetteer.FeatureClass;
-import com.bericotech.clavin.gazetteer.FeatureCode;
 import com.bericotech.clavin.gazetteer.GeoName;
 
 /**
