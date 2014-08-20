@@ -1,10 +1,9 @@
 package org.mediameter.cliff.places;
 
-import java.io.File;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.LineIterator;
 import org.mediameter.cliff.ParseManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +17,8 @@ public class CountryGeoNameLookup extends AbstractGeoNameLookup {
 
     public final static Logger logger = LoggerFactory.getLogger(CountryGeoNameLookup.class);
 
+    public static final String RESOURCE_NAME = "countryInfo.txt";
+
     private static CountryGeoNameLookup instance;
     
     public CountryGeoNameLookup() throws IOException {
@@ -28,20 +29,19 @@ public class CountryGeoNameLookup extends AbstractGeoNameLookup {
     public void parse() {
         try {
             CustomLuceneLocationResolver resolver = (CustomLuceneLocationResolver) ParseManager.getResolver();
-            File file = new File("src/main/resources/geonames/countryInfo.txt"); 
-            LineIterator it = FileUtils.lineIterator(file, "UTF-8");
-            while (it.hasNext()) {
-                String line = it.nextLine().trim();
-                if(line.length()==0){
+            BufferedReader br = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream(RESOURCE_NAME)));
+            String line = null;
+            while ((line = br.readLine()) != null) {  
+                if(line.trim().length()==0){
                     continue;
                 }
                 if (line.charAt(0)=='#') {
                     continue;
                 }
-                String[] columns = line.split("\t");
+                String[] columns = line.trim().split("\t");
                 try {
                     String iso3166Alpha2 = columns[0];
-                    String name = columns[4];
+                    //String name = columns[4];
                     int geonameId = Integer.parseInt(columns[16]);                
                     this.put(iso3166Alpha2, resolver.getByGeoNameId(geonameId));
                 } catch (NumberFormatException nfe){
