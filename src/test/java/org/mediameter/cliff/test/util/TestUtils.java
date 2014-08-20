@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.mediameter.cliff.ParseManager;
-import org.mediameter.cliff.places.focus.AboutnessLocation;
+import org.mediameter.cliff.places.focus.FocusLocation;
 import org.mediameter.cliff.test.places.CodedArticle;
 import org.slf4j.Logger;
 
@@ -91,9 +91,9 @@ public class TestUtils {
         return false;
     }
 
-    public static boolean isCountryCodeInAboutnessLocationList(String countryAlpha2, List<AboutnessLocation> countryCodes){
+    public static boolean isCountryCodeInAboutnessLocationList(String countryAlpha2, List<FocusLocation> countryCodes){
         if(countryAlpha2.length()==0) return true;
-        for(AboutnessLocation location: countryCodes){
+        for(FocusLocation location: countryCodes){
             if(location.getPrimaryCountryCode().name().equals(countryAlpha2)){
                 return true;
             }

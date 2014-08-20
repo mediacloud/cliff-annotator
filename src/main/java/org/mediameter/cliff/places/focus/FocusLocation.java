@@ -3,12 +3,12 @@ package org.mediameter.cliff.places.focus;
 import com.bericotech.clavin.gazetteer.CountryCode;
 import com.bericotech.clavin.gazetteer.GeoName;
 
-public class AboutnessLocation {
+public class FocusLocation {
 
     private int score;
     private GeoName geoName;
     
-    public AboutnessLocation(GeoName geoName, int score){
+    public FocusLocation(GeoName geoName, int score){
         this.geoName = geoName;
         this.score = score;
     }

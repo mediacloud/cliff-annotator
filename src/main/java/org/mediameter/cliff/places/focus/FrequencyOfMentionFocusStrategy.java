@@ -19,15 +19,15 @@ import com.bericotech.clavin.resolver.ResolvedLocation;
  * 
  * @author rahulb
  */
-public class FrequencyOfMentionAboutnessStrategy implements AboutnessStrategy {
+public class FrequencyOfMentionFocusStrategy implements FocusStrategy {
 
-    private static final Logger logger = LoggerFactory.getLogger(FrequencyOfMentionAboutnessStrategy.class);
+    private static final Logger logger = LoggerFactory.getLogger(FrequencyOfMentionFocusStrategy.class);
 
     @Override
-    public List<AboutnessLocation> selectCountries(List<ResolvedLocation> resolvedLocations){
-        List<AboutnessLocation> results = new ArrayList<AboutnessLocation>();
+    public List<FocusLocation> selectCountries(List<ResolvedLocation> resolvedLocations){
+        List<FocusLocation> results = new ArrayList<FocusLocation>();
         // count country mentions
-        HashMap<CountryCode,Integer> countryCounts = AboutnessUtils.getCountryCounts(resolvedLocations); 
+        HashMap<CountryCode,Integer> countryCounts = FocusUtils.getCountryCounts(resolvedLocations); 
         if(countryCounts.size()==0){
             return results;
         }
@@ -41,12 +41,12 @@ public class FrequencyOfMentionAboutnessStrategy implements AboutnessStrategy {
         logger.info("Found primary country "+primaryCountry);
         // return results
         if(primaryCountry!=null) {
-            results.add( new AboutnessLocation(
+            results.add( new FocusLocation(
                     CountryGeoNameLookup.lookup( primaryCountry.name()),countryCounts.get(primaryCountry) ) 
             );
         	 for(CountryCode countryCode: countryCounts.keySet()){
                 if( countryCode != primaryCountry && countryCounts.get(countryCode) == countryCounts.get(primaryCountry) ){
-                    results.add( new AboutnessLocation(
+                    results.add( new FocusLocation(
                             CountryGeoNameLookup.lookup( countryCode.name()),countryCounts.get(countryCode) ) 
                     );
                 } 
@@ -56,10 +56,10 @@ public class FrequencyOfMentionAboutnessStrategy implements AboutnessStrategy {
     }
 
     @Override
-    public List<AboutnessLocation> selectStates(List<ResolvedLocation> resolvedLocations){
-        List<AboutnessLocation> results = new ArrayList<AboutnessLocation>();
+    public List<FocusLocation> selectStates(List<ResolvedLocation> resolvedLocations){
+        List<FocusLocation> results = new ArrayList<FocusLocation>();
         // count state mentions
-        HashMap<String,Integer> stateCounts = AboutnessUtils.getStateCounts(resolvedLocations);
+        HashMap<String,Integer> stateCounts = FocusUtils.getStateCounts(resolvedLocations);
         if(stateCounts.size()==0){
             return results;
         }
@@ -77,12 +77,12 @@ public class FrequencyOfMentionAboutnessStrategy implements AboutnessStrategy {
         // return results
         if(primaryState!=null) {
             int primaryStateCount = stateCounts.get(primaryState);
-        	results.add( new AboutnessLocation( 
+        	results.add( new FocusLocation( 
         	        Adm1GeoNameLookup.lookup(primaryState), primaryStateCount ) );
         	for(String stateCode: stateCounts.keySet()){
         		int count = stateCounts.get(stateCode);        		
                 if( stateCode != primaryState && count == primaryStateCount ){
-                    results.add( new AboutnessLocation( 
+                    results.add( new FocusLocation( 
                             Adm1GeoNameLookup.lookup(stateCode), count ) );
                 } 
             }
@@ -91,10 +91,10 @@ public class FrequencyOfMentionAboutnessStrategy implements AboutnessStrategy {
     }
     
     @Override
-    public List<AboutnessLocation> selectCities(List<ResolvedLocation> resolvedLocations){
-        List<AboutnessLocation> results = new ArrayList<AboutnessLocation>();
+    public List<FocusLocation> selectCities(List<ResolvedLocation> resolvedLocations){
+        List<FocusLocation> results = new ArrayList<FocusLocation>();
         // count state mentions
-        HashMap<GeoName,Integer> cityCounts = AboutnessUtils.getCityCounts(resolvedLocations); 
+        HashMap<GeoName,Integer> cityCounts = FocusUtils.getCityCounts(resolvedLocations); 
         if(cityCounts.size()==0){
             return results;
         }
@@ -112,11 +112,11 @@ public class FrequencyOfMentionAboutnessStrategy implements AboutnessStrategy {
         // return results
         if(primaryCity!=null) {
             int primaryCityCount = cityCounts.get(primaryCity);
-            results.add( new AboutnessLocation( primaryCity, primaryCityCount ) );
+            results.add( new FocusLocation( primaryCity, primaryCityCount ) );
             for(GeoName city: cityCounts.keySet()){
                 int count = cityCounts.get(city);             
                 if( (city != primaryCity && count == primaryCityCount ) || ((city != primaryCity && count > 1)) ){
-                    results.add( new AboutnessLocation( city, count ) );
+                    results.add( new FocusLocation( city, count ) );
                 } 
             }
         }

@@ -11,7 +11,7 @@ import com.bericotech.clavin.gazetteer.FeatureClass;
 import com.bericotech.clavin.gazetteer.GeoName;
 import com.bericotech.clavin.resolver.ResolvedLocation;
 
-public class AboutnessUtils {
+public class FocusUtils {
 
 	public static HashMap<GeoName,Integer> getCityCounts(List<ResolvedLocation> resolvedLocations){     
         HashMap<GeoName,Integer> cityCounts = new HashMap<GeoName,Integer>();

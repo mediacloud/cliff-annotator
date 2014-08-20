@@ -9,13 +9,13 @@ import com.bericotech.clavin.resolver.ResolvedLocation;
  * document is "about".  This exists so we can try and compare different strategies.
  * @author rahulb
  */
-public interface AboutnessStrategy {
+public interface FocusStrategy {
 
-    public abstract List<AboutnessLocation> selectCountries(
+    public abstract List<FocusLocation> selectCountries(
             List<ResolvedLocation> resolvedLocations);
-    public abstract List<AboutnessLocation> selectStates(
+    public abstract List<FocusLocation> selectStates(
             List<ResolvedLocation> resolvedLocations);
-    public abstract List<AboutnessLocation> selectCities(
+    public abstract List<FocusLocation> selectCities(
             List<ResolvedLocation> resolvedLocations);
 
 }

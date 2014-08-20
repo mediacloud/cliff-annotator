@@ -1,4 +1,4 @@
-package org.mediameter.cliff.test.places.aboutness;
+package org.mediameter.cliff.test.places.focus;
 
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
@@ -14,8 +14,8 @@ import java.util.List;
 import org.mediameter.cliff.ParseManager;
 import org.mediameter.cliff.extractor.ExtractedEntities;
 import org.mediameter.cliff.places.CountryGeoNameLookup;
-import org.mediameter.cliff.places.focus.AboutnessLocation;
-import org.mediameter.cliff.places.focus.AboutnessStrategy;
+import org.mediameter.cliff.places.focus.FocusLocation;
+import org.mediameter.cliff.places.focus.FocusStrategy;
 import org.mediameter.cliff.test.reuters.RegionSubstitutionMap;
 import org.mediameter.cliff.test.reuters.ReutersCorpusDocument;
 import org.slf4j.Logger;
@@ -31,21 +31,21 @@ import com.bericotech.clavin.gazetteer.GeoName;
  * 
  * @author rahulb
  */
-public class ReutersAboutnessChecker {
+public class ReutersFocusChecker {
 
-    private static final Logger logger = LoggerFactory.getLogger(ReutersAboutnessChecker.class);
+    private static final Logger logger = LoggerFactory.getLogger(ReutersFocusChecker.class);
 
     public static final String REGIONS_FILE = "reuters_region_codes.txt";
 
     private static String BASE_DIR = "data/reuters/";
 
     private int articlesWithLocations = 0;
-    private int aboutnessArticlesWeGotRight = 0;
+    private int focusArticlesWeGotRight = 0;
     private int mentionsArticlesWeGotRight = 0;
     
     private RegionSubstitutionMap substitutions;
     
-    public ReutersAboutnessChecker() throws Exception {
+    public ReutersFocusChecker() throws Exception {
         substitutions = new RegionSubstitutionMap(REGIONS_FILE);
     }
 
@@ -53,9 +53,9 @@ public class ReutersAboutnessChecker {
         FileVisitor<Path> fileProcessor = new ProcessFile();
         Files.walkFileTree(Paths.get(BASE_DIR), fileProcessor);
         double success = (double)mentionsArticlesWeGotRight/(double)articlesWithLocations; 
-        double aboutnessSuccess = (double)aboutnessArticlesWeGotRight/(double)articlesWithLocations; 
+        double focusSuccess = (double)focusArticlesWeGotRight/(double)articlesWithLocations; 
         logger.info("Checked "+articlesWithLocations+" Articles - Base success rate: "+success);
-        logger.info("Checked "+articlesWithLocations+" Articles - Aboutness success rate: "+aboutnessSuccess);
+        logger.info("Checked "+articlesWithLocations+" Articles - Aboutness success rate: "+focusSuccess);
     }
     
     private final class ProcessFile extends SimpleFileVisitor<Path> {
@@ -96,21 +96,21 @@ public class ReutersAboutnessChecker {
                         }
 
                         //also have a measure for making sure the main "about" country is included in their list of countries
-                        AboutnessStrategy aboutness = ParseManager.getAboutness();
-                        List<AboutnessLocation> ourAboutnessCountries = aboutness.selectCountries(entities.getResolvedLocations());
+                        FocusStrategy focus = ParseManager.getFocusStrategy();
+                        List<FocusLocation> ourAboutnessCountries = focus.selectCountries(entities.getResolvedLocations());
                         List<GeoName> ourAboutnessGeoNames = new ArrayList<GeoName>();
-                        for(AboutnessLocation aboutLocation: ourAboutnessCountries){
+                        for(FocusLocation aboutLocation: ourAboutnessCountries){
                             ourAboutnessGeoNames.add(aboutLocation.getGeoName());
                         }
                         if(ourAboutnessGeoNames.size()>0){
                             boolean allMatched = true;
-                            for(GeoName aboutnessGeoName:ourAboutnessGeoNames){
-                                if(!countriesTheyCoded.contains(aboutnessGeoName)){
+                            for(GeoName focusGeoName:ourAboutnessGeoNames){
+                                if(!countriesTheyCoded.contains(focusGeoName)){
                                     allMatched = false;
                                 }
                             }
                             if(allMatched){
-                                aboutnessArticlesWeGotRight++;
+                                focusArticlesWeGotRight++;
                             } else {
                                 logger.warn(doc.getId()+": about "+ourAboutnessGeoNames+" they found "+countriesTheyCoded);
                             }
@@ -134,13 +134,13 @@ public class ReutersAboutnessChecker {
     
     public static void main(String[] args) throws Exception {
         long startTime = System.currentTimeMillis();
-        logger.info("Starting ReutersAboutnessChecker");
-        ReutersAboutnessChecker checker = new ReutersAboutnessChecker();
+        logger.info("Starting ReutersFocusChecker");
+        ReutersFocusChecker checker = new ReutersFocusChecker();
         checker.check();
         ParseManager.logStats();
         long endTime = System.currentTimeMillis();
         long elapsedMillis = endTime - startTime;
-        logger.info("Done with ReutersAboutnessChecker ("+elapsedMillis+" milliseconds)");
+        logger.info("Done with ReutersFocusChecker ("+elapsedMillis+" milliseconds)");
     }
 
 }

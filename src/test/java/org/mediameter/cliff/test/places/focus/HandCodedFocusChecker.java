@@ -1,10 +1,10 @@
-package org.mediameter.cliff.test.places.aboutness;
+package org.mediameter.cliff.test.places.focus;
 
 import java.util.List;
 
 import org.mediameter.cliff.ParseManager;
-import org.mediameter.cliff.places.focus.AboutnessLocation;
-import org.mediameter.cliff.places.focus.AboutnessStrategy;
+import org.mediameter.cliff.places.focus.FocusLocation;
+import org.mediameter.cliff.places.focus.FocusStrategy;
 import org.mediameter.cliff.test.places.CodedArticle;
 import org.mediameter.cliff.test.util.TestUtils;
 import org.slf4j.Logger;
@@ -18,9 +18,9 @@ import com.bericotech.clavin.resolver.ResolvedLocation;
  * @author rahulb
  *
  */
-public class HandCodedAboutnessChecker {
+public class HandCodedFocusChecker {
 
-    private static final Logger logger = LoggerFactory.getLogger(HandCodedAboutnessChecker.class);
+    private static final Logger logger = LoggerFactory.getLogger(HandCodedFocusChecker.class);
 
     private static double getAboutnessAccuracy(String filePath) throws Exception{
         int correct = 0;
@@ -29,8 +29,8 @@ public class HandCodedAboutnessChecker {
             logger.info("Testing article "+article.mediacloudId+" (looking for "+article.handCodedPlaceName+" / "+article.handCodedCountryCode+")");
             //List<CountryCode> primaryCountries = ParseManager.extractAndResolve(article.text).getUniqueCountries();
             List<ResolvedLocation> resolvedLocations = ParseManager.extractAndResolve(article.text).getResolvedLocations();
-            AboutnessStrategy aboutness = ParseManager.getAboutness();
-            List<AboutnessLocation> primaryCountries = aboutness.selectCountries(resolvedLocations);
+            FocusStrategy focusStrategy = ParseManager.getFocusStrategy();
+            List<FocusLocation> primaryCountries = focusStrategy.selectCountries(resolvedLocations);
             if(article.isAboutHandCodedCountry(primaryCountries)) {
                 correct++;
             } else {

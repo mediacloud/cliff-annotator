@@ -1,4 +1,4 @@
-package org.mediameter.cliff.test.places.aboutness;
+package org.mediameter.cliff.test.places.focus;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -27,13 +27,13 @@ import de.l3s.boilerpipe.sax.HTMLDocument;
  * 
  * @author rahulb
  */
-public class GdeltAboutnessChecker {
+public class GdeltFocusChecker {
 
-    private static final Logger logger = LoggerFactory.getLogger(GdeltAboutnessChecker.class);
+    private static final Logger logger = LoggerFactory.getLogger(GdeltFocusChecker.class);
 
     private static String BASE_DIR = "data/gdelt/";
         
-    public GdeltAboutnessChecker(){
+    public GdeltFocusChecker(){
     }
     
     public void check() throws Exception {
@@ -82,13 +82,13 @@ public class GdeltAboutnessChecker {
 
     public static void main(String[] args) throws Exception {
         long startTime = System.currentTimeMillis();
-        logger.info("Starting GdeltAboutnessChecker");
-        GdeltAboutnessChecker checker = new GdeltAboutnessChecker();
+        logger.info("Starting GdeltFocusChecker");
+        GdeltFocusChecker checker = new GdeltFocusChecker();
         checker.check();
         ParseManager.logStats();
         long endTime = System.currentTimeMillis();
         long elapsedMillis = endTime - startTime;
-        logger.info("Done with GdeltAboutnessChecker ("+elapsedMillis+" milliseconds)");
+        logger.info("Done with GdeltFocusChecker ("+elapsedMillis+" milliseconds)");
     }
 
 }

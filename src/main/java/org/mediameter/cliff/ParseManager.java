@@ -12,9 +12,9 @@ import org.mediameter.cliff.extractor.StanfordNamedEntityExtractor.Model;
 import org.mediameter.cliff.orgs.ResolvedOrganization;
 import org.mediameter.cliff.people.ResolvedPerson;
 import org.mediameter.cliff.places.CustomLuceneLocationResolver;
-import org.mediameter.cliff.places.focus.AboutnessLocation;
-import org.mediameter.cliff.places.focus.AboutnessStrategy;
-import org.mediameter.cliff.places.focus.FrequencyOfMentionAboutnessStrategy;
+import org.mediameter.cliff.places.focus.FocusLocation;
+import org.mediameter.cliff.places.focus.FocusStrategy;
+import org.mediameter.cliff.places.focus.FrequencyOfMentionFocusStrategy;
 import org.mediameter.cliff.util.MuckUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,8 +44,7 @@ public class ParseManager {
 
     private static LocationResolver resolver;   // HACK: pointer to keep around for stats logging
     
-    private static AboutnessStrategy aboutness = new FrequencyOfMentionAboutnessStrategy();
-    //private static AboutnessStrategy aboutness = new LocationScoredAboutnessStrategy();
+    private static FocusStrategy focusStrategy = new FrequencyOfMentionFocusStrategy();
     
     public static final String PATH_TO_GEONAMES_INDEX = "/etc/cliff/IndexDirectory";
     
@@ -120,25 +119,25 @@ public class ParseManager {
         logger.debug("Adding Aboutness:");
         HashMap aboutResults = new HashMap();
         if (resolvedPlaces.size() > 0){
-            ArrayList aboutnessLocationInfoList;
+            ArrayList focusLocationInfoList;
             logger.debug("Adding Country Aboutness:");
-            aboutnessLocationInfoList = new ArrayList<HashMap>();
-            for(AboutnessLocation loc:aboutness.selectCountries(entities.getResolvedLocations())) {
-                aboutnessLocationInfoList.add( writeAboutnessLocationToHash(loc) );
+            focusLocationInfoList = new ArrayList<HashMap>();
+            for(FocusLocation loc:focusStrategy.selectCountries(entities.getResolvedLocations())) {
+                focusLocationInfoList.add( writeAboutnessLocationToHash(loc) );
             }
-            aboutResults.put("countries", aboutnessLocationInfoList);
+            aboutResults.put("countries", focusLocationInfoList);
             logger.debug("Adding State Aboutness:");
-            aboutnessLocationInfoList = new ArrayList<HashMap>();
-            for(AboutnessLocation loc:aboutness.selectStates(entities.getResolvedLocations())) {
-                aboutnessLocationInfoList.add( writeAboutnessLocationToHash(loc) );
+            focusLocationInfoList = new ArrayList<HashMap>();
+            for(FocusLocation loc:focusStrategy.selectStates(entities.getResolvedLocations())) {
+                focusLocationInfoList.add( writeAboutnessLocationToHash(loc) );
             }
-            aboutResults.put("states", aboutnessLocationInfoList);
+            aboutResults.put("states", focusLocationInfoList);
             logger.debug("Adding City Aboutness:");
-            aboutnessLocationInfoList = new ArrayList<HashMap>();
-            for(AboutnessLocation loc:aboutness.selectCities(entities.getResolvedLocations())) {
-                aboutnessLocationInfoList.add( writeAboutnessLocationToHash(loc) );
+            focusLocationInfoList = new ArrayList<HashMap>();
+            for(FocusLocation loc:focusStrategy.selectCities(entities.getResolvedLocations())) {
+                focusLocationInfoList.add( writeAboutnessLocationToHash(loc) );
             }
-            aboutResults.put("cities", aboutnessLocationInfoList);
+            aboutResults.put("cities", focusLocationInfoList);
         }
         placeResults.put("about",aboutResults);
         results.put("places",placeResults);
@@ -172,7 +171,7 @@ public class ParseManager {
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public static HashMap writeAboutnessLocationToHash(AboutnessLocation location){
+    public static HashMap writeAboutnessLocationToHash(FocusLocation location){
         HashMap loc = new HashMap();
         GeoName place = location.getGeoName();
         loc.put("score", location.getScore());
@@ -292,9 +291,9 @@ public class ParseManager {
         return resolver;
     }
 
-    public static AboutnessStrategy getAboutness() throws Exception {
+    public static FocusStrategy getFocusStrategy() throws Exception {
         ParseManager.getParserInstance();
-        return aboutness;
+        return focusStrategy;
     }
 
     static {

@@ -1,4 +1,4 @@
-package org.mediameter.cliff.test.places.aboutness;
+package org.mediameter.cliff.test.places.focus;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,8 +15,8 @@ import java.util.List;
 import org.mediameter.cliff.ParseManager;
 import org.mediameter.cliff.extractor.ExtractedEntities;
 import org.mediameter.cliff.extractor.StanfordNamedEntityExtractor;
-import org.mediameter.cliff.places.focus.AboutnessLocation;
-import org.mediameter.cliff.places.focus.AboutnessStrategy;
+import org.mediameter.cliff.places.focus.FocusLocation;
+import org.mediameter.cliff.places.focus.FocusStrategy;
 import org.mediameter.cliff.places.substitutions.AbstractSubstitutionMap;
 import org.mediameter.cliff.places.substitutions.CustomSubstitutionMap;
 import org.slf4j.Logger;
@@ -38,9 +38,9 @@ import com.nytlabs.corpus.NYTCorpusDocumentParser;
  * @author rahulb
  * 
  */
-public class NYTAboutnessChecker {
+public class NYTFocusChecker {
 
-    private static final Logger logger = LoggerFactory.getLogger(NYTAboutnessChecker.class);
+    private static final Logger logger = LoggerFactory.getLogger(NYTFocusChecker.class);
 
     private static final String NYT_BASE_DIR = "data/nyt/";
     
@@ -48,18 +48,18 @@ public class NYTAboutnessChecker {
     
     private int articlesWithLocations = 0;
     private int articlesWeGotRight = 0;
-    private int aboutnessArticlesWeGotRight = 0;
+    private int focusArticlesWeGotRight = 0;
 
     private AbstractSubstitutionMap customSubstitutions = new CustomSubstitutionMap(StanfordNamedEntityExtractor.CUSTOM_SUBSTITUTION_FILE); 
     
-    public NYTAboutnessChecker(){
+    public NYTFocusChecker(){
     }
     
     public void check() throws IOException {
         FileVisitor<Path> fileProcessor = new ProcessFile();
         Files.walkFileTree(Paths.get(NYT_BASE_DIR), fileProcessor);
         double success = (double)articlesWeGotRight/(double)articlesWithLocations; 
-        double aboutnessSuccess = (double)aboutnessArticlesWeGotRight/(double)articlesWithLocations; 
+        double aboutnessSuccess = (double)focusArticlesWeGotRight/(double)articlesWithLocations; 
         logger.info("Checked "+articlesWithLocations+" Articles - Base success rate: "+success);
         logger.info("Checked "+articlesWithLocations+" Articles - Aboutness success rate: "+aboutnessSuccess);        
     }
@@ -109,10 +109,10 @@ public class NYTAboutnessChecker {
                         }
                         
                         //also have a measure for making sure the main "about" country is included in their list of countries
-                        AboutnessStrategy aboutness = ParseManager.getAboutness();
-                        List<AboutnessLocation> ourAboutnessCountries = aboutness.selectCountries(resolvedLocations);
+                        FocusStrategy aboutness = ParseManager.getFocusStrategy();
+                        List<FocusLocation> ourAboutnessCountries = aboutness.selectCountries(resolvedLocations);
                         List<GeoName> ourAboutnessGeoNames = new ArrayList<GeoName>();
-                        for(AboutnessLocation aboutLocation: ourAboutnessCountries){
+                        for(FocusLocation aboutLocation: ourAboutnessCountries){
                             ourAboutnessGeoNames.add(aboutLocation.getGeoName());
                         }
                         if(ourAboutnessCountries.size()>0){
@@ -123,7 +123,7 @@ public class NYTAboutnessChecker {
                                 }
                             }
                             if(allMatched){
-                                aboutnessArticlesWeGotRight++;
+                                focusArticlesWeGotRight++;
                             } else {
                                 logger.warn("We found "+ourAboutnessCountries+" they found "+countriesTheyCoded+" from ("+doc.getLocations()+")");
                                 //logger.info("TC:" + doc.getTaxonomicClassifiers());
@@ -159,13 +159,13 @@ public class NYTAboutnessChecker {
 
     public static void main(String[] args) throws Exception {
         long startTime = System.currentTimeMillis();
-        logger.info("Starting NYTAboutnessChecker");
-        NYTAboutnessChecker checker = new NYTAboutnessChecker();
+        logger.info("Starting NYTFocusChecker");
+        NYTFocusChecker checker = new NYTFocusChecker();
         checker.check();
         ParseManager.logStats();
         long endTime = System.currentTimeMillis();
         long elapsedMillis = endTime - startTime;
-        logger.info("Done with NYTAboutnessChecker ("+elapsedMillis+" milliseconds)");
+        logger.info("Done with NYTFocusChecker ("+elapsedMillis+" milliseconds)");
     }
 
 }
