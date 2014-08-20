@@ -18,15 +18,15 @@ public class MuckUtilsTest {
     }
     
     @Test
-    public void testEverything() throws IOException {
+    public void testStory1() throws IOException {
         String fileName = "nlp-test-1.json";
         File file = new File("src/test/resources/sample-muck-json/"+fileName); 
         String json = FileUtils.readFileToString(file);
         
         ExtractedEntities entities  = MuckUtils.entitiesFromJsonString(json);
-        assertEquals("Wrong number of location occurrences", 5, entities.getLocations().size());
-        assertEquals("Wrong number of people occurrences", 13, entities.getPeople().size());
-        assertEquals("Wrong number of organization occurrences", 3, entities.getOrganizations().size());
+        assertEquals("Wrong number of location occurrences", 19, entities.getLocations().size());
+        assertEquals("Wrong number of people occurrences", 15, entities.getPeople().size());
+        assertEquals("Wrong number of organization occurrences", 4, entities.getOrganizations().size());
     }
     
 }

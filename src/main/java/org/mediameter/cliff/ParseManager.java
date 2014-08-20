@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.mediameter.cliff.extractor.CliffConfig;
 import org.mediameter.cliff.extractor.ExtractedEntities;
+import org.mediameter.cliff.extractor.SentenceLocationOccurrence;
 import org.mediameter.cliff.extractor.StanfordNamedEntityExtractor;
 import org.mediameter.cliff.extractor.StanfordNamedEntityExtractor.Model;
 import org.mediameter.cliff.orgs.ResolvedOrganization;
@@ -226,6 +227,9 @@ public class ParseManager {
         HashMap sourceInfo = new HashMap();
         sourceInfo.put("string",resolvedLocation.location.text);
         sourceInfo.put("charIndex",charIndex);  
+        if(resolvedLocation.location instanceof SentenceLocationOccurrence){
+            sourceInfo.put("storySentencesId", ((SentenceLocationOccurrence) resolvedLocation.location).storySentenceId);
+        }
         loc.put("source",sourceInfo);
         
     	return loc;

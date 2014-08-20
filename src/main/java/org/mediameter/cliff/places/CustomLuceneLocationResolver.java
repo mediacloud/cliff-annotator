@@ -261,7 +261,7 @@ public class CustomLuceneLocationResolver implements LocationResolver {
      * Resolves the supplied list of location names into
      * {@link ResolvedLocation}s containing {@link GeoName} objects.
      * 
-     * Calls {@link CustomLuceneLocationResolver#getCandidateMatches(LocationOccurrence, boolean)} on
+     * Calls {@link CustomLuceneLocationResolver#getCandidateMatches(SentenceLocationOccurrence, boolean)} on
      * each location name to find all possible matches, then uses
      * heuristics to select the best match for each by calling
      * {@link LocationResolver#pickBestCandidates(List<List<ResolvedLocation>>)}.
