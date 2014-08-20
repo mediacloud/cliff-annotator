@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.mediameter.cliff.ParseManager;
-import org.mediameter.cliff.places.aboutness.AboutnessLocation;
+import org.mediameter.cliff.places.focus.AboutnessLocation;
 import org.mediameter.cliff.test.places.CodedArticle;
 import org.slf4j.Logger;
 

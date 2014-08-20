@@ -3,8 +3,8 @@ package org.mediameter.cliff.test.places.aboutness;
 import java.util.List;
 
 import org.mediameter.cliff.ParseManager;
-import org.mediameter.cliff.places.aboutness.AboutnessLocation;
-import org.mediameter.cliff.places.aboutness.AboutnessStrategy;
+import org.mediameter.cliff.places.focus.AboutnessLocation;
+import org.mediameter.cliff.places.focus.AboutnessStrategy;
 import org.mediameter.cliff.test.places.CodedArticle;
 import org.mediameter.cliff.test.util.TestUtils;
 import org.slf4j.Logger;

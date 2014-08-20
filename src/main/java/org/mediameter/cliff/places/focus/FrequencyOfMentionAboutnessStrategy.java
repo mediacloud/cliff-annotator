@@ -1,4 +1,4 @@
-package org.mediameter.cliff.places.aboutness;
+package org.mediameter.cliff.places.focus;
 
 import java.util.ArrayList;
 import java.util.HashMap;

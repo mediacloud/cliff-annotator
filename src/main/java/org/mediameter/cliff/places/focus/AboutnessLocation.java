@@ -1,4 +1,4 @@
-package org.mediameter.cliff.places.aboutness;
+package org.mediameter.cliff.places.focus;
 
 import com.bericotech.clavin.gazetteer.CountryCode;
 import com.bericotech.clavin.gazetteer.GeoName;

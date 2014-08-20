@@ -2,7 +2,7 @@ package org.mediameter.cliff.test.places;
 
 import java.util.List;
 
-import org.mediameter.cliff.places.aboutness.AboutnessLocation;
+import org.mediameter.cliff.places.focus.AboutnessLocation;
 import org.mediameter.cliff.test.util.TestUtils;
 
 import com.bericotech.clavin.resolver.ResolvedLocation;
