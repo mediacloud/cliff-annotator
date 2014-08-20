@@ -116,30 +116,30 @@ public class ParseManager {
         }
         placeResults.put("mentions",resolvedPlaces);
         
-        logger.debug("Adding Aboutness:");
-        HashMap aboutResults = new HashMap();
+        logger.debug("Adding Focus:");
+        HashMap focusResults = new HashMap();
         if (resolvedPlaces.size() > 0){
             ArrayList focusLocationInfoList;
-            logger.debug("Adding Country Aboutness:");
+            logger.debug("Adding Country Focus:");
             focusLocationInfoList = new ArrayList<HashMap>();
             for(FocusLocation loc:focusStrategy.selectCountries(entities.getResolvedLocations())) {
                 focusLocationInfoList.add( writeAboutnessLocationToHash(loc) );
             }
-            aboutResults.put("countries", focusLocationInfoList);
-            logger.debug("Adding State Aboutness:");
+            focusResults.put("countries", focusLocationInfoList);
+            logger.debug("Adding State Focus:");
             focusLocationInfoList = new ArrayList<HashMap>();
             for(FocusLocation loc:focusStrategy.selectStates(entities.getResolvedLocations())) {
                 focusLocationInfoList.add( writeAboutnessLocationToHash(loc) );
             }
-            aboutResults.put("states", focusLocationInfoList);
-            logger.debug("Adding City Aboutness:");
+            focusResults.put("states", focusLocationInfoList);
+            logger.debug("Adding City Focus:");
             focusLocationInfoList = new ArrayList<HashMap>();
             for(FocusLocation loc:focusStrategy.selectCities(entities.getResolvedLocations())) {
                 focusLocationInfoList.add( writeAboutnessLocationToHash(loc) );
             }
-            aboutResults.put("cities", focusLocationInfoList);
+            focusResults.put("cities", focusLocationInfoList);
         }
-        placeResults.put("about",aboutResults);
+        placeResults.put("focus",focusResults);
         results.put("places",placeResults);
 
         logger.debug("Adding People:");

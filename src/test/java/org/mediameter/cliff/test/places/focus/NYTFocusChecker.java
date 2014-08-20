@@ -59,9 +59,9 @@ public class NYTFocusChecker {
         FileVisitor<Path> fileProcessor = new ProcessFile();
         Files.walkFileTree(Paths.get(NYT_BASE_DIR), fileProcessor);
         double success = (double)articlesWeGotRight/(double)articlesWithLocations; 
-        double aboutnessSuccess = (double)focusArticlesWeGotRight/(double)articlesWithLocations; 
+        double focusSuccess = (double)focusArticlesWeGotRight/(double)articlesWithLocations; 
         logger.info("Checked "+articlesWithLocations+" Articles - Base success rate: "+success);
-        logger.info("Checked "+articlesWithLocations+" Articles - Aboutness success rate: "+aboutnessSuccess);        
+        logger.info("Checked "+articlesWithLocations+" Articles - Aboutness success rate: "+focusSuccess);        
     }
 
     private final class ProcessFile extends SimpleFileVisitor<Path> {
@@ -109,16 +109,16 @@ public class NYTFocusChecker {
                         }
                         
                         //also have a measure for making sure the main "about" country is included in their list of countries
-                        FocusStrategy aboutness = ParseManager.getFocusStrategy();
-                        List<FocusLocation> ourAboutnessCountries = aboutness.selectCountries(resolvedLocations);
+                        FocusStrategy focus = ParseManager.getFocusStrategy();
+                        List<FocusLocation> ourAboutnessCountries = focus.selectCountries(resolvedLocations);
                         List<GeoName> ourAboutnessGeoNames = new ArrayList<GeoName>();
                         for(FocusLocation aboutLocation: ourAboutnessCountries){
                             ourAboutnessGeoNames.add(aboutLocation.getGeoName());
                         }
                         if(ourAboutnessCountries.size()>0){
                             boolean allMatched = true;
-                            for(GeoName aboutnessGeoName:ourAboutnessGeoNames){
-                                if(!countriesTheyCoded.contains(aboutnessGeoName)){
+                            for(GeoName focusGeoName:ourAboutnessGeoNames){
+                                if(!countriesTheyCoded.contains(focusGeoName)){
                                     allMatched = false;
                                 }
                             }
