@@ -9,3 +9,4 @@ data/gdelt/*.CSV
 data/gdelt/*.zip
 data/reuters/*
 *.tmp
+catalina.out
