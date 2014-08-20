@@ -8,10 +8,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.mediameter.cliff.ParseManager;
 import org.mediameter.cliff.extractor.ExtractedEntities;
+import org.mediameter.cliff.places.CountryGeoNameLookup;
+import org.mediameter.cliff.places.aboutness.AboutnessLocation;
 import org.mediameter.cliff.places.aboutness.AboutnessStrategy;
 import org.mediameter.cliff.test.reuters.RegionSubstitutionMap;
 import org.mediameter.cliff.test.reuters.ReutersCorpusDocument;
@@ -19,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.bericotech.clavin.gazetteer.CountryCode;
+import com.bericotech.clavin.gazetteer.GeoName;
 
 /**
  * Load some of the Reuters corpus and check against their geographic tagging.  This prints out
@@ -69,14 +73,17 @@ public class ReutersAboutnessChecker {
                         
                         logger.info("Checking file "+aFile);
                         articlesWithLocations++;
-                        List<CountryCode> countriesTheyCoded = doc.getCountryCodeObjects();
+                        List<GeoName> countriesTheyCoded = new ArrayList<GeoName>();
+                        for(CountryCode countryCode:doc.getCountryCodeObjects()){
+                            countriesTheyCoded.add( CountryGeoNameLookup.lookup(countryCode.name()) );
+                        }
                         logger.info(doc.getId()+": "+countriesTheyCoded);
-                        List<CountryCode> ourMentionedCountries = entities.getUniqueCountries();
+                        List<GeoName> ourMentionedCountries = entities.getUniqueCountryGeoNames();
 
                         // check to make sure we found all the countries they coded
                         if(ourMentionedCountries.size()>0){
                             boolean allMatched = true;
-                            for(CountryCode countryTheyCoded:countriesTheyCoded){
+                            for(GeoName countryTheyCoded:countriesTheyCoded){
                                 if(!ourMentionedCountries.contains(countryTheyCoded)){
                                     allMatched = false;
                                 }
@@ -90,18 +97,22 @@ public class ReutersAboutnessChecker {
 
                         //also have a measure for making sure the main "about" country is included in their list of countries
                         AboutnessStrategy aboutness = ParseManager.getAboutness();
-                        List<CountryCode> ourAboutnessCountries = aboutness.selectCountries(entities.getResolvedLocations());
-                        if(ourAboutnessCountries.size()>0){
+                        List<AboutnessLocation> ourAboutnessCountries = aboutness.selectCountries(entities.getResolvedLocations());
+                        List<GeoName> ourAboutnessGeoNames = new ArrayList<GeoName>();
+                        for(AboutnessLocation aboutLocation: ourAboutnessCountries){
+                            ourAboutnessGeoNames.add(aboutLocation.getGeoName());
+                        }
+                        if(ourAboutnessGeoNames.size()>0){
                             boolean allMatched = true;
-                            for(CountryCode aboutnessCountry:ourAboutnessCountries){
-                                if(!countriesTheyCoded.contains(aboutnessCountry)){
+                            for(GeoName aboutnessGeoName:ourAboutnessGeoNames){
+                                if(!countriesTheyCoded.contains(aboutnessGeoName)){
                                     allMatched = false;
                                 }
                             }
                             if(allMatched){
                                 aboutnessArticlesWeGotRight++;
                             } else {
-                                logger.warn(doc.getId()+": about "+ourAboutnessCountries+" they found "+countriesTheyCoded);
+                                logger.warn(doc.getId()+": about "+ourAboutnessGeoNames+" they found "+countriesTheyCoded);
                             }
                         }
                         

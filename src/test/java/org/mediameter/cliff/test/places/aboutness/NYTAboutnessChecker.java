@@ -15,6 +15,7 @@ import java.util.List;
 import org.mediameter.cliff.ParseManager;
 import org.mediameter.cliff.extractor.ExtractedEntities;
 import org.mediameter.cliff.extractor.StanfordNamedEntityExtractor;
+import org.mediameter.cliff.places.aboutness.AboutnessLocation;
 import org.mediameter.cliff.places.aboutness.AboutnessStrategy;
 import org.mediameter.cliff.places.substitutions.AbstractSubstitutionMap;
 import org.mediameter.cliff.places.substitutions.CustomSubstitutionMap;
@@ -23,6 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import com.bericotech.clavin.extractor.LocationOccurrence;
 import com.bericotech.clavin.gazetteer.CountryCode;
+import com.bericotech.clavin.gazetteer.GeoName;
 import com.bericotech.clavin.resolver.ResolvedLocation;
 import com.nytlabs.corpus.NYTCorpusDocument;
 import com.nytlabs.corpus.NYTCorpusDocumentParser;
@@ -87,13 +89,13 @@ public class NYTAboutnessChecker {
                         List<ResolvedLocation> resolvedLocations;
                         resolvedLocations = ParseManager.getResolver().resolveLocations(locationOccurrences,false);
                         resolvedLocations.addAll(rawResolvedLocations);
-                        List<CountryCode> countriesTheyCoded = ExtractedEntities.getUniqueCountries(resolvedLocations);
+                        List<GeoName> countriesTheyCoded = ExtractedEntities.getUniqueCountryGeoNames(resolvedLocations);
                    
                         // now geoparse it ourselves and see 
                         List<CountryCode> countriesWeFound = ParseManager.extractAndResolve(doc.getHeadline() + " " + doc.getBody()).getUniqueCountries();
                         if(countriesWeFound.size()>0){
                             boolean allMatched = true;
-                            for(CountryCode countryTheyCoded:countriesTheyCoded){
+                            for(GeoName countryTheyCoded:countriesTheyCoded){
                                 if(!countriesWeFound.contains(countryTheyCoded)){
                                     allMatched = false;
                                 }
@@ -108,11 +110,15 @@ public class NYTAboutnessChecker {
                         
                         //also have a measure for making sure the main "about" country is included in their list of countries
                         AboutnessStrategy aboutness = ParseManager.getAboutness();
-                        List<CountryCode> ourAboutnessCountries = aboutness.selectCountries(resolvedLocations);
+                        List<AboutnessLocation> ourAboutnessCountries = aboutness.selectCountries(resolvedLocations);
+                        List<GeoName> ourAboutnessGeoNames = new ArrayList<GeoName>();
+                        for(AboutnessLocation aboutLocation: ourAboutnessCountries){
+                            ourAboutnessGeoNames.add(aboutLocation.getGeoName());
+                        }
                         if(ourAboutnessCountries.size()>0){
                             boolean allMatched = true;
-                            for(CountryCode aboutnessCountry:ourAboutnessCountries){
-                                if(!countriesTheyCoded.contains(aboutnessCountry)){
+                            for(GeoName aboutnessGeoName:ourAboutnessGeoNames){
+                                if(!countriesTheyCoded.contains(aboutnessGeoName)){
                                     allMatched = false;
                                 }
                             }

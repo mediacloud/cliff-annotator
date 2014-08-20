@@ -18,8 +18,9 @@ public class TestPlaces {
     public static final int COUNTRY_SINGAPORE = 1880251;
     public static final int COUNTRY_INDONESIA = 1643084;
     public static final int REGION_ASIA = 6255147;
-    public static final int CITY_COLOMBO_SRI_LANKA = 1248990;
+    public static final int CITY_COLOMBO_SRI_LANKA = 1248991;
     public static final int CITY_CAIRNS = 2172797;
     public static final int COUNTRY_DOMINICAN_REPUBLIC = 3508796;
+    public static final int COUNTRY_ENGLAND = 6269131;
 
 }

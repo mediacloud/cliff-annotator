@@ -4,32 +4,35 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import org.mediameter.cliff.places.Adm1GeoNameLookup;
+
 import com.bericotech.clavin.gazetteer.CountryCode;
 import com.bericotech.clavin.gazetteer.FeatureClass;
+import com.bericotech.clavin.gazetteer.GeoName;
 import com.bericotech.clavin.resolver.ResolvedLocation;
 
 public class AboutnessUtils {
 
-	public static HashMap<ResolvedLocation,Integer> getCityCounts(List<ResolvedLocation> resolvedLocations){     
-        HashMap<ResolvedLocation,Integer> cityCounts = new HashMap<ResolvedLocation,Integer>();
+	public static HashMap<GeoName,Integer> getCityCounts(List<ResolvedLocation> resolvedLocations){     
+        HashMap<GeoName,Integer> cityCounts = new HashMap<GeoName,Integer>();
         for (ResolvedLocation resolvedLocation: resolvedLocations){
             if(resolvedLocation.geoname.featureClass!=FeatureClass.P){
                 continue;
             }
-            Set<ResolvedLocation> cityCountKeys = cityCounts.keySet();
+            Set<GeoName> cityCountKeys = cityCounts.keySet();
             boolean found = false;
            
            
-            for (ResolvedLocation cityKey: cityCountKeys){
-            	if (cityKey.geoname.geonameID == resolvedLocation.geoname.geonameID){
-            		cityCounts.put(cityKey, cityCounts.get(cityKey)+1);
-            		System.out.println("Adding count to city " + cityKey.geoname.asciiName + cityCounts.get(cityKey));
+            for (GeoName geoname: cityCountKeys){
+            	if (geoname.geonameID == resolvedLocation.geoname.geonameID){
+            		cityCounts.put(geoname, cityCounts.get(geoname)+1);
+            		System.out.println("Adding count to city " + geoname.asciiName + cityCounts.get(geoname));
             		found=true;
             		break;
             	}
             }
             if(!found){
-            	cityCounts.put(resolvedLocation, 1);
+            	cityCounts.put(resolvedLocation.geoname, 1);
             	System.out.println("Adding city " + resolvedLocation.geoname.asciiName);
             }
             
@@ -37,31 +40,26 @@ public class AboutnessUtils {
         return cityCounts;
     }
 
-	public static HashMap<String,HashMap<String, String>> getStateCounts(List<ResolvedLocation> resolvedLocations){     
-        HashMap<String,HashMap<String, String>> stateCounts = new HashMap<String,HashMap<String, String>>();
-        for (ResolvedLocation resolvedLocation: resolvedLocations){
-            if(resolvedLocation.geoname.admin1Code==null){
+	public static HashMap<String,Integer> getStateCounts(List<ResolvedLocation> resolvedLocations){     
+	    HashMap<String,Integer> stateCounts = new HashMap<String,Integer>();
+	    for (ResolvedLocation resolvedLocation: resolvedLocations){
+            if(resolvedLocation.geoname.primaryCountryCode==CountryCode.NULL){
                 continue;
             }
-            String stateCode = resolvedLocation.geoname.admin1Code;
-           
-            
-            if(!stateCounts.containsKey(stateCode)){
-            	 HashMap<String, String> state = new HashMap<String, String>();
-                 state.put("stateCode", stateCode);
-                 state.put("countryCode", resolvedLocation.geoname.primaryCountryCode.toString());                 
-                 state.put("count", "1");
-                 stateCounts.put(stateCode, state);
-            } else{
-            	HashMap<String, String> state = stateCounts.get(stateCode);
-            	int currentCount = Integer.parseInt( state.get("count") );
-            	state.put("count", String.valueOf( ++currentCount ));
-            	stateCounts.put(stateCode, state);
+            CountryCode country = resolvedLocation.geoname.primaryCountryCode;
+            String adm1Code = resolvedLocation.geoname.admin1Code;
+            String key = Adm1GeoNameLookup.getKey(country, adm1Code);
+            if(!Adm1GeoNameLookup.isValid(key)){    // skip things that aren't actually ADM1 codes
+                continue;
             }
-      
+            if(!stateCounts.containsKey(key)){
+                stateCounts.put(key, 0);
+            }
+            stateCounts.put(key, stateCounts.get(key)+1);
         }
         return stateCounts;
     }
+
 	public static HashMap<CountryCode,Integer> getCountryCounts(List<ResolvedLocation> resolvedLocations){     
         HashMap<CountryCode,Integer> countryCounts = new HashMap<CountryCode,Integer>();
         for (ResolvedLocation resolvedLocation: resolvedLocations){
@@ -76,6 +74,7 @@ public class AboutnessUtils {
         }
         return countryCounts;
     }
+	
     public static HashMap<String,Integer> getScoredStateCounts(List<ResolvedLocation> resolvedLocations, String text){     
         HashMap<String,Integer> stateCounts = new HashMap<String,Integer>();
         

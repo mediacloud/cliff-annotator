@@ -9,10 +9,12 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.mediameter.cliff.ParseManager;
+import org.mediameter.cliff.places.aboutness.AboutnessLocation;
 import org.mediameter.cliff.test.places.CodedArticle;
 import org.slf4j.Logger;
 
 import com.bericotech.clavin.gazetteer.CountryCode;
+import com.bericotech.clavin.gazetteer.GeoName;
 import com.bericotech.clavin.resolver.ResolvedLocation;
 import com.bericotech.clavin.util.TextUtils;
 import com.google.gson.Gson;
@@ -31,17 +33,32 @@ public class TestUtils {
     }
     
     public static void verifyPlacesInFile(String pathToFile, int[] places, boolean andNoOthers, Logger logger) throws Exception{
+        verifyPlacesInFile(pathToFile, places, andNoOthers, logger, false);
+    }
+    
+    public static void verifyPlacesInFile(String pathToFile, int[] places, boolean andNoOthers, Logger logger, boolean replaceDemonyms) throws Exception{
         logger.info("Looking for "+Arrays.toString(places)+" in "+pathToFile);
         File inputFile = new File(pathToFile);
         String inputString = TextUtils.fileToString(inputFile);
-        List<ResolvedLocation> results = ParseManager.extractAndResolve(inputString).getResolvedLocations();
+        List<ResolvedLocation> results = ParseManager.extractAndResolve(inputString,replaceDemonyms).getResolvedLocations();
         for(ResolvedLocation resolvedLocation: results){ logger.info("  "+resolvedLocation.toString()); }
         for(int placeId: places){
             assertTrue("Didn't find "+placeId+" in list of places ("+places.length+" places found)",TestUtils.resultsContainsPlaceId(results, placeId));
         }
         if(andNoOthers){
-            assertTrue("There are some results that were unexecpted! Found "+results.size()+" but expected "+places.length+".",results.size()==places.length);
+            for(ResolvedLocation resolvedLocation: results){
+                assertTrue("Found a place that we weren't supposed to! "+resolvedLocation,intArrayContains(places,resolvedLocation.geoname.geonameID));
+            }
         }
+    }
+    
+    public static boolean intArrayContains(int[] array, int key) {
+        for (final int i : array) {
+            if (i == key) {
+                return true;
+            }
+        }
+        return false;
     }
     
     public static boolean resultsContainsPlaceId(List<ResolvedLocation> results, int placeId){
@@ -68,6 +85,16 @@ public class TestUtils {
         if(countryAlpha2.length()==0) return true;
         for(CountryCode location: countryCodes){
             if(location.toString().equals(countryAlpha2)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isCountryCodeInAboutnessLocationList(String countryAlpha2, List<AboutnessLocation> countryCodes){
+        if(countryAlpha2.length()==0) return true;
+        for(AboutnessLocation location: countryCodes){
+            if(location.getPrimaryCountryCode().name().equals(countryAlpha2)){
                 return true;
             }
         }

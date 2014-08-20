@@ -1,9 +1,7 @@
 package org.mediameter.cliff.places.aboutness;
 
-import java.util.HashMap;
 import java.util.List;
 
-import com.bericotech.clavin.gazetteer.CountryCode;
 import com.bericotech.clavin.resolver.ResolvedLocation;
 
 /**
@@ -13,11 +11,11 @@ import com.bericotech.clavin.resolver.ResolvedLocation;
  */
 public interface AboutnessStrategy {
 
-    public abstract List<CountryCode> selectCountries(
+    public abstract List<AboutnessLocation> selectCountries(
             List<ResolvedLocation> resolvedLocations);
-    public abstract List<HashMap<String, String>> selectStates(
+    public abstract List<AboutnessLocation> selectStates(
             List<ResolvedLocation> resolvedLocations);
-    public abstract List<ResolvedLocation> selectCities(
+    public abstract List<AboutnessLocation> selectCities(
             List<ResolvedLocation> resolvedLocations);
 
 }

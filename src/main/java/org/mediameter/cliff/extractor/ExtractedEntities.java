@@ -5,9 +5,11 @@ import java.util.List;
 
 import org.mediameter.cliff.orgs.ResolvedOrganization;
 import org.mediameter.cliff.people.ResolvedPerson;
+import org.mediameter.cliff.places.CountryGeoNameLookup;
 
 import com.bericotech.clavin.extractor.LocationOccurrence;
 import com.bericotech.clavin.gazetteer.CountryCode;
+import com.bericotech.clavin.gazetteer.GeoName;
 import com.bericotech.clavin.resolver.ResolvedLocation;
 
 /**
@@ -73,6 +75,10 @@ public class ExtractedEntities {
     public List<CountryCode> getUniqueCountries(){
         return getUniqueCountries(resolvedLocations);
     }
+
+    public List<GeoName> getUniqueCountryGeoNames(){
+        return getUniqueCountryGeoNames(resolvedLocations);
+    }
     
     public static List<CountryCode> getUniqueCountries(List<ResolvedLocation> resolvedLocations){
         List<CountryCode> countries = new ArrayList<CountryCode>();
@@ -86,6 +92,15 @@ public class ExtractedEntities {
             }
         }
         return countries;
+    }
+    
+    public static List<GeoName> getUniqueCountryGeoNames(List<ResolvedLocation> resolvedLocations){
+        List<CountryCode> countryCodes = getUniqueCountries(resolvedLocations);
+        List<GeoName> geoNames = new ArrayList<GeoName>();
+        for(CountryCode countryCode: countryCodes){
+            geoNames.add( CountryGeoNameLookup.lookup(countryCode.name()) );
+        }
+        return geoNames;
     }
 
     public void setResolvedPeople(List<ResolvedPerson> resolvedPeople) {

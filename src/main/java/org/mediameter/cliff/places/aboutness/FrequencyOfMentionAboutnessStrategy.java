@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.mediameter.cliff.places.Adm1GeoNameLookup;
+import org.mediameter.cliff.places.CountryGeoNameLookup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.bericotech.clavin.gazetteer.CountryCode;
+import com.bericotech.clavin.gazetteer.GeoName;
 import com.bericotech.clavin.resolver.ResolvedLocation;
 
 /**
@@ -21,9 +24,13 @@ public class FrequencyOfMentionAboutnessStrategy implements AboutnessStrategy {
     private static final Logger logger = LoggerFactory.getLogger(FrequencyOfMentionAboutnessStrategy.class);
 
     @Override
-    public List<CountryCode> selectCountries(List<ResolvedLocation> resolvedLocations){
+    public List<AboutnessLocation> selectCountries(List<ResolvedLocation> resolvedLocations){
+        List<AboutnessLocation> results = new ArrayList<AboutnessLocation>();
         // count country mentions
         HashMap<CountryCode,Integer> countryCounts = AboutnessUtils.getCountryCounts(resolvedLocations); 
+        if(countryCounts.size()==0){
+            return results;
+        }
         // find the most mentioned
         CountryCode primaryCountry = null;        
         for(CountryCode countryCode: countryCounts.keySet()){
@@ -33,75 +40,86 @@ public class FrequencyOfMentionAboutnessStrategy implements AboutnessStrategy {
         }
         logger.info("Found primary country "+primaryCountry);
         // return results
-        List<CountryCode> results = new ArrayList<CountryCode>();
         if(primaryCountry!=null) {
-        	results.add(primaryCountry);
+            results.add( new AboutnessLocation(
+                    CountryGeoNameLookup.lookup( primaryCountry.name()),countryCounts.get(primaryCountry) ) 
+            );
         	 for(CountryCode countryCode: countryCounts.keySet()){
-            	
                 if( countryCode != primaryCountry && countryCounts.get(countryCode) == countryCounts.get(primaryCountry) ){
-                	results.add(countryCode);
+                    results.add( new AboutnessLocation(
+                            CountryGeoNameLookup.lookup( countryCode.name()),countryCounts.get(countryCode) ) 
+                    );
                 } 
             }
         }
         return results;
     }
 
-    public List<HashMap<String, String>> selectStates(List<ResolvedLocation> resolvedLocations){
-        // count country mentions
-        HashMap<String,HashMap<String, String>> stateCounts = AboutnessUtils.getStateCounts(resolvedLocations); 
+    @Override
+    public List<AboutnessLocation> selectStates(List<ResolvedLocation> resolvedLocations){
+        List<AboutnessLocation> results = new ArrayList<AboutnessLocation>();
+        // count state mentions
+        HashMap<String,Integer> stateCounts = AboutnessUtils.getStateCounts(resolvedLocations);
+        if(stateCounts.size()==0){
+            return results;
+        }
         // find the most mentioned
-        HashMap<String, String> primaryState = null;        
+        String primaryState = null;        
         int highestCount = 0;
         for(String stateCode: stateCounts.keySet()){
-            HashMap<String, String> state = stateCounts.get(stateCode);
-        	int count = Integer.valueOf(state.get("count"));
+            int count = stateCounts.get(stateCode);
             if( (primaryState==null) || count > highestCount ){
             	highestCount = count;
-            	primaryState = state;
+            	primaryState = stateCode;
             }
         }
         logger.info("Found primary state "+primaryState.toString());
         // return results
-        List<HashMap<String, String>> results = new ArrayList<HashMap<String, String>>();
         if(primaryState!=null) {
-        	results.add(primaryState);
-        	int primaryStateCount = Integer.valueOf(primaryState.get("count").toString());
+            int primaryStateCount = stateCounts.get(primaryState);
+        	results.add( new AboutnessLocation( 
+        	        Adm1GeoNameLookup.lookup(primaryState), primaryStateCount ) );
         	for(String stateCode: stateCounts.keySet()){
-        	    HashMap<String, String> state = stateCounts.get(stateCode);
-        		int count = Integer.valueOf(state.get("count").toString());
-        		
-                if( state != primaryState && count == primaryStateCount ){
-                	results.add(state);
+        		int count = stateCounts.get(stateCode);        		
+                if( stateCode != primaryState && count == primaryStateCount ){
+                    results.add( new AboutnessLocation( 
+                            Adm1GeoNameLookup.lookup(stateCode), count ) );
                 } 
             }
         }
         return results;
     }
-    public List<ResolvedLocation> selectCities(List<ResolvedLocation> resolvedLocations){
-        // count city mentions
-        HashMap<ResolvedLocation,Integer> cityCounts = AboutnessUtils.getCityCounts(resolvedLocations); 
-        // find the most mentioned
-        ResolvedLocation primaryCity = null;   
-        for(ResolvedLocation city: cityCounts.keySet()){
-            if( (primaryCity==null) || (cityCounts.get(city) > cityCounts.get(primaryCity)) ){
-            	primaryCity = city;
-            } 
+    
+    @Override
+    public List<AboutnessLocation> selectCities(List<ResolvedLocation> resolvedLocations){
+        List<AboutnessLocation> results = new ArrayList<AboutnessLocation>();
+        // count state mentions
+        HashMap<GeoName,Integer> cityCounts = AboutnessUtils.getCityCounts(resolvedLocations); 
+        if(cityCounts.size()==0){
+            return results;
         }
-        List<ResolvedLocation> results = new ArrayList<ResolvedLocation>();
-        if(primaryCity !=null) {
-        	results.add(primaryCity);
-        	for(ResolvedLocation city: cityCounts.keySet()){
-            	
-                if( (city != primaryCity && cityCounts.get(city) == cityCounts.get(primaryCity)) ||
-                	(city != primaryCity && cityCounts.get(city) > 1)	){
-                	results.add(city);
+        // find the most mentioned
+        GeoName primaryCity = null;       
+        int highestCount = 0;
+        for(GeoName geoname: cityCounts.keySet()){
+            int count = cityCounts.get(geoname);
+            if( (primaryCity==null) || count > highestCount ){
+                highestCount = count;
+                primaryCity = geoname;
+            }
+        }
+        logger.info("Found primary city "+primaryCity.toString());
+        // return results
+        if(primaryCity!=null) {
+            int primaryCityCount = cityCounts.get(primaryCity);
+            results.add( new AboutnessLocation( primaryCity, primaryCityCount ) );
+            for(GeoName city: cityCounts.keySet()){
+                int count = cityCounts.get(city);             
+                if( (city != primaryCity && count == primaryCityCount ) || ((city != primaryCity && count > 1)) ){
+                    results.add( new AboutnessLocation( city, count ) );
                 } 
             }
         }
-        
-        logger.info("Found primary city "+primaryCity);
-        // return results
-        
         return results;
     }
     

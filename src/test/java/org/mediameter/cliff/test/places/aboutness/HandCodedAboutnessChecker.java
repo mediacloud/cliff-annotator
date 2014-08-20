@@ -3,13 +3,13 @@ package org.mediameter.cliff.test.places.aboutness;
 import java.util.List;
 
 import org.mediameter.cliff.ParseManager;
+import org.mediameter.cliff.places.aboutness.AboutnessLocation;
 import org.mediameter.cliff.places.aboutness.AboutnessStrategy;
 import org.mediameter.cliff.test.places.CodedArticle;
 import org.mediameter.cliff.test.util.TestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.bericotech.clavin.gazetteer.CountryCode;
 import com.bericotech.clavin.resolver.ResolvedLocation;
 
 /**
@@ -30,7 +30,7 @@ public class HandCodedAboutnessChecker {
             //List<CountryCode> primaryCountries = ParseManager.extractAndResolve(article.text).getUniqueCountries();
             List<ResolvedLocation> resolvedLocations = ParseManager.extractAndResolve(article.text).getResolvedLocations();
             AboutnessStrategy aboutness = ParseManager.getAboutness();
-            List<CountryCode> primaryCountries = aboutness.selectCountries(resolvedLocations);
+            List<AboutnessLocation> primaryCountries = aboutness.selectCountries(resolvedLocations);
             if(article.isAboutHandCodedCountry(primaryCountries)) {
                 correct++;
             } else {

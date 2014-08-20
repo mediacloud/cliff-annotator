@@ -12,6 +12,7 @@ import org.mediameter.cliff.extractor.StanfordNamedEntityExtractor.Model;
 import org.mediameter.cliff.orgs.ResolvedOrganization;
 import org.mediameter.cliff.people.ResolvedPerson;
 import org.mediameter.cliff.places.CustomLuceneLocationResolver;
+import org.mediameter.cliff.places.aboutness.AboutnessLocation;
 import org.mediameter.cliff.places.aboutness.AboutnessStrategy;
 import org.mediameter.cliff.places.aboutness.FrequencyOfMentionAboutnessStrategy;
 import org.mediameter.cliff.util.MuckUtils;
@@ -105,6 +106,7 @@ public class ParseManager {
         response.put("status",STATUS_OK);
         response.put("version", PARSER_VERSION);
         
+        logger.debug("Adding Mentions:");
         HashMap results = new HashMap();
         // assemble the "where" results
         HashMap placeResults = new HashMap();
@@ -115,20 +117,33 @@ public class ParseManager {
         }
         placeResults.put("mentions",resolvedPlaces);
         
+        logger.debug("Adding Aboutness:");
         HashMap aboutResults = new HashMap();
         if (resolvedPlaces.size() > 0){
-            aboutResults.put("countries", aboutness.selectCountries(entities.getResolvedLocations()));
-            aboutResults.put("states", aboutness.selectStates(entities.getResolvedLocations()));
-            ArrayList primaryCities = new ArrayList();            
-            for (ResolvedLocation resolvedLocation: aboutness.selectCities(entities.getResolvedLocations())){
-                HashMap loc = writeResolvedLocationToHash(resolvedLocation);
-                primaryCities.add(loc);
+            ArrayList aboutnessLocationInfoList;
+            logger.debug("Adding Country Aboutness:");
+            aboutnessLocationInfoList = new ArrayList<HashMap>();
+            for(AboutnessLocation loc:aboutness.selectCountries(entities.getResolvedLocations())) {
+                aboutnessLocationInfoList.add( writeAboutnessLocationToHash(loc) );
             }
-            aboutResults.put("cities",primaryCities);
+            aboutResults.put("countries", aboutnessLocationInfoList);
+            logger.debug("Adding State Aboutness:");
+            aboutnessLocationInfoList = new ArrayList<HashMap>();
+            for(AboutnessLocation loc:aboutness.selectStates(entities.getResolvedLocations())) {
+                aboutnessLocationInfoList.add( writeAboutnessLocationToHash(loc) );
+            }
+            aboutResults.put("states", aboutnessLocationInfoList);
+            logger.debug("Adding City Aboutness:");
+            aboutnessLocationInfoList = new ArrayList<HashMap>();
+            for(AboutnessLocation loc:aboutness.selectCities(entities.getResolvedLocations())) {
+                aboutnessLocationInfoList.add( writeAboutnessLocationToHash(loc) );
+            }
+            aboutResults.put("cities", aboutnessLocationInfoList);
         }
         placeResults.put("about",aboutResults);
         results.put("places",placeResults);
 
+        logger.debug("Adding People:");
         // assemble the "who" results
         List<ResolvedPerson> resolvedPeople = entities.getResolvedPeople();
         List<HashMap> personResults = new ArrayList<HashMap>();
@@ -140,6 +155,7 @@ public class ParseManager {
         }
         results.put("people",personResults);
 
+        logger.debug("Adding Organizations:");
         // assemble the org results
         List<ResolvedOrganization> resolvedOrganizations = entities.getResolvedOrganizations();
         List<HashMap> organizationResults = new ArrayList<HashMap>();
@@ -153,6 +169,34 @@ public class ParseManager {
 
         response.put("results",results);
         return response;
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public static HashMap writeAboutnessLocationToHash(AboutnessLocation location){
+        HashMap loc = new HashMap();
+        GeoName place = location.getGeoName();
+        loc.put("score", location.getScore());
+        loc.put("id",place.geonameID);
+        loc.put("name",place.name);
+        String primaryCountryCodeAlpha2 = ""; 
+        if(place.primaryCountryCode!=CountryCode.NULL){
+            primaryCountryCodeAlpha2 = place.primaryCountryCode.toString();
+        }
+        String admin1Code = "";
+        
+        if(place.admin1Code !=null){
+            admin1Code = place.admin1Code;
+        }
+        String featureCode = place.featureCode.toString();
+        loc.put("featureClass", place.featureClass.toString());
+        loc.put("featureCode", featureCode);
+        loc.put("population", place.population);
+        loc.put("stateCode", admin1Code);
+        loc.put("countryCode",primaryCountryCodeAlpha2);
+        loc.put("lat",place.latitude);
+        loc.put("lon",place.longitude);
+        
+        return loc;
     }
     
     @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -186,7 +230,6 @@ public class ParseManager {
         loc.put("source",sourceInfo);
         
     	return loc;
-    	
     }
     
     public static ExtractedEntities extractAndResolve(String text) throws Exception{

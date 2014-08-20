@@ -8,4 +8,8 @@ public class UnknownGeoNameIdException extends Exception {
         this.geoNameId = geoNameId;
     }
     
+    public int getGeoNameId(){
+        return geoNameId;
+    }
+    
 }

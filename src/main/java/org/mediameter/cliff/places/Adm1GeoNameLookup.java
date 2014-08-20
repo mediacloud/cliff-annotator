@@ -9,6 +9,7 @@ import org.mediameter.cliff.ParseManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.bericotech.clavin.gazetteer.CountryCode;
 import com.bericotech.clavin.gazetteer.GeoName;
 
 /**
@@ -18,12 +19,22 @@ public class Adm1GeoNameLookup extends AbstractGeoNameLookup {
 
     public final static Logger logger = LoggerFactory.getLogger(Adm1GeoNameLookup.class);
 
+    private static Adm1GeoNameLookup instance;
+    
     public Adm1GeoNameLookup() throws IOException {
         super();
     }
 
+    public static String getKey(String countryCode, String ADM1){
+        return countryCode+"."+ADM1;
+    }
+
+    public static String getKey(CountryCode countryCode, String ADM1){
+        return getKey(countryCode.name(),ADM1);
+    }
+
     public GeoName get(String countryCode, String ADM1){
-        return this.get(countryCode+"."+ADM1);
+        return this.get(getKey(countryCode,ADM1));
     }
     
     @Override
@@ -57,4 +68,40 @@ public class Adm1GeoNameLookup extends AbstractGeoNameLookup {
         }
     }
 	    
+    private static Adm1GeoNameLookup getInstance() throws IOException{
+        if(instance==null){
+            instance = new Adm1GeoNameLookup();
+        }
+        return instance;
+    }
+    
+    public static GeoName lookup(String countryCodeDotAdm1Code){
+        try{
+            Adm1GeoNameLookup lookup = getInstance();
+            GeoName geoName = lookup.get(countryCodeDotAdm1Code);
+            logger.debug("Found '"+countryCodeDotAdm1Code+"': "+geoName);
+            return geoName;
+        } catch (IOException ioe){
+            logger.error("Couldn't lookup state ADM1 geoname!");
+            logger.error(ioe.toString());
+        }
+        return null;
+    }
+
+    public static boolean isValid(String countryCodeDotAdm1Code){
+        boolean valid = false;
+        try{
+            Adm1GeoNameLookup lookup = getInstance();
+            valid = lookup.contains(countryCodeDotAdm1Code);
+        } catch (IOException ioe){
+            logger.error("Couldn't lookup state ADM1 geoname!");
+            logger.error(ioe.toString());
+        }
+        return valid;
+    }
+    
+    public static GeoName lookup(String countryCode, String adm1Code){
+        return lookup( getKey(countryCode, adm1Code) );
+    }
+    
 }

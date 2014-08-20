@@ -35,6 +35,10 @@ public abstract class AbstractGeoNameLookup {
 	    return lookup.get(key);
 	}
 
+	public boolean contains(String key){
+	    return lookup.containsKey(key);
+	}
+	
 	public int size(){
 	    return lookup.size();
 	}
