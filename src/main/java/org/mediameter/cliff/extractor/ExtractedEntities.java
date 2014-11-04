@@ -83,7 +83,7 @@ public class ExtractedEntities {
     public static List<CountryCode> getUniqueCountries(List<ResolvedLocation> resolvedLocations){
         List<CountryCode> countries = new ArrayList<CountryCode>();
         for(ResolvedLocation resolvedLocation: resolvedLocations){
-            CountryCode country = resolvedLocation.geoname.primaryCountryCode;
+            CountryCode country = resolvedLocation.getGeoname().getPrimaryCountryCode();
             if(country==CountryCode.NULL){  // skip things that aren't in countries (ie. "Asia")
                 continue;
             }
