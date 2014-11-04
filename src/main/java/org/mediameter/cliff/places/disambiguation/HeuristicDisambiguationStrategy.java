@@ -43,7 +43,7 @@ public class HeuristicDisambiguationStrategy implements LocationDisambiguationSt
         // print all of them
         for( List<ResolvedLocation> candidates: allPossibilities){
             ResolvedLocation firstCandidate = candidates.get(0);
-            logger.debug("  Location: "+firstCandidate.location.text+"@"+firstCandidate.location.position);
+            logger.debug("  Location: "+firstCandidate.getLocation().getText()+"@"+firstCandidate.getLocation().getPosition());
             for( ResolvedLocation candidate: candidates){
                 GenericPass.logResolvedLocationInfo(candidate);
             }

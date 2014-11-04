@@ -56,8 +56,8 @@ public abstract class GenericPass {
      * @return
      */
     static boolean isExactMatch(ResolvedLocation candidate) {
-    	//logger.debug(candidate.geoname.name + " EQUALS " + candidate.location.text + " ? " + candidate.geoname.name.equals(candidate.location.text));
-        return candidate.geoname.name.equalsIgnoreCase(candidate.location.text);
+    	//logger.debug(candidate.getGeoname().name + " EQUALS " + candidate.location.text + " ? " + candidate.getGeoname().name.equals(candidate.location.text));
+        return candidate.getGeoname().getName().equalsIgnoreCase(candidate.getLocation().getText());
         // return candidate.confidence==EXACT_MATCH_CONFIDENCE;
     }
     
@@ -73,18 +73,18 @@ public abstract class GenericPass {
 
     protected static boolean inSameSuperPlace(ResolvedLocation candidate, List<ResolvedLocation> list){
         for( ResolvedLocation item: list){
-            if(candidate.geoname.admin1Code.equals(item.geoname.admin1Code)){
+            if(candidate.getGeoname().getAdmin1Code().equals(item.getGeoname().getAdmin1Code())){
                 return true;
             }
         }
         return false;
     }
     protected static boolean isCity(ResolvedLocation candidate){
-    	return candidate.geoname.population>0 && candidate.geoname.featureClass==FeatureClass.P;
+    	return candidate.getGeoname().getPopulation()>0 && candidate.getGeoname().getFeatureClass()==FeatureClass.P;
     
     }
     protected static boolean isAdminRegion(ResolvedLocation candidate){
-    	return candidate.geoname.population>0 && candidate.geoname.featureClass==FeatureClass.A;
+    	return candidate.getGeoname().getPopulation()>0 && candidate.getGeoname().getFeatureClass()==FeatureClass.A;
     }
     protected ResolvedLocation findFirstCityCandidate(List<ResolvedLocation> candidates, boolean exactMatchRequired){
     	for(ResolvedLocation candidate: candidates) {
@@ -121,8 +121,8 @@ public abstract class GenericPass {
     	} else if (adminCandidate == null){
     		return true;
     	} else {
-    		return (cityCandidate.geoname.population > adminCandidate.geoname.population) ||
-    			(cityCandidate.geoname.primaryCountryCode == adminCandidate.geoname.primaryCountryCode);
+    		return (cityCandidate.getGeoname().getPopulation() > adminCandidate.getGeoname().getPopulation()) ||
+    			(cityCandidate.getGeoname().getPrimaryCountryCode() == adminCandidate.getGeoname().getPrimaryCountryCode());
     	}
     }
     
@@ -130,7 +130,7 @@ public abstract class GenericPass {
     protected boolean inSameCountry(ResolvedLocation candidate, List<ResolvedLocation> list){
     	
         for( ResolvedLocation item: list){
-            if(candidate.geoname.primaryCountryCode.equals(item.geoname.primaryCountryCode)){
+            if(candidate.getGeoname().getPrimaryCountryCode().equals(item.getGeoname().getPrimaryCountryCode())){
                 return true;
             }
         }
@@ -138,16 +138,16 @@ public abstract class GenericPass {
     }
 
     public static void logSelectedCandidate(ResolvedLocation candidate){
-        logger.debug("  PICKED: "+candidate.location.text+"@"+candidate.location.position);
+        logger.debug("  PICKED: "+candidate.getLocation().getText()+"@"+candidate.getLocation().getPosition());
     }
     
     public static void logResolvedLocationInfo(ResolvedLocation resolvedLocation){
-        GeoName candidatePlace = resolvedLocation.geoname; 
-        logger.debug("    "+candidatePlace.geonameID+" "+candidatePlace.name+
-                ", "+ candidatePlace.admin1Code+
-                ", " + candidatePlace.primaryCountryCode
-                + " / "+resolvedLocation.confidence
-                +" / "+candidatePlace.population + " / " + candidatePlace.featureClass
+        GeoName candidatePlace = resolvedLocation.getGeoname(); 
+        logger.debug("    "+candidatePlace.getGeonameID()+" "+candidatePlace.getName()+
+                ", "+ candidatePlace.getAdmin1Code()+
+                ", " + candidatePlace.getPrimaryCountryCode()
+                + " / "+resolvedLocation.getConfidence()
+                +" / "+candidatePlace.getPopulation() + " / " + candidatePlace.getFeatureClass()
                 + " ( isExactMatch="+isExactMatch(resolvedLocation)+" )");
     }
 

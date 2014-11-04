@@ -14,8 +14,8 @@ public class FuzzyMatchedCountriesPass extends GenericPass {
         List<List<ResolvedLocation>> possibilitiesToRemove = new ArrayList<List<ResolvedLocation>>();
         for( List<ResolvedLocation> candidates: possibilitiesToDo){
             ResolvedLocation firstcandidate = candidates.get(0);
-            if(firstcandidate.geoname.population>0 && 
-                    firstcandidate.geoname.admin1Code.equals("00")){
+            if(firstcandidate.getGeoname().getPopulation()>0 && 
+                    firstcandidate.getGeoname().getAdmin1Code().equals("00")){
                 bestCandidates.add(firstcandidate);
                 possibilitiesToRemove.add(candidates);
             }

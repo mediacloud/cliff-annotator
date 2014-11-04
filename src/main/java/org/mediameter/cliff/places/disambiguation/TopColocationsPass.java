@@ -19,7 +19,7 @@ public class TopColocationsPass extends GenericPass {
             boolean foundOne = false;
             for( ResolvedLocation candidate: candidates) {
                 if(!foundOne && 
-                        (candidate.geoname.featureClass==FeatureClass.A || candidate.geoname.featureClass==FeatureClass.P) &&
+                        (candidate.getGeoname().getFeatureClass()==FeatureClass.A || candidate.getGeoname().getFeatureClass()==FeatureClass.P) &&
                         inSameCountry(candidate,bestCandidates)){
                     bestCandidates.add(candidate);
                     possibilitiesToRemove.add(candidates);

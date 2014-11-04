@@ -19,8 +19,8 @@ public class LargeAreasPass extends GenericPass {
             for (ResolvedLocation candidate : candidates) {
                 if (!foundOne
                         && isExactMatch(candidate)
-                        && candidate.geoname.primaryCountryCode == CountryCode.NULL
-                        && candidate.geoname.featureClass == FeatureClass.L) {
+                        && candidate.getGeoname().getPrimaryCountryCode() == CountryCode.NULL
+                        && candidate.getGeoname().getFeatureClass() == FeatureClass.L) {
                     bestCandidates.add(candidate);
                     possibilitiesToRemove.add(candidates);
                     foundOne = true;

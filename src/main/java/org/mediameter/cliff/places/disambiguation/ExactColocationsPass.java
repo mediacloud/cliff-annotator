@@ -18,7 +18,7 @@ public class ExactColocationsPass extends GenericPass {
             boolean foundOne = false;
             for( ResolvedLocation candidate: candidates){
                 if(!foundOne && isExactMatch(candidate) && 
-                		candidate.geoname.population>0 && 
+                		candidate.getGeoname().getPopulation()>0 && 
                 		(bestCandidates.size() == 0 || 
                 			(bestCandidates.size() != 0 && inSameCountry(candidate, bestCandidates)))){
                 	//	 candidate.geoname.population>0){
