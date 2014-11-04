@@ -22,7 +22,7 @@ public class FocusLocation {
     }
     
     public CountryCode getPrimaryCountryCode(){
-        return geoName.primaryCountryCode;
+        return geoName.getPrimaryCountryCode();
     }
     
 }

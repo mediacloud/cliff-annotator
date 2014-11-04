@@ -16,7 +16,7 @@ public class FocusUtils {
 	public static HashMap<GeoName,Integer> getCityCounts(List<ResolvedLocation> resolvedLocations){     
         HashMap<GeoName,Integer> cityCounts = new HashMap<GeoName,Integer>();
         for (ResolvedLocation resolvedLocation: resolvedLocations){
-            if(resolvedLocation.geoname.featureClass!=FeatureClass.P){
+            if(resolvedLocation.getGeoname().getFeatureClass()!=FeatureClass.P){
                 continue;
             }
             Set<GeoName> cityCountKeys = cityCounts.keySet();
@@ -24,16 +24,16 @@ public class FocusUtils {
            
            
             for (GeoName geoname: cityCountKeys){
-            	if (geoname.geonameID == resolvedLocation.geoname.geonameID){
+            	if (geoname.getGeonameID() == resolvedLocation.getGeoname().getGeonameID()){
             		cityCounts.put(geoname, cityCounts.get(geoname)+1);
-            		System.out.println("Adding count to city " + geoname.asciiName + cityCounts.get(geoname));
+            		System.out.println("Adding count to city " + geoname.getAsciiName() + cityCounts.get(geoname));
             		found=true;
             		break;
             	}
             }
             if(!found){
-            	cityCounts.put(resolvedLocation.geoname, 1);
-            	System.out.println("Adding city " + resolvedLocation.geoname.asciiName);
+            	cityCounts.put(resolvedLocation.getGeoname(), 1);
+            	System.out.println("Adding city " + resolvedLocation.getGeoname().getAsciiName());
             }
             
         }
@@ -43,11 +43,11 @@ public class FocusUtils {
 	public static HashMap<String,Integer> getStateCounts(List<ResolvedLocation> resolvedLocations){     
 	    HashMap<String,Integer> stateCounts = new HashMap<String,Integer>();
 	    for (ResolvedLocation resolvedLocation: resolvedLocations){
-            if(resolvedLocation.geoname.primaryCountryCode==CountryCode.NULL){
+            if(resolvedLocation.getGeoname().getPrimaryCountryCode()==CountryCode.NULL){
                 continue;
             }
-            CountryCode country = resolvedLocation.geoname.primaryCountryCode;
-            String adm1Code = resolvedLocation.geoname.admin1Code;
+            CountryCode country = resolvedLocation.getGeoname().getPrimaryCountryCode();
+            String adm1Code = resolvedLocation.getGeoname().getAdmin1Code();
             String key = Adm1GeoNameLookup.getKey(country, adm1Code);
             if(!Adm1GeoNameLookup.isValid(key)){    // skip things that aren't actually ADM1 codes
                 continue;
@@ -63,10 +63,10 @@ public class FocusUtils {
 	public static HashMap<CountryCode,Integer> getCountryCounts(List<ResolvedLocation> resolvedLocations){     
         HashMap<CountryCode,Integer> countryCounts = new HashMap<CountryCode,Integer>();
         for (ResolvedLocation resolvedLocation: resolvedLocations){
-            if(resolvedLocation.geoname.primaryCountryCode==CountryCode.NULL){
+            if(resolvedLocation.getGeoname().getPrimaryCountryCode()==CountryCode.NULL){
                 continue;
             }
-            CountryCode country = resolvedLocation.geoname.primaryCountryCode;
+            CountryCode country = resolvedLocation.getGeoname().getPrimaryCountryCode();
             if(!countryCounts.containsKey(country)){
                 countryCounts.put(country, 0);
             }
@@ -79,10 +79,10 @@ public class FocusUtils {
         HashMap<String,Integer> stateCounts = new HashMap<String,Integer>();
         
         for (ResolvedLocation resolvedLocation: resolvedLocations){
-            if(resolvedLocation.geoname.admin1Code==null){
+            if(resolvedLocation.getGeoname().getAdmin1Code()==null){
                 continue;
             }
-            int position = resolvedLocation.location.position;
+            int position = resolvedLocation.getLocation().getPosition();
             int percent10 = text.length()/10;
             
             int points = 1;
@@ -90,7 +90,7 @@ public class FocusUtils {
             	points = 2;	
             } 
             
-            String state = resolvedLocation.geoname.admin1Code;
+            String state = resolvedLocation.getGeoname().getAdmin1Code();
             if(!stateCounts.containsKey(state)){
             	stateCounts.put(state, 0);
             }
