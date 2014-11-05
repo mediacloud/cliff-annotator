@@ -44,9 +44,15 @@ public class EntityParser {
 
     public ExtractedEntities extractAndResolve(String inputText, boolean manuallyReplaceDemonyms) throws Exception {
         logger.trace("input: {}", inputText);
+        long startTime = System.nanoTime();
         ExtractedEntities extractedEntities = extractor.extractEntities(inputText,manuallyReplaceDemonyms);
+        long extract = System.nanoTime() - startTime;
         logger.trace("extracted: {}", extractedEntities.getLocations());
-        return resolve(extractedEntities);
+        startTime = System.nanoTime();
+        ExtractedEntities entities = resolve(extractedEntities);
+        long resolve = System.nanoTime() - startTime;
+        logger.debug("extractAndResolve: "+extract+" / "+resolve);
+        return entities;
     }
         
     public ExtractedEntities resolve(ExtractedEntities entities) throws Exception{
