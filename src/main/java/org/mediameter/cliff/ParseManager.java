@@ -176,25 +176,25 @@ public class ParseManager {
         HashMap loc = new HashMap();
         GeoName place = location.getGeoName();
         loc.put("score", location.getScore());
-        loc.put("id",place.geonameID);
-        loc.put("name",place.name);
+        loc.put("id",place.getGeonameID());
+        loc.put("name",place.getName());
         String primaryCountryCodeAlpha2 = ""; 
-        if(place.primaryCountryCode!=CountryCode.NULL){
-            primaryCountryCodeAlpha2 = place.primaryCountryCode.toString();
+        if(place.getPrimaryCountryCode()!=CountryCode.NULL){
+            primaryCountryCodeAlpha2 = place.getPrimaryCountryCode().toString();
         }
         String admin1Code = "";
         
-        if(place.admin1Code !=null){
-            admin1Code = place.admin1Code;
+        if(place.getAdmin1Code() !=null){
+            admin1Code = place.getAdmin1Code();
         }
-        String featureCode = place.featureCode.toString();
-        loc.put("featureClass", place.featureClass.toString());
+        String featureCode = place.getFeatureCode().toString();
+        loc.put("featureClass", place.getFeatureClass().toString());
         loc.put("featureCode", featureCode);
-        loc.put("population", place.population);
+        loc.put("population", place.getPopulation());
         loc.put("stateCode", admin1Code);
         loc.put("countryCode",primaryCountryCodeAlpha2);
-        loc.put("lat",place.latitude);
-        loc.put("lon",place.longitude);
+        loc.put("lat",place.getLatitude());
+        loc.put("lon",place.getLongitude());
         
         return loc;
     }
@@ -202,33 +202,33 @@ public class ParseManager {
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public static HashMap writeResolvedLocationToHash(ResolvedLocation resolvedLocation){
     	HashMap loc = new HashMap();
-    	int charIndex = resolvedLocation.location.position;
-    	GeoName place = resolvedLocation.geoname;
-        loc.put("confidence", resolvedLocation.confidence); // low is good
-        loc.put("id",place.geonameID);
-        loc.put("name",place.name);
+    	int charIndex = resolvedLocation.getLocation().getPosition();
+    	GeoName place = resolvedLocation.getGeoname();
+        loc.put("confidence", resolvedLocation.getConfidence()); // low is good
+        loc.put("id",place.getGeonameID());
+        loc.put("name",place.getName());
         String primaryCountryCodeAlpha2 = ""; 
-        if(place.primaryCountryCode!=CountryCode.NULL){
-            primaryCountryCodeAlpha2 = place.primaryCountryCode.toString();
+        if(place.getPrimaryCountryCode()!=CountryCode.NULL){
+            primaryCountryCodeAlpha2 = place.getPrimaryCountryCode().toString();
         }
         String admin1Code = "";
         
-        if(place.admin1Code !=null){
-            admin1Code = place.admin1Code;
+        if(place.getAdmin1Code() !=null){
+            admin1Code = place.getAdmin1Code();
         }
-        String featureCode = place.featureCode.toString();
-        loc.put("featureClass", place.featureClass.toString());
+        String featureCode = place.getFeatureCode().toString();
+        loc.put("featureClass", place.getFeatureClass().toString());
         loc.put("featureCode", featureCode);
-        loc.put("population", place.population);
+        loc.put("population", place.getPopulation());
         loc.put("stateCode", admin1Code);
         loc.put("countryCode",primaryCountryCodeAlpha2);
-        loc.put("lat",place.latitude);
-        loc.put("lon",place.longitude);
+        loc.put("lat",place.getLatitude());
+        loc.put("lon",place.getLongitude());
         HashMap sourceInfo = new HashMap();
-        sourceInfo.put("string",resolvedLocation.location.text);
+        sourceInfo.put("string",resolvedLocation.getLocation().getText());
         sourceInfo.put("charIndex",charIndex);  
-        if(resolvedLocation.location instanceof SentenceLocationOccurrence){
-            sourceInfo.put("storySentencesId", ((SentenceLocationOccurrence) resolvedLocation.location).storySentenceId);
+        if(resolvedLocation.getLocation() instanceof SentenceLocationOccurrence){
+            sourceInfo.put("storySentencesId", ((SentenceLocationOccurrence) resolvedLocation.getLocation()).storySentenceId);
         }
         loc.put("source",sourceInfo);
         
