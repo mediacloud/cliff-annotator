@@ -2,7 +2,7 @@ package org.mediameter.cliff.places.disambiguation;
 
 import java.util.List;
 
-import org.mediameter.cliff.places.CustomLuceneLocationResolver;
+import org.mediameter.cliff.places.CliffLocationResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +37,7 @@ public class HeuristicDisambiguationStrategy implements LocationDisambiguationSt
     }
 
     @Override
-    public List<ResolvedLocation> select(CustomLuceneLocationResolver resolver, List<List<ResolvedLocation>> allPossibilities) {
+    public List<ResolvedLocation> select(CliffLocationResolver resolver, List<List<ResolvedLocation>> allPossibilities) {
             
         logger.debug("Starting with "+allPossibilities.size()+" lists to do:");
         // print all of them

@@ -28,7 +28,7 @@ public class CountryGeoNameLookup extends AbstractGeoNameLookup {
     @Override
     public void parse() {
         try {
-            CustomLuceneLocationResolver resolver = (CustomLuceneLocationResolver) ParseManager.getResolver();
+            CliffLocationResolver resolver = (CliffLocationResolver) ParseManager.getResolver();
             BufferedReader br = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream(RESOURCE_NAME)));
             String line = null;
             while ((line = br.readLine()) != null) {  

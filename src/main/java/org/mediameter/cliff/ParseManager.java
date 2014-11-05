@@ -12,7 +12,7 @@ import org.mediameter.cliff.extractor.StanfordNamedEntityExtractor;
 import org.mediameter.cliff.extractor.StanfordNamedEntityExtractor.Model;
 import org.mediameter.cliff.orgs.ResolvedOrganization;
 import org.mediameter.cliff.people.ResolvedPerson;
-import org.mediameter.cliff.places.CustomLuceneLocationResolver;
+import org.mediameter.cliff.places.CliffLocationResolver;
 import org.mediameter.cliff.places.focus.FocusLocation;
 import org.mediameter.cliff.places.focus.FocusStrategy;
 import org.mediameter.cliff.places.focus.FrequencyOfMentionFocusStrategy;
@@ -22,7 +22,8 @@ import org.slf4j.LoggerFactory;
 
 import com.bericotech.clavin.gazetteer.CountryCode;
 import com.bericotech.clavin.gazetteer.GeoName;
-import com.bericotech.clavin.resolver.LocationResolver;
+import com.bericotech.clavin.gazetteer.query.Gazetteer;
+import com.bericotech.clavin.gazetteer.query.LuceneGazetteer;
 import com.bericotech.clavin.resolver.ResolvedLocation;
 
 /**
@@ -35,7 +36,7 @@ public class ParseManager {
      * Minor: change in json result format
      * Revision: minor change or bug fix
      */
-    static final String PARSER_VERSION = "1.1.0";
+    static final String PARSER_VERSION = "2.0.0";
     
     private static final Logger logger = LoggerFactory.getLogger(ParseManager.class);
 
@@ -43,11 +44,11 @@ public class ParseManager {
     
     public static StanfordNamedEntityExtractor peopleExtractor = null;
 
-    private static LocationResolver resolver;   // HACK: pointer to keep around for stats logging
+    private static CliffLocationResolver resolver;   // HACK: pointer to keep around for stats logging
     
     private static FocusStrategy focusStrategy = new FrequencyOfMentionFocusStrategy();
     
-    public static final String PATH_TO_GEONAMES_INDEX = "/etc/cliff/IndexDirectory";
+    public static final String PATH_TO_GEONAMES_INDEX = "/etc/cliff2/IndexDirectory";
     
     // these two are the statuses used in the JSON responses
     private static final String STATUS_OK = "ok";
@@ -259,7 +260,7 @@ public class ParseManager {
     
     public static void logStats(){
         if(resolver!=null){
-            ((CustomLuceneLocationResolver) resolver).logStats();
+            ((CliffLocationResolver) resolver).logStats();
         }
     }
     
@@ -272,15 +273,14 @@ public class ParseManager {
 
         if(parser==null){
 
-            // use the Stanford NER location extractor?
+            // use the Stanford NER location extractor
             String modelToUse = CliffConfig.getInstance().getNerModelName();
             logger.debug("Creating extractor with "+modelToUse);
             StanfordNamedEntityExtractor locationExtractor = new StanfordNamedEntityExtractor(Model.valueOf(modelToUse));                
             
-            int numberOfResultsToFetch = 10;
             boolean useFuzzyMatching = false;
-            resolver = new CustomLuceneLocationResolver(new File(PATH_TO_GEONAMES_INDEX), 
-                    numberOfResultsToFetch);
+            Gazetteer gazetteer = new LuceneGazetteer(new File(PATH_TO_GEONAMES_INDEX));
+            resolver = new CliffLocationResolver(gazetteer);
 
             parser = new EntityParser(locationExtractor, resolver, useFuzzyMatching);
                         
@@ -290,7 +290,7 @@ public class ParseManager {
         return parser;
     }
 
-    public static LocationResolver getResolver() throws Exception {
+    public static CliffLocationResolver getResolver() throws Exception {
         ParseManager.getParserInstance();
         return resolver;
     }

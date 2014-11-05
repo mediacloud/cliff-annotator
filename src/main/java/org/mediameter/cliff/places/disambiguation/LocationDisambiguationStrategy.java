@@ -3,7 +3,7 @@ package org.mediameter.cliff.places.disambiguation;
 import java.util.List;
 
 import org.mediameter.cliff.DisambiguationStrategy;
-import org.mediameter.cliff.places.CustomLuceneLocationResolver;
+import org.mediameter.cliff.places.CliffLocationResolver;
 
 import com.bericotech.clavin.resolver.ResolvedLocation;
 
@@ -22,7 +22,7 @@ public interface LocationDisambiguationStrategy extends DisambiguationStrategy {
      * @return Set of the best candidate choices.
      */
     public abstract List<ResolvedLocation> select(
-            CustomLuceneLocationResolver resolver,
+            CliffLocationResolver resolver,
             List<List<ResolvedLocation>> allPossibilities);
 
     public abstract void logStats();

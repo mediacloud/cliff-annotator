@@ -8,10 +8,10 @@ import org.mediameter.cliff.orgs.OrganizationResolver;
 import org.mediameter.cliff.orgs.ResolvedOrganization;
 import org.mediameter.cliff.people.PersonResolver;
 import org.mediameter.cliff.people.ResolvedPerson;
+import org.mediameter.cliff.places.CliffLocationResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.bericotech.clavin.resolver.LocationResolver;
 import com.bericotech.clavin.resolver.ResolvedLocation;
 
 /**
@@ -26,14 +26,14 @@ public class EntityParser {
     // entity extractor to find location names in text
     private StanfordNamedEntityExtractor extractor;
     
-    private LocationResolver locationResolver;
+    private CliffLocationResolver locationResolver;
     private PersonResolver personResolver;
     private OrganizationResolver organizationResolver;
     
     // switch controlling use of fuzzy matching
     private final boolean fuzzy;
 
-    public EntityParser(StanfordNamedEntityExtractor extractor, LocationResolver resolver,
+    public EntityParser(StanfordNamedEntityExtractor extractor, CliffLocationResolver resolver,
             boolean fuzzy) {
         this.extractor = extractor;
         this.locationResolver = resolver;

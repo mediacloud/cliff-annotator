@@ -16,7 +16,7 @@ public class AmazonPlaceTest {
     public void testAmazon() throws Exception{
         List<ResolvedLocation> results = ParseManager.extractAndResolve("This is about the Amazon.").getResolvedLocations();
         assertEquals("Found "+results.size()+" places, should have been 1!",1,results.size());
-        assertEquals(TestPlaces.AMAZON,results.get(0).geoname.geonameID);
+        assertEquals(TestPlaces.AMAZON,results.get(0).getGeoname().getGeonameID());
     }
 
 }

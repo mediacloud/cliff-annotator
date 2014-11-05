@@ -15,15 +15,15 @@ public class GeoNameLookupTest {
         CountryGeoNameLookup lookup = new CountryGeoNameLookup();
         assertEquals(lookup.size(),250);
         GeoName usa = lookup.get("US");
-        assertEquals(usa.geonameID,6252001);
+        assertEquals(usa.getGeonameID(),6252001);
     }
 
     @Test
     public void testAdm1Lookup() throws Exception {
         Adm1GeoNameLookup lookup = new Adm1GeoNameLookup();
-        assertEquals(lookup.size(),3891);
+        assertEquals(lookup.size(),3895);
         GeoName newYorkState = lookup.get("US","NY");
-        assertEquals(newYorkState.geonameID,5128638);
+        assertEquals(newYorkState.getGeonameID(),5128638);
     }
     
 }

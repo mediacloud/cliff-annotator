@@ -47,7 +47,7 @@ public class HandCodedDisambiguationTest {
             List<ResolvedLocation> resolvedLocations = ParseManager.extractAndResolve(article.text).getResolvedLocations();
             String resolvedCountryCodes = "";
             for(ResolvedLocation loc: resolvedLocations){
-                resolvedCountryCodes += loc.geoname.primaryCountryCode+" ";
+                resolvedCountryCodes += loc.getGeoname().getPrimaryCountryCode()+" ";
             }
             assertTrue("Didn't find "+source+" "+article.handCodedPlaceName+" ("+article.handCodedCountryCode+") "
                     + "in article "+article.mediacloudId+ "( found "+resolvedCountryCodes+")",

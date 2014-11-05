@@ -2,7 +2,7 @@ CLIFF: Extract Named Entities and Geoparse the News
 ===================================================
 
 CLIFF is a lightweight server to allow HTTP requests to the Stanford Named Entity 
-Recognized and a modified [CLAVIN geoparser](http://clavin.bericotechnologies.com).  
+Recognized and a modified [CLAVIN 2.0.0 geoparser](http://clavin.bericotechnologies.com).  
 It allows you to submit unstructured text over HTTP and a receive in reply JSON 
 results with information about organizations mentioned, locations mentioned, 
 people mentioned, and countries the text is "about".  The geoparsing is tuned 
@@ -13,7 +13,7 @@ to identify cities, states and countries.
 You need maven and java (1.7).  We develop in Eclipse Kepler: Java EE.
 
 You need to build CLAVIN in order to build the Geonames Gazetteer Index for geoparsing. 
-The idea is that you build all that, and then create a symlink at `/etc/cliff/IndexDirectory` 
+The idea is that you build all that, and then create a symlink at `/etc/cliff2/IndexDirectory` 
 to the CLAVIN index you just built.
 
 ### Tomcat Setup

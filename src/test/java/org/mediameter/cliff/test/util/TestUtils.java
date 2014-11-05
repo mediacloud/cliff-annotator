@@ -14,7 +14,6 @@ import org.mediameter.cliff.test.places.CodedArticle;
 import org.slf4j.Logger;
 
 import com.bericotech.clavin.gazetteer.CountryCode;
-import com.bericotech.clavin.gazetteer.GeoName;
 import com.bericotech.clavin.resolver.ResolvedLocation;
 import com.bericotech.clavin.util.TextUtils;
 import com.google.gson.Gson;
@@ -47,7 +46,7 @@ public class TestUtils {
         }
         if(andNoOthers){
             for(ResolvedLocation resolvedLocation: results){
-                assertTrue("Found a place that we weren't supposed to! "+resolvedLocation,intArrayContains(places,resolvedLocation.geoname.geonameID));
+                assertTrue("Found a place that we weren't supposed to! "+resolvedLocation,intArrayContains(places,resolvedLocation.getGeoname().getGeonameID()));
             }
         }
     }
@@ -64,7 +63,7 @@ public class TestUtils {
     public static boolean resultsContainsPlaceId(List<ResolvedLocation> results, int placeId){
         if(placeId==0) return true;
         for(ResolvedLocation location: results){
-            if(location.geoname.geonameID==placeId){
+            if(location.getGeoname().getGeonameID()==placeId){
                 return true;
             }
         }
@@ -74,7 +73,7 @@ public class TestUtils {
     public static boolean isCountryCodeInResolvedLocations(String countryAlpha2, List<ResolvedLocation> results){
         if(countryAlpha2.length()==0) return true;
         for(ResolvedLocation location: results){
-            if(location.geoname.primaryCountryCode.toString().equals(countryAlpha2)){
+            if(location.getGeoname().getPrimaryCountryCode().toString().equals(countryAlpha2)){
                 return true;
             }
         }
