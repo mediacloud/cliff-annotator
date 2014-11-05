@@ -64,7 +64,7 @@ Controls which Stanford NER Model to use while extracting entities:
 To test it out, hit this url in a browser and you should get some JSON back:
 
 ```
-http://localhost:8080/CLIFF-1.1.0/parse/text?q=This is some text about New York City, and maybe about Accra as well, and maybe Boston as well.
+http://localhost:8080/CLIFF-2.0.0/parse/text?q=This is some text about New York City, and maybe about Accra as well, and maybe Boston as well.
 ```
 
 Of course, when you use this in a script you should do an HTTP POST, not a GET!
