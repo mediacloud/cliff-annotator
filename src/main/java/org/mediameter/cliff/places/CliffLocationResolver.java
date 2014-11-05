@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.mediameter.cliff.EntityParser;
 import org.mediameter.cliff.places.disambiguation.HeuristicDisambiguationStrategy;
 import org.mediameter.cliff.places.disambiguation.LocationDisambiguationStrategy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.bericotech.clavin.ClavinException;
 import com.bericotech.clavin.extractor.LocationOccurrence;
@@ -21,6 +24,8 @@ import com.bericotech.clavin.resolver.ResolvedLocation;
  * @author rahulb
  */
 public class CliffLocationResolver extends ClavinLocationResolver{
+
+    private static final Logger logger = LoggerFactory.getLogger(CliffLocationResolver.class);
 
     // my custom wrapper to let us try out multiple different disambiguation strategies
     private LocationDisambiguationStrategy disambiguationStrategy;
@@ -96,6 +101,7 @@ public class CliffLocationResolver extends ClavinLocationResolver{
             // stores all possible matches for each location name
             List<List<ResolvedLocation>> allCandidates = new ArrayList<List<ResolvedLocation>>();
 
+            long startTime = System.nanoTime();
             // loop through all the location names
             for (LocationOccurrence location : filteredLocations) {
                 // get all possible matches
@@ -106,12 +112,15 @@ public class CliffLocationResolver extends ClavinLocationResolver{
                     allCandidates.add(candidates);
                 }
             }
+            long gazetteerTime = System.nanoTime() - startTime;
 
             // initialize return object
             List<ResolvedLocation> bestCandidates = new ArrayList<ResolvedLocation>();
 
             //RB: use out heuristic disambiguation instead of the CLAVIN default
+            startTime = System.nanoTime();
             bestCandidates = disambiguationStrategy.select(this, allCandidates);
+            long disambiguationTime = System.nanoTime() - startTime;
             /*
             // split-up allCandidates into reasonably-sized chunks to
             // limit computational load when heuristically selecting
@@ -122,6 +131,7 @@ public class CliffLocationResolver extends ClavinLocationResolver{
                 bestCandidates.addAll(pickBestCandidates(theseCandidates));
             }
             */
+            logger.debug("gazetterAndDisambiguation: "+gazetteerTime+" / "+disambiguationTime);
 
             return bestCandidates;
         } else { // use no heuristics, simply choose matching location with greatest population
