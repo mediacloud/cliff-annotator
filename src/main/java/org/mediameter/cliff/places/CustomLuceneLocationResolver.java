@@ -283,6 +283,7 @@ public class CustomLuceneLocationResolver implements LocationResolver {
 			// stores all possible matches for each location name
 			List<List<ResolvedLocation>> allCandidates = new ArrayList<List<ResolvedLocation>>();
 			
+		    long startTime = System.nanoTime();
 			// loop through all the location names
 			for (LocationOccurrence location : locations) {
 				// get all possible matches
@@ -292,14 +293,19 @@ public class CustomLuceneLocationResolver implements LocationResolver {
 				if (candidates.size() > 0)
 					allCandidates.add(candidates);
 			}
+			long gazetteerTime = System.nanoTime() - startTime;
 			
 			// initialize return object
 			List<ResolvedLocation> bestCandidates = new ArrayList<ResolvedLocation>();
 			
 			// select the best match for each location name based
 			// based on heuristics
+			startTime = System.nanoTime();
 			bestCandidates.addAll(pickBestCandidates(allCandidates));
+			long disambiguationTime = System.nanoTime() - startTime;
 			
+            logger.debug("gazetterAndDisambiguation: "+gazetteerTime+" / "+disambiguationTime);
+
 			return bestCandidates;
 			
 		} else { // use no heuristics, simply choose matching location with greatest population
