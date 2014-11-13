@@ -282,7 +282,8 @@ public class ParseManager {
             Gazetteer gazetteer = new LuceneGazetteer(new File(PATH_TO_GEONAMES_INDEX));
             resolver = new CliffLocationResolver(gazetteer);
 
-            parser = new EntityParser(locationExtractor, resolver, useFuzzyMatching);
+            parser = new EntityParser(locationExtractor, resolver, 
+                    useFuzzyMatching, CliffLocationResolver.MAX_HIT_DEPTH);
                         
             logger.info("Created parser successfully");
         }

@@ -32,14 +32,16 @@ public class EntityParser {
     
     // switch controlling use of fuzzy matching
     private final boolean fuzzy;
-
+    private final int maxHitDepth;
+    
     public EntityParser(StanfordNamedEntityExtractor extractor, CliffLocationResolver resolver,
-            boolean fuzzy) {
+            boolean fuzzy, int maxHitDepth) {
         this.extractor = extractor;
         this.locationResolver = resolver;
         this.personResolver = new PersonResolver();
         this.organizationResolver = new OrganizationResolver();
         this.fuzzy = fuzzy;
+        this.maxHitDepth = maxHitDepth;
     }
 
     public ExtractedEntities extractAndResolve(String inputText, boolean manuallyReplaceDemonyms) throws Exception {
@@ -54,13 +56,14 @@ public class EntityParser {
         logger.debug("extractAndResolve: "+extract+" / "+resolve);
         return entities;
     }
-        
+            
     public ExtractedEntities resolve(ExtractedEntities entities) throws Exception{
         
         // resolve the extracted location names against a
         // gazetteer to produce geographic entities representing the
         // locations mentioned in the original text
-        List<ResolvedLocation> resolvedLocations = locationResolver.resolveLocations(entities.getLocations(), fuzzy);
+        List<ResolvedLocation> resolvedLocations = locationResolver.resolveLocations(
+                entities.getLocations(), this.maxHitDepth, -1, this.fuzzy);
         entities.setResolvedLocations( resolvedLocations );
         logger.trace("resolvedLocations: {}", resolvedLocations);
         

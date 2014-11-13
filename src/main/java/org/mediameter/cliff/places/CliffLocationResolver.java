@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.mediameter.cliff.EntityParser;
 import org.mediameter.cliff.places.disambiguation.HeuristicDisambiguationStrategy;
 import org.mediameter.cliff.places.disambiguation.LocationDisambiguationStrategy;
 import org.slf4j.Logger;
@@ -27,6 +26,8 @@ public class CliffLocationResolver extends ClavinLocationResolver{
 
     private static final Logger logger = LoggerFactory.getLogger(CliffLocationResolver.class);
 
+    public static final int MAX_HIT_DEPTH = 10;
+    
     // my custom wrapper to let us try out multiple different disambiguation strategies
     private LocationDisambiguationStrategy disambiguationStrategy;
 
