@@ -1,6 +1,7 @@
 package org.mediameter.cliff;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,7 @@ import org.mediameter.cliff.extractor.StanfordNamedEntityExtractor.Model;
 import org.mediameter.cliff.orgs.ResolvedOrganization;
 import org.mediameter.cliff.people.ResolvedPerson;
 import org.mediameter.cliff.places.CustomLuceneLocationResolver;
+import org.mediameter.cliff.places.UnknownGeoNameIdException;
 import org.mediameter.cliff.places.focus.FocusLocation;
 import org.mediameter.cliff.places.focus.FocusStrategy;
 import org.mediameter.cliff.places.focus.FrequencyOfMentionFocusStrategy;
@@ -23,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import com.bericotech.clavin.gazetteer.CountryCode;
 import com.bericotech.clavin.gazetteer.GeoName;
 import com.bericotech.clavin.resolver.LocationResolver;
+import com.bericotech.clavin.resolver.LuceneLocationResolver;
 import com.bericotech.clavin.resolver.ResolvedLocation;
 
 /**
@@ -35,7 +38,7 @@ public class ParseManager {
      * Minor: change in json result format
      * Revision: minor change or bug fix
      */
-    static final String PARSER_VERSION = "1.1.0";
+    static final String PARSER_VERSION = "1.1.1";
     
     private static final Logger logger = LoggerFactory.getLogger(ParseManager.class);
 
@@ -52,6 +55,17 @@ public class ParseManager {
     // these two are the statuses used in the JSON responses
     private static final String STATUS_OK = "ok";
     private static final String STATUS_ERROR = "error";
+    
+    @SuppressWarnings("rawtypes")
+    public static HashMap getGeoNameInfo(int id) throws IOException{
+        try {
+            GeoName geoname = ((CustomLuceneLocationResolver) resolver).getByGeoNameId(id);
+            return writeGeoNameToHash(geoname);
+        } catch (UnknownGeoNameIdException e) {
+            logger.warn(e.getMessage());
+            return getErrorText("Invalid GeoNames id "+id);
+        }
+    }
     
     /**
      * Public api method - call this statically to extract locations from a text string 
@@ -172,10 +186,8 @@ public class ParseManager {
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public static HashMap writeAboutnessLocationToHash(FocusLocation location){
+    public static HashMap writeGeoNameToHash(GeoName place){
         HashMap loc = new HashMap();
-        GeoName place = location.getGeoName();
-        loc.put("score", location.getScore());
         loc.put("id",place.geonameID);
         loc.put("name",place.name);
         String primaryCountryCodeAlpha2 = ""; 
@@ -183,7 +195,6 @@ public class ParseManager {
             primaryCountryCodeAlpha2 = place.primaryCountryCode.toString();
         }
         String admin1Code = "";
-        
         if(place.admin1Code !=null){
             admin1Code = place.admin1Code;
         }
@@ -195,7 +206,13 @@ public class ParseManager {
         loc.put("countryCode",primaryCountryCodeAlpha2);
         loc.put("lat",place.latitude);
         loc.put("lon",place.longitude);
-        
+        return loc;
+    }
+    
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public static HashMap writeAboutnessLocationToHash(FocusLocation location){
+        HashMap loc = writeGeoNameToHash(location.getGeoName());
+        loc.put("score", location.getScore());
         return loc;
     }
     
