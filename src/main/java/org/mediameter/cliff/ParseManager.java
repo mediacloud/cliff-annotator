@@ -56,11 +56,15 @@ public class ParseManager {
     private static final String STATUS_OK = "ok";
     private static final String STATUS_ERROR = "error";
     
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public static HashMap getGeoNameInfo(int id) throws IOException{
         try {
             GeoName geoname = ((CustomLuceneLocationResolver) resolver).getByGeoNameId(id);
-            return writeGeoNameToHash(geoname);
+            HashMap response = new HashMap();
+            response.put("status",STATUS_OK);
+            response.put("version",PARSER_VERSION);
+            response.put("results",writeGeoNameToHash(geoname));
+            return response;
         } catch (UnknownGeoNameIdException e) {
             logger.warn(e.getMessage());
             return getErrorText("Invalid GeoNames id "+id);
