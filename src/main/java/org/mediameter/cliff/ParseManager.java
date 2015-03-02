@@ -222,29 +222,9 @@ public class ParseManager {
     
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public static HashMap writeResolvedLocationToHash(ResolvedLocation resolvedLocation){
-    	HashMap loc = new HashMap();
+    	HashMap loc = writeGeoNameToHash(resolvedLocation.geoname);
     	int charIndex = resolvedLocation.location.position;
-    	GeoName place = resolvedLocation.geoname;
         loc.put("confidence", resolvedLocation.confidence); // low is good
-        loc.put("id",place.geonameID);
-        loc.put("name",place.name);
-        String primaryCountryCodeAlpha2 = ""; 
-        if(place.primaryCountryCode!=CountryCode.NULL){
-            primaryCountryCodeAlpha2 = place.primaryCountryCode.toString();
-        }
-        String admin1Code = "";
-        
-        if(place.admin1Code !=null){
-            admin1Code = place.admin1Code;
-        }
-        String featureCode = place.featureCode.toString();
-        loc.put("featureClass", place.featureClass.toString());
-        loc.put("featureCode", featureCode);
-        loc.put("population", place.population);
-        loc.put("stateCode", admin1Code);
-        loc.put("countryCode",primaryCountryCodeAlpha2);
-        loc.put("lat",place.latitude);
-        loc.put("lon",place.longitude);
         HashMap sourceInfo = new HashMap();
         sourceInfo.put("string",resolvedLocation.location.text);
         sourceInfo.put("charIndex",charIndex);  
@@ -252,7 +232,6 @@ public class ParseManager {
             sourceInfo.put("storySentencesId", ((SentenceLocationOccurrence) resolvedLocation.location).storySentenceId);
         }
         loc.put("source",sourceInfo);
-        
     	return loc;
     }
     
