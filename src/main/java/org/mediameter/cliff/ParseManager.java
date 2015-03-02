@@ -13,6 +13,8 @@ import org.mediameter.cliff.extractor.StanfordNamedEntityExtractor;
 import org.mediameter.cliff.extractor.StanfordNamedEntityExtractor.Model;
 import org.mediameter.cliff.orgs.ResolvedOrganization;
 import org.mediameter.cliff.people.ResolvedPerson;
+import org.mediameter.cliff.places.Adm1GeoNameLookup;
+import org.mediameter.cliff.places.CountryGeoNameLookup;
 import org.mediameter.cliff.places.CustomLuceneLocationResolver;
 import org.mediameter.cliff.places.UnknownGeoNameIdException;
 import org.mediameter.cliff.places.focus.FocusLocation;
@@ -37,7 +39,7 @@ public class ParseManager {
      * Minor: change in json result format
      * Revision: minor change or bug fix
      */
-    static final String PARSER_VERSION = "1.1.1";
+    static final String PARSER_VERSION = "1.2.0";
     
     private static final Logger logger = LoggerFactory.getLogger(ParseManager.class);
 
@@ -193,22 +195,37 @@ public class ParseManager {
         HashMap loc = new HashMap();
         loc.put("id",place.geonameID);
         loc.put("name",place.name);
+        loc.put("lat",place.latitude);
+        loc.put("lon",place.longitude);
+        loc.put("population", place.population);
+        String featureCode = place.featureCode.toString();
+        loc.put("featureClass", place.featureClass.toString());
+        loc.put("featureCode", featureCode);
+        // add in country info
         String primaryCountryCodeAlpha2 = ""; 
         if(place.primaryCountryCode!=CountryCode.NULL){
             primaryCountryCodeAlpha2 = place.primaryCountryCode.toString();
         }
+        loc.put("countryCode",primaryCountryCodeAlpha2);
+        GeoName countryGeoName = CountryGeoNameLookup.lookup(primaryCountryCodeAlpha2);
+        String countryGeoNameId = "";
+        if(countryGeoName!=null){
+            countryGeoNameId = ""+countryGeoName.geonameID;
+        }
+        loc.put("countryGeoNameId",countryGeoNameId);
+        // add in state info
         String admin1Code = "";
         if(place.admin1Code !=null){
             admin1Code = place.admin1Code;
         }
-        String featureCode = place.featureCode.toString();
-        loc.put("featureClass", place.featureClass.toString());
-        loc.put("featureCode", featureCode);
-        loc.put("population", place.population);
         loc.put("stateCode", admin1Code);
-        loc.put("countryCode",primaryCountryCodeAlpha2);
-        loc.put("lat",place.latitude);
-        loc.put("lon",place.longitude);
+        GeoName adm1GeoName = Adm1GeoNameLookup.lookup(primaryCountryCodeAlpha2, admin1Code);        
+        String stateGeoNameId = "";
+        if(adm1GeoName!=null){
+            stateGeoNameId = ""+adm1GeoName.geonameID;
+        }
+        loc.put("stateGeoNameId",stateGeoNameId);
+
         return loc;
     }
     
