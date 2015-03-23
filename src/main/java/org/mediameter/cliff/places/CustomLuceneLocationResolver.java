@@ -135,7 +135,7 @@ public class CustomLuceneLocationResolver implements LocationResolver {
         if (results.scoreDocs.length > 0) {
             Document luceneDoc = indexSearcher.doc(results.scoreDocs[0].doc);
             GeoName geoname = GeoName.parseFromGeoNamesRecord(luceneDoc.get("geoname"));
-            logger.debug("GeoName: {}", geoname);
+            logger.trace("GeoName: {}", geoname);
             return geoname;
         }
         throw new UnknownGeoNameIdException(geoNameId);
