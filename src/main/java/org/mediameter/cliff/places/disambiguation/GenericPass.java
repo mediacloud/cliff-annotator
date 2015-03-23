@@ -86,6 +86,9 @@ public abstract class GenericPass {
     protected static boolean isAdminRegion(ResolvedLocation candidate){
     	return candidate.geoname.population>0 && candidate.geoname.featureClass==FeatureClass.A;
     }
+    protected static boolean isCountry(ResolvedLocation candidate){
+        return candidate.geoname.population>0 && candidate.geoname.admin1Code.equals("00");
+    }
     protected ResolvedLocation findFirstCityCandidate(List<ResolvedLocation> candidates, boolean exactMatchRequired){
     	for(ResolvedLocation candidate: candidates) {
             if(isCity(candidate)){
@@ -98,6 +101,7 @@ public abstract class GenericPass {
         }
     	return null; 	
     }
+    
     protected ResolvedLocation findFirstAdminCandidate(List<ResolvedLocation> candidates, boolean exactMatchRequired){
     	for(ResolvedLocation candidate: candidates) {
             if(isAdminRegion(candidate)){
@@ -110,6 +114,7 @@ public abstract class GenericPass {
         }
     	return null; 	
     }
+    
     /* Logic is now to compare the City place with the Admin/State place. 
      * If City has larger population then choose it. If the City and State are in the same country, 
      * then choose the city (this will favor Paris the city over Paris the district in France). 

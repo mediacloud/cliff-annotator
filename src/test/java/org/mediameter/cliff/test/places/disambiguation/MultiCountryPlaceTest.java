@@ -13,7 +13,8 @@ public class MultiCountryPlaceTest {
     @Test
     public void testCountryExample() throws Exception {
         TestUtils.verifyPlacesInFile("src/test/resources/sample-docs/multi-country.txt", 
-                new int[] {TestPlaces.COUNTRY_CHINA,TestPlaces.COUNTRY_INDIA,TestPlaces.COUNTRY_AUSTRALIA},logger );
+                new int[] {TestPlaces.COUNTRY_CHINA,TestPlaces.COUNTRY_INDIA,TestPlaces.COUNTRY_AUSTRALIA,
+                           TestPlaces.COUNTRY_US, TestPlaces.COUNTRY_RUSSIA},logger );
     }
 
 }
