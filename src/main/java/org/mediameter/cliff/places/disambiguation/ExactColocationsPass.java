@@ -22,7 +22,7 @@ public class ExactColocationsPass extends GenericPass {
         for( List<ResolvedLocation> candidates: possibilitiesToDo){
             boolean foundOne = false;
             for( ResolvedLocation candidate: candidates){
-                if(!foundOne && isExactMatch(candidate) && 
+                if(!foundOne && isExactMatch(candidate) && isCity(candidate) && 
                 		candidate.geoname.population>0 && 
                 		(bestCandidates.size() == 0 || 
                 			(bestCandidates.size() != 0 && inSameCountry(candidate, bestCandidates)))){
@@ -39,7 +39,7 @@ public class ExactColocationsPass extends GenericPass {
 
     @Override
     public String getDescription() {
-        return "Looking for top populated exact match in same countries as best results so far";
+        return "Looking for top populated city exact match in same countries as best results so far";
     }
     
 }
