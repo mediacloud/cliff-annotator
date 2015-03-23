@@ -21,7 +21,7 @@ public class GeoNameLookupTest {
     @Test
     public void testAdm1Lookup() throws Exception {
         Adm1GeoNameLookup lookup = new Adm1GeoNameLookup();
-        assertEquals(lookup.size(),3891);
+        assertEquals(lookup.size(),3895);
         GeoName newYorkState = lookup.get("US","NY");
         assertEquals(newYorkState.geonameID,5128638);
     }
