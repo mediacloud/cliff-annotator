@@ -137,15 +137,25 @@ public abstract class GenericPass {
         return false;
     }
 
+    protected boolean inSameAdmin1(ResolvedLocation candidate, List<ResolvedLocation> list){
+        
+        for( ResolvedLocation item: list){
+            if(candidate.geoname.admin1Code.equals(item.geoname.admin1Code)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static void logSelectedCandidate(ResolvedLocation candidate){
         logger.debug("  PICKED: "+candidate.location.text+"@"+candidate.location.position);
     }
     
     public static void logResolvedLocationInfo(ResolvedLocation resolvedLocation){
         GeoName candidatePlace = resolvedLocation.geoname; 
-        logger.debug("    "+candidatePlace.geonameID+" "+candidatePlace.name+
-                ", "+ candidatePlace.admin1Code+
-                ", " + candidatePlace.primaryCountryCode
+        logger.debug("    "+candidatePlace.geonameID+" "+candidatePlace.name
+                + ", "+ candidatePlace.admin1Code
+                + ", " + candidatePlace.primaryCountryCode
                 + " / "+resolvedLocation.confidence
                 +" / "+candidatePlace.population + " / " + candidatePlace.featureClass
                 + " ( isExactMatch="+isExactMatch(resolvedLocation)+" )");
