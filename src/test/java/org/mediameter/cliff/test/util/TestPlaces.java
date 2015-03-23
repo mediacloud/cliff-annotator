@@ -22,5 +22,6 @@ public class TestPlaces {
     public static final int CITY_CAIRNS = 2172797;
     public static final int COUNTRY_DOMINICAN_REPUBLIC = 3508796;
     public static final int COUNTRY_ENGLAND = 6269131;
+    public static final int CONTINENT_EUROPE = 6255148;
 
 }
