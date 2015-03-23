@@ -32,7 +32,7 @@ public class Blacklist {
             if(row.length()==0) continue;
             list.add(row.trim().toLowerCase()); 
         }
-        logger.info(this.toString());
+        logger.trace(this.toString());
     }
     
     public String toString(){

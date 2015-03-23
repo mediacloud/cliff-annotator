@@ -38,7 +38,6 @@ public class CustomSubstitutionMap extends AbstractSubstitutionMap {
         // now walk each line
         String row = null;  
         while ((row = br.readLine()) != null) {
-            logger.debug(row);
             if(row.length()==0) continue;
             if(row.charAt(0)==comment) continue;    // skip comment lines
             String[] columns = row.split(separator);
@@ -50,7 +49,7 @@ public class CustomSubstitutionMap extends AbstractSubstitutionMap {
             }
             put( original, replacement ); 
         }         
-        logger.debug(this.toString());
+        logger.trace(this.toString());
     }
     
     public String toString(){
