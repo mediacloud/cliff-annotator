@@ -14,6 +14,9 @@ public class ExactAdmin1MatchPass extends GenericPass {
             List<ResolvedLocation> bestCandidates) {
         List<List<ResolvedLocation>> possibilitiesToRemove = new ArrayList<List<ResolvedLocation>>();
         for( List<ResolvedLocation> candidates: possibilitiesToDo){
+            if(containsPopulatedCityExactMatch(candidates)){
+                continue;
+            }
             ResolvedLocation firstCandidate = candidates.get(0);
             if(isExactMatch(firstCandidate) &&
                     firstCandidate.geoname.population>0 && 
@@ -23,6 +26,15 @@ public class ExactAdmin1MatchPass extends GenericPass {
             }
         }
         return possibilitiesToRemove;
+    }
+
+    private boolean containsPopulatedCityExactMatch(List<ResolvedLocation> candidates) {
+        for(ResolvedLocation loc:candidates){
+            if(loc.geoname.population>0 && isCity(loc) && isExactMatch(loc)){
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
