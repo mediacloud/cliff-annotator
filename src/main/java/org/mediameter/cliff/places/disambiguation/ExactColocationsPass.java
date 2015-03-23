@@ -3,9 +3,14 @@ package org.mediameter.cliff.places.disambiguation;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.bericotech.clavin.resolver.ResolvedLocation;
 
 public class ExactColocationsPass extends GenericPass {
+
+    private static final Logger logger = LoggerFactory.getLogger(ExactColocationsPass.class);
 
     @Override
     protected List<List<ResolvedLocation>> disambiguate(
@@ -21,20 +26,10 @@ public class ExactColocationsPass extends GenericPass {
                 		candidate.geoname.population>0 && 
                 		(bestCandidates.size() == 0 || 
                 			(bestCandidates.size() != 0 && inSameCountry(candidate, bestCandidates)))){
-                	//	 candidate.geoname.population>0){
-                    //candidate.geoname.population>0 && inSameCountry(candidate, bestCandidates)){
-     
-                    ResolvedLocation cityCandidate = findFirstCityCandidate(candidates, true);
-                    ResolvedLocation adminCandidate = findFirstAdminCandidate(candidates, true);
-                    if (chooseCityOverAdmin(cityCandidate, adminCandidate)){
-                    	bestCandidates.add(cityCandidate);
-                    	possibilitiesToRemove.add(candidates);
-                    	foundOne = true;
-                    }else if (adminCandidate != null){              
-                    	bestCandidates.add(adminCandidate);
-                    	possibilitiesToRemove.add(candidates);
-                    	foundOne = true;
-                    }
+                    logger.trace("  "+candidate.geoname.geonameID+"  "+candidate.geoname.name + " is in "+candidate.geoname.primaryCountryCode);
+                	bestCandidates.add(candidate);
+                	possibilitiesToRemove.add(candidates);
+                    foundOne = true;
                 }
             }
         }
