@@ -28,9 +28,15 @@ public class ExactAdmin1MatchPass extends GenericPass {
         return possibilitiesToRemove;
     }
 
+    /**
+     * Tuned to skip tiny cities that are populated to solve the Oklahoma problem
+     * and the Sao Paulo problem.
+     * @param candidates
+     * @return
+     */
     private boolean containsPopulatedCityExactMatch(List<ResolvedLocation> candidates) {
         for(ResolvedLocation loc:candidates){
-            if(loc.geoname.population>0 && isCity(loc) && isExactMatch(loc)){
+            if(loc.geoname.population>10000 && isCity(loc) && isExactMatch(loc)){
                 return true;
             }
         }
