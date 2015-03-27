@@ -14,9 +14,9 @@ import com.google.gson.Gson;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class MuckUtils {
 
-    public static ExtractedEntities entitiesFromJsonString(String nlpJsonString){
+    public static ExtractedEntities entitiesFromNlpJsonString(String nlpJsonString){
         Map sentences = sentencesFromJsonString(nlpJsonString);
-        return entitiesFromSentenceMap(sentences);
+        return entitiesFromNlpSentenceMap(sentences);
     }
 
     public static Map sentencesFromJsonString(String nlpJsonString) {
@@ -26,9 +26,9 @@ public class MuckUtils {
     }
         
     /**
-     * I've overloaded "position" in each of the occurrences to be sentenceIndex 
+     *  
      */
-    private static ExtractedEntities entitiesFromSentenceMap(Map mcSentences){
+    private static ExtractedEntities entitiesFromNlpSentenceMap(Map mcSentences){
         ExtractedEntities entities = new ExtractedEntities();
         Iterator it = mcSentences.entrySet().iterator();
         while (it.hasNext()) {

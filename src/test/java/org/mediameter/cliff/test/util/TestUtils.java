@@ -14,7 +14,6 @@ import org.mediameter.cliff.test.places.CodedArticle;
 import org.slf4j.Logger;
 
 import com.bericotech.clavin.gazetteer.CountryCode;
-import com.bericotech.clavin.gazetteer.GeoName;
 import com.bericotech.clavin.resolver.ResolvedLocation;
 import com.bericotech.clavin.util.TextUtils;
 import com.google.gson.Gson;

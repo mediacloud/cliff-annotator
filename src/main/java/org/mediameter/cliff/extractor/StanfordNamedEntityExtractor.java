@@ -3,6 +3,7 @@ package org.mediameter.cliff.extractor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.mediameter.cliff.places.substitutions.Blacklist;
@@ -149,6 +150,79 @@ public class StanfordNamedEntityExtractor{
                     break;
                 default:
                     logger.error("Unknown NER type :"+ extractedEntity.first);
+                }
+            }
+        }
+
+        return entities;
+    }
+    
+
+    /**
+     * Get extracted locations from a plain-text body.
+     * 
+     * @param text                      Text content to perform extraction on.
+     * @param manuallyReplaceDemonyms   Can slow down performance quite a bit
+     * @return          All the entities mentioned
+     */
+    @SuppressWarnings("rawtypes")
+    public ExtractedEntities extractEntitiesFromSentences(Map[] sentences,boolean manuallyReplaceDemonyms) {
+        ExtractedEntities entities = new ExtractedEntities();
+
+        if (sentences.length==0){
+            logger.warn("input to extractEntities was null or zero!");
+            return entities; 
+        }
+
+        if(manuallyReplaceDemonyms){    // this is a noticeable performance hit
+            logger.debug("Replacing all demonyms by hand");
+        }
+        
+        for(Map s:sentences){
+            String storySentencesId = s.get("story_sentences_id").toString();
+            String text = s.get("sentence").toString();
+            if(manuallyReplaceDemonyms){    // this is a noticeable performance hit
+                text = demonyms.replaceAll(text);
+            }
+            // extract entities as <Entity Type, Start Index, Stop Index>
+            List<Triple<String, Integer, Integer>> extractedEntities = 
+                namedEntityRecognizer.classifyToCharacterOffsets(text);
+            if (extractedEntities != null) {
+                for (Triple<String, Integer, Integer> extractedEntity : extractedEntities) {
+                    String entityName = text.substring(extractedEntity.second(), extractedEntity.third());
+                    int position = extractedEntity.second();
+                    switch(extractedEntity.first){
+                    case "PERSON":
+                        if(personToPlaceSubstitutions.contains(entityName)){
+                            entities.addLocation( getLocationOccurrence(personToPlaceSubstitutions.getSubstitution(entityName), position) );
+                            logger.debug("Changed person "+entityName+" to a place");
+                        } else {
+                            PersonOccurrence person = new PersonOccurrence(entityName, position);
+                            entities.addPerson( person );
+                        }
+                        break;
+                    case "LOCATION":
+                        if(!locationBlacklist.contains(entityName)){
+                            LocationOccurrence loc = getLocationOccurrence(entityName, position);  
+                            // save the sentence id here
+                            entities.addLocation( new SentenceLocationOccurrence(loc.text, storySentencesId) );
+                        } else {
+                           logger.debug("Ignored blacklisted location "+entityName);
+                        }
+                        break;
+                    case "ORGANIZATION":
+                        OrganizationOccurrence organization = new OrganizationOccurrence(entityName, position);
+                        entities.addOrganization( organization );
+                        break;
+                    case "MISC":    // if you're using the slower 4class model
+                        if (demonyms.contains(entityName)) {
+                            logger.debug("Found and adding a MISC demonym "+entityName);
+                            entities.addLocation( getLocationOccurrence(entityName, position) );
+                        }
+                        break;
+                    default:
+                        logger.error("Unknown NER type :"+ extractedEntity.first);
+                    }
                 }
             }
         }

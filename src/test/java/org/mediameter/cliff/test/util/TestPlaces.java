@@ -27,5 +27,6 @@ public class TestPlaces {
     public static final int CITY_BANGOR = 4957280;
     public static final int COUNTRY_RUSSIA = 2017370;
     public static final int STATE_OKLAHOMA = 4544379;
+    public static final int RIKERS_ISLAND = 5133874;
 
 }

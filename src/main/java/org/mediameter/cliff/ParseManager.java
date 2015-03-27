@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.mediameter.cliff.extractor.CliffConfig;
 import org.mediameter.cliff.extractor.ExtractedEntities;
@@ -28,6 +29,7 @@ import com.bericotech.clavin.gazetteer.CountryCode;
 import com.bericotech.clavin.gazetteer.GeoName;
 import com.bericotech.clavin.resolver.LocationResolver;
 import com.bericotech.clavin.resolver.ResolvedLocation;
+import com.google.gson.Gson;
 
 /**
  * Singleton-style wrapper around a GeoParser.  Call GeoParser.locate(someText) to use this class.
@@ -39,7 +41,7 @@ public class ParseManager {
      * Minor: change in json result format
      * Revision: minor change or bug fix
      */
-    static final String PARSER_VERSION = "1.2.0";
+    static final String PARSER_VERSION = "1.3.0";
     
     private static final Logger logger = LoggerFactory.getLogger(ParseManager.class);
 
@@ -97,6 +99,27 @@ public class ParseManager {
     }
     
     @SuppressWarnings({ "unchecked", "rawtypes" })
+    public static HashMap parseFromSentences(String jsonText, boolean manuallyReplaceDemonyms) {
+        long startTime = System.currentTimeMillis();
+        HashMap results = null;
+        if(jsonText.trim().length()==0){
+            return getErrorText("No text");
+        }
+        try {
+            Gson gson = new Gson();
+            Map[] sentences = gson.fromJson(jsonText, Map[].class);
+            ExtractedEntities entities = extractAndResolveFromSentences(sentences,manuallyReplaceDemonyms);
+            results = parseFromEntities(entities);
+        } catch (Exception e) {
+            results = getErrorText(e.toString());
+        }
+        long endTime = System.currentTimeMillis();
+        long elapsedMillis = endTime - startTime;
+        results.put("milliseconds", elapsedMillis);
+        return results;
+    }
+    
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public static HashMap parseFromNlpJson(String nlpJsonString){
         long startTime = System.currentTimeMillis();
         HashMap results = null;
@@ -104,7 +127,7 @@ public class ParseManager {
             return getErrorText("No text");
         }
         try {
-            ExtractedEntities entities = MuckUtils.entitiesFromJsonString(nlpJsonString);
+            ExtractedEntities entities = MuckUtils.entitiesFromNlpJsonString(nlpJsonString);
             entities = getParserInstance().resolve(entities);;
             results = parseFromEntities(entities);
         } catch (Exception e) {
@@ -259,6 +282,11 @@ public class ParseManager {
         return getParserInstance().extractAndResolve(text,manuallyReplaceDemonyms);
     }
 
+    @SuppressWarnings("rawtypes")
+    public static ExtractedEntities extractAndResolveFromSentences(Map[] sentences, boolean manuallyReplaceDemonyms) throws Exception{
+        return getParserInstance().extractAndResolveFromSentences(sentences, manuallyReplaceDemonyms);
+    }
+    
     /**
      * We want all error messages sent to the client to have the same format 
      * @param msg

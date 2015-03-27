@@ -24,6 +24,15 @@
      </servlet-mapping>
 
      <servlet>
+         <servlet-name>ParseSentencesServlet</servlet-name>
+         <servlet-class>org.mediameter.cliff.servlet.ParseSentencesServlet</servlet-class>
+     </servlet>
+     <servlet-mapping>
+         <servlet-name>ParseSentencesServlet</servlet-name>
+         <url-pattern>/parse/sentences</url-pattern>
+     </servlet-mapping>
+
+     <servlet>
          <servlet-name>GeonamesLookupServlet</servlet-name>
          <servlet-class>org.mediameter.cliff.servlet.GeonamesLookupServlet</servlet-class>
      </servlet>
