@@ -1,4 +1,4 @@
-package org.mediameter.cliff.extractor;
+package org.mediameter.cliff;
 
 import java.io.InputStream;
 import java.util.Enumeration;

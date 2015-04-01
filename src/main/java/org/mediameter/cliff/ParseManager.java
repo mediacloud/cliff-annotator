@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.mediameter.cliff.extractor.CliffConfig;
 import org.mediameter.cliff.extractor.ExtractedEntities;
 import org.mediameter.cliff.extractor.SentenceLocationOccurrence;
 import org.mediameter.cliff.extractor.StanfordNamedEntityExtractor;
