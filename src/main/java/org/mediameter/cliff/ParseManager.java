@@ -36,11 +36,11 @@ import com.google.gson.Gson;
 public class ParseManager {
 
     /**
-     * Major: new features or capabilities
-     * Minor: change in json result format
+     * Major: major new features or capabilities
+     * Minor: small new features, changes to the json result format, or changes to the disambiguation algorithm
      * Revision: minor change or bug fix
      */
-    static final String PARSER_VERSION = "1.3.0";
+    static final String PARSER_VERSION = "1.4.0";
     
     private static final Logger logger = LoggerFactory.getLogger(ParseManager.class);
 
@@ -59,13 +59,19 @@ public class ParseManager {
     private static final String STATUS_ERROR = "error";
     
     @SuppressWarnings({ "rawtypes", "unchecked" })
+    public static HashMap getResponseMap(HashMap results){
+        HashMap response = new HashMap();
+        response.put("status",STATUS_OK);
+        response.put("version",PARSER_VERSION);
+        response.put("results",results);
+        return response;
+    }
+    
+    @SuppressWarnings({ "rawtypes" })
     public static HashMap getGeoNameInfo(int id) throws IOException{
         try {
             GeoName geoname = ((CustomLuceneLocationResolver) resolver).getByGeoNameId(id);
-            HashMap response = new HashMap();
-            response.put("status",STATUS_OK);
-            response.put("version",PARSER_VERSION);
-            response.put("results",writeGeoNameToHash(geoname));
+            HashMap response = getResponseMap( writeGeoNameToHash(geoname) );
             return response;
         } catch (UnknownGeoNameIdException e) {
             logger.warn(e.getMessage());
@@ -143,9 +149,6 @@ public class ParseManager {
         if (entities == null){
             return getErrorText("No place or person entitites detected in this text.");
         } 
-        HashMap response = new HashMap();
-        response.put("status",STATUS_OK);
-        response.put("version", PARSER_VERSION);
         
         logger.debug("Adding Mentions:");
         HashMap results = new HashMap();
@@ -208,7 +211,7 @@ public class ParseManager {
         }
         results.put("organizations",organizationResults);
 
-        response.put("results",results);
+        HashMap response = getResponseMap( results );
         return response;
     }
 

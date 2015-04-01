@@ -40,5 +40,15 @@
          <servlet-name>GeonamesLookupServlet</servlet-name>
          <url-pattern>/geonames</url-pattern>
      </servlet-mapping>
+     
+     <servlet>
+         <servlet-name>ExtractTextServlet</servlet-name>
+         <servlet-class>org.mediameter.cliff.servlet.ExtractTextServlet</servlet-class>
+     </servlet>
+     <servlet-mapping>
+         <servlet-name>ExtractTextServlet</servlet-name>
+         <url-pattern>/extract</url-pattern>
+     </servlet-mapping>
+     
 
  </web-app>
