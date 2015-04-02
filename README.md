@@ -69,11 +69,167 @@ http://localhost:8080/CLIFF-1.1.0/parse/text?q=This is some text about New York 
 
 Of course, when you use this in a script you should do an HTTP POST, not a GET!
 
-### Optional Arguments
+### Public API Endpoints
 
-If you instance of CLIFF is using the default `english.all.3class.distsim.crf` model, you can force it do 
-manual really slow extra parsing to catch more demonyms by including a `replaceAllDemonyms=true` parameter 
-on your query
+*/parse/text*
+
+The reason CLIFF exists! This parses some text and returns the entities mentioned (people, places and organizations).
+
+|Parameter|Default|Notes|
+|----------|----------|----------|
+|q|(required)|Raw text of a news story that you want to parse|
+|replaceAllDemonyms|false|"true" if you want to count things like "Chinese" as a mention of the country China| 
+
+Example Query:
+`http://localhost:8080/CLIFF-1.4.0/parse/text?q=Some%20clever%20text%20mentioning%20places%20like%20New%20Delhi,%20and%20people%20like%20Einstein.%20Perhaps%20also%20we%20want%20mention%20an%20organization%20like%20the%20United%20Nations?`
+Response:
+```json
+{
+  "status": "ok",
+  "version": "1.3.0",
+  "results": {
+    "organizations": [
+      {
+        "count": 1,
+        "name": "United Nations"
+      }
+    ],
+    "places": {
+      "mentions": [
+        {
+          "confidence": 1,
+          "name": "New Delhi",
+          "countryCode": "IN",
+          "featureCode": "PPLC",
+          "lon": 77.22445,
+          "countryGeoNameId": "1269750",
+          "source": {
+            "charIndex": 40,
+            "string": "New Delhi"
+          },
+          "stateCode": "07",
+          "featureClass": "P",
+          "lat": 28.63576,
+          "stateGeoNameId": "1273293",
+          "id": 1261481,
+          "population": 317797
+        }
+      ],
+      "focus": {
+        "states": [
+          {
+            "name": "National Capital Territory of Delhi",
+            "countryCode": "IN",
+            "featureCode": "ADM1",
+            "lon": 77.1,
+            "countryGeoNameId": "1269750",
+            "score": 1,
+            "stateCode": "07",
+            "featureClass": "A",
+            "lat": 28.6667,
+            "stateGeoNameId": "1273293",
+            "id": 1273293,
+            "population": 15766943
+          }
+        ],
+        "cities": [
+          {
+            "name": "New Delhi",
+            "countryCode": "IN",
+            "featureCode": "PPLC",
+            "lon": 77.22445,
+            "countryGeoNameId": "1269750",
+            "score": 1,
+            "stateCode": "07",
+            "featureClass": "P",
+            "lat": 28.63576,
+            "stateGeoNameId": "1273293",
+            "id": 1261481,
+            "population": 317797
+          }
+        ],
+        "countries": [
+          {
+            "name": "Republic of India",
+            "countryCode": "IN",
+            "featureCode": "PCLI",
+            "lon": 79,
+            "countryGeoNameId": "1269750",
+            "score": 1,
+            "stateCode": "00",
+            "featureClass": "A",
+            "lat": 22,
+            "stateGeoNameId": "",
+            "id": 1269750,
+            "population": 1173108018
+          }
+        ]
+      }
+    },
+    "people": [
+      {
+        "count": 1,
+        "name": "Einstein"
+      }
+    ]
+  },
+  "milliseconds": 5
+}
+```
+
+*/geonames*
+
+A convenience method to help you lookup places by their geonames ids.
+
+|Parameter|Default|Notes|
+|----------|----------|----------|
+|id|(required)|The unique id that identifies a place in the [geonames.org](geonames.org) database|
+
+Example Query:
+`http://localhost:8080/CLIFF-1.4.0/geonames?id=4930956`
+Response:
+```json
+{
+  "status": "ok", 
+  "version": "1.4.0", 
+  "results": {
+    "name": "Boston", 
+    "countryCode": "US", 
+    "featureCode": "PPLA", 
+    "lon": -71.05977, 
+    "countryGeoNameId": "6252001", 
+    "stateCode": "MA", 
+    "featureClass": "P", 
+    "lat": 42.35843, 
+    "stateGeoNameId": "6254926", 
+    "id": 4930956, 
+    "population": 617594
+  }
+}
+```
+
+*/extract*
+
+A convenience method to help you get the raw text of the story from a URL.  This uses the [boilerpipe](https://code.google.com/p/boilerpipe/) library.
+
+|Parameter|Default|Notes|
+|----------|----------|----------|
+|url|(required)|The url of a news story to extract the text of|
+
+Example Query:
+`http://localhost:8080/CLIFF-1.4.0/extract?url=http://www.theonion.com/articles/woman-thinks-she-can-just-waltz-back-into-work-aft,38349/`
+Response:
+```json
+{
+  "results":{
+    "text":" \n \nKENWOOD, OH—Saying she has a lot of nerve to try and pull something like this, employees of insurance agency Boland \u0026 Sons told reporters Wednesday that coworker Emily Nelson seems to believe she can just waltz back into work after her maternity leave without once bringing her baby into the office. “I don’t know where she gets off thinking she doesn’t need to come in here with that baby strapped around her in a bjorn,” said Greg Sheldrick, adding that Nelson is out of her goddamn mind if she seriously believes showing off a few measly pictures of the newborn on her cell phone is an adequate substitute for bringing him around to meet everyone in their department. “She’s been back for three weeks already, so the grace period is over. She needs to come in with that baby in a stroller, roll it by my desk, and say ‘Somebody wants to say hello,’ or, frankly, she might as well never show her face here again. Seriously, every single person here better get a chance to lean in and smile at that baby, and God help her if she shows up the rest of this week empty-handed.” Sheldrick reportedly expressed equal astonishment that Nelson’s husband thinks he can get away with not once arriving with the infant to pick up his wife from work.\n \n",
+    "url":"http://www.theonion.com/articles/woman-thinks-she-can-just-waltz-back-into-work-aft,38349/"
+  },
+  "status":"ok",
+  "milliseconds":185,
+  "version":"1.4.0"
+}
+```
 
 ## Testing
 
