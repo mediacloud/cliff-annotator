@@ -71,7 +71,7 @@ Of course, when you use this in a script you should do an HTTP POST, not a GET!
 
 ### Public API Endpoints
 
-*/parse/text*
+####/parse/text
 
 The reason CLIFF exists! This parses some text and returns the entities mentioned (people, places and organizations).
 
@@ -82,6 +82,7 @@ The reason CLIFF exists! This parses some text and returns the entities mentione
 
 Example Query:
 `http://localhost:8080/CLIFF-1.4.0/parse/text?q=Some%20clever%20text%20mentioning%20places%20like%20New%20Delhi,%20and%20people%20like%20Einstein.%20Perhaps%20also%20we%20want%20mention%20an%20organization%20like%20the%20United%20Nations?`
+
 Response:
 ```json
 {
@@ -177,7 +178,7 @@ Response:
 }
 ```
 
-*/geonames*
+####/geonames
 
 A convenience method to help you lookup places by their geonames ids.
 
@@ -187,6 +188,7 @@ A convenience method to help you lookup places by their geonames ids.
 
 Example Query:
 `http://localhost:8080/CLIFF-1.4.0/geonames?id=4930956`
+
 Response:
 ```json
 {
@@ -208,7 +210,7 @@ Response:
 }
 ```
 
-*/extract*
+####/extract
 
 A convenience method to help you get the raw text of the story from a URL.  This uses the [boilerpipe](https://code.google.com/p/boilerpipe/) library.
 
@@ -218,6 +220,7 @@ A convenience method to help you get the raw text of the story from a URL.  This
 
 Example Query:
 `http://localhost:8080/CLIFF-1.4.0/extract?url=http://www.theonion.com/articles/woman-thinks-she-can-just-waltz-back-into-work-aft,38349/`
+
 Response:
 ```json
 {
