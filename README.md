@@ -2,7 +2,7 @@ CLIFF: Extract Named Entities and Geoparse the News
 ===================================================
 
 CLIFF is a lightweight server to allow HTTP requests to the Stanford Named Entity 
-Recognized and a modified [CLAVIN geoparser](http://clavin.bericotechnologies.com).  
+Recognized and a modified [CLAVIN geoparser v1.1.x](https://github.com/Berico-Technologies/CLAVIN/tree/stable/1.1.x).  
 It allows you to submit unstructured text over HTTP and a receive in reply JSON 
 results with information about organizations mentioned, locations mentioned, 
 people mentioned, and countries the text is "about".  The geoparsing is tuned 
