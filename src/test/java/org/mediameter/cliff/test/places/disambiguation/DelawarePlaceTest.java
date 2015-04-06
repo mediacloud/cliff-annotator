@@ -12,13 +12,13 @@ import com.bericotech.clavin.resolver.ResolvedLocation;
 
 public class DelawarePlaceTest {
     
-/*    @Test
+    @Test
     public void testDelawareState() throws Exception{
         List<ResolvedLocation> results = ParseManager.extractAndResolve("This is about Delaware the state.").getResolvedLocations();
         assertEquals("Found "+results.size()+" places, should have been 1!",1,results.size());
         assertEquals(TestPlaces.STATE_DELAWARE,results.get(0).geoname.geonameID);
     }
-*/
+
     @Test
     /**
      * Problem case reported by Guy Demeter
@@ -29,4 +29,5 @@ public class DelawarePlaceTest {
         assertEquals(TestPlaces.STATE_DELAWARE,results.get(0).geoname.geonameID);
         assertEquals(TestPlaces.CITY_WILMINGTON_DELAWARE,results.get(1).geoname.geonameID);
     }    
+    
 }

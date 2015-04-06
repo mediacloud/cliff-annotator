@@ -37,7 +37,7 @@ public class ExactAdmin1MatchPass extends GenericPass {
      */
     private boolean containsPopulatedCityExactMatch(List<ResolvedLocation> candidates) {
         for(ResolvedLocation loc:candidates){
-            if(loc.geoname.population>40000 && isCity(loc) && isExactMatch(loc)){
+            if(loc.geoname.population>300000 && isCity(loc) && isExactMatch(loc)){
                 return true;
             }
         }

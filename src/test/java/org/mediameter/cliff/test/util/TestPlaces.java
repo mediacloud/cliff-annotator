@@ -30,5 +30,7 @@ public class TestPlaces {
     public static final int RIKERS_ISLAND = 5133874;
     public static final int STATE_DELAWARE = 4142224;
     public static final int CITY_WILMINGTON_DELAWARE = 4145381;
+    public static final int STATE_VIRGINIA = 6254928;
+    public static final int CITY_ARLINGTON_VIRGINIA = 4744709;
 
 }
