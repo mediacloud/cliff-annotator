@@ -30,13 +30,14 @@ public class ExactAdmin1MatchPass extends GenericPass {
 
     /**
      * Tuned to skip tiny cities that are populated to solve the Oklahoma problem
-     * and the Sao Paulo problem.
+     * and the Sao Paulo problem.  The population threshold is a subjective number based 
+     * on a number of specific test cases we have in the unit tests (from bug reports).
      * @param candidates
      * @return
      */
     private boolean containsPopulatedCityExactMatch(List<ResolvedLocation> candidates) {
         for(ResolvedLocation loc:candidates){
-            if(loc.geoname.population>10000 && isCity(loc) && isExactMatch(loc)){
+            if(loc.geoname.population>40000 && isCity(loc) && isExactMatch(loc)){
                 return true;
             }
         }
