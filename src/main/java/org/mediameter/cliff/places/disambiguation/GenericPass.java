@@ -131,15 +131,50 @@ public abstract class GenericPass {
     	}
     }
     
-	
-    protected boolean inSameCountry(ResolvedLocation candidate, List<ResolvedLocation> list){
+    /**
+     * Pick all the candidates that are in the same primary country as any of the places already picked
+     * @param candidates
+     * @param placesAlreadyPicked
+     * @return
+     */
+    protected List<ResolvedLocation> inSameCountry(List<ResolvedLocation> candidates, 
+            List<ResolvedLocation> placesAlreadyPicked,
+            boolean citiesOnly,boolean exactMatchesOnly,boolean populatedOnly){
+        List<ResolvedLocation> candidatesInSameCountry = new ArrayList<ResolvedLocation>();
+        for(ResolvedLocation candidate:candidates){
+            if(inSameCountry(candidate,placesAlreadyPicked) &&
+                    (!citiesOnly || isCity(candidate)) &&
+                    (!exactMatchesOnly || isExactMatch(candidate)) && 
+                    (!populatedOnly || isPopulated(candidate))
+              ){
+                candidatesInSameCountry.add(candidate);
+            }
+        }
+        return candidatesInSameCountry;
+    }
+
+    protected static boolean isPopulated(ResolvedLocation candidate) {
+        return candidate.geoname.population > 0;
+    }
+
+    /**
+     * Return if the candidate is in the same primary country as any of the places already picked
+     * @param candidate
+     * @param placesAlreadyPicked
+     * @return
+     */
+    protected boolean inSameCountry(ResolvedLocation candidate, List<ResolvedLocation> placesAlreadyPicked){
     	
-        for( ResolvedLocation item: list){
-            if(candidate.geoname.primaryCountryCode.equals(item.geoname.primaryCountryCode)){
+        for( ResolvedLocation selected: placesAlreadyPicked){
+            if(inSameCountry(candidate,selected)){
                 return true;
             }
         }
         return false;
+    }
+
+    protected boolean inSameCountry(ResolvedLocation loc1, ResolvedLocation loc2) {
+        return loc1.geoname.primaryCountryCode.equals(loc2.geoname.primaryCountryCode);
     }
 
     protected boolean inSameAdmin1(ResolvedLocation candidate, List<ResolvedLocation> list){
