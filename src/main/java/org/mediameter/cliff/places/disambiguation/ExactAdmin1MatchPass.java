@@ -3,11 +3,14 @@ package org.mediameter.cliff.places.disambiguation;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.bericotech.clavin.gazetteer.FeatureCode;
 import com.bericotech.clavin.resolver.ResolvedLocation;
 
 public class ExactAdmin1MatchPass extends GenericPass {
-
+    
     @Override
     protected List<List<ResolvedLocation>> disambiguate(
             List<List<ResolvedLocation>> possibilitiesToDo,
