@@ -314,7 +314,7 @@ public class ParseManager {
      * @return
      * @throws Exception
      */
-    private static EntityParser getParserInstance() throws Exception{
+    public static EntityParser getParserInstance() throws Exception{
 
         if(parser==null){
 

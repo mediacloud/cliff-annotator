@@ -6,17 +6,16 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
-import org.junit.Before;
 import org.junit.Test;
 import org.mediameter.cliff.extractor.ExtractedEntities;
 import org.mediameter.cliff.util.MuckUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MuckUtilsTest {
     
-    @Before
-    public void setUp() throws Exception {
-    }
-    
+    private static final Logger logger = LoggerFactory.getLogger(MuckUtilsTest.class);
+        
     @Test
     public void testStory1() throws IOException {
         String fileName = "nlp-test-1.json";

@@ -34,6 +34,9 @@ public class MuckUtils {
         while (it.hasNext()) {
             Map.Entry pairs = (Map.Entry)it.next();
             String storySentencesId = pairs.getKey().toString();
+            if(storySentencesId.equals('_')){
+                continue;
+            }
             Map corenlp = (Map) pairs.getValue();
             List<Map> nlpSentences = (List<Map>) ((Map) corenlp.get("corenlp")).get("sentences");
             for(Map sentence:nlpSentences){ // one mc sentence could be multiple corenlp sentences

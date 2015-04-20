@@ -32,5 +32,8 @@ public class TestPlaces {
     public static final int CITY_WILMINGTON_DELAWARE = 4145381;
     public static final int STATE_VIRGINIA = 6254928;
     public static final int CITY_ARLINGTON_VIRGINIA = 4744709;
+    public static final int COUNTRY_IRELAND = 2963597;
+    public static final int COUNTRY_FRANCE = 3017382;
+    
 
 }
