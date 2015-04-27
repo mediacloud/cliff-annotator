@@ -326,10 +326,11 @@ public class ParseManager {
             
             boolean useFuzzyMatching = false;
             File gazetteerDir = new File(PATH_TO_GEONAMES_INDEX);
-            if( !(gazetteerDir.exists() && gazetteerDir.isDirectory() ) ){
+            if( !gazetteerDir.exists() || !gazetteerDir.isDirectory() ){
                 logger.error("Missing gazetter! Download and build a CLAVIN IndexDirectory at "+PATH_TO_GEONAMES_INDEX);
+            } else {
+                logger.info("Loading CLAVIN Gazetteer from "+PATH_TO_GEONAMES_INDEX);
             }
-            logger.info("Loading CLAVIN Gazetteer from "+PATH_TO_GEONAMES_INDEX);
             Gazetteer gazetteer = new LuceneGazetteer(new File(PATH_TO_GEONAMES_INDEX));
             resolver = new CliffLocationResolver(gazetteer);
 
