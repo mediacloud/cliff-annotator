@@ -1,18 +1,22 @@
 package org.mediameter.cliff;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.mediameter.cliff.extractor.CliffConfig;
 import org.mediameter.cliff.extractor.ExtractedEntities;
 import org.mediameter.cliff.extractor.SentenceLocationOccurrence;
 import org.mediameter.cliff.extractor.StanfordNamedEntityExtractor;
 import org.mediameter.cliff.extractor.StanfordNamedEntityExtractor.Model;
 import org.mediameter.cliff.orgs.ResolvedOrganization;
 import org.mediameter.cliff.people.ResolvedPerson;
+import org.mediameter.cliff.places.Adm1GeoNameLookup;
 import org.mediameter.cliff.places.CliffLocationResolver;
+import org.mediameter.cliff.places.CountryGeoNameLookup;
+import org.mediameter.cliff.places.UnknownGeoNameIdException;
 import org.mediameter.cliff.places.focus.FocusLocation;
 import org.mediameter.cliff.places.focus.FocusStrategy;
 import org.mediameter.cliff.places.focus.FrequencyOfMentionFocusStrategy;
@@ -25,6 +29,7 @@ import com.bericotech.clavin.gazetteer.GeoName;
 import com.bericotech.clavin.gazetteer.query.Gazetteer;
 import com.bericotech.clavin.gazetteer.query.LuceneGazetteer;
 import com.bericotech.clavin.resolver.ResolvedLocation;
+import com.google.gson.Gson;
 
 /**
  * Singleton-style wrapper around a GeoParser.  Call GeoParser.locate(someText) to use this class.
@@ -32,11 +37,11 @@ import com.bericotech.clavin.resolver.ResolvedLocation;
 public class ParseManager {
 
     /**
-     * Major: new features or capabilities
-     * Minor: change in json result format
+     * Major: major new features or capabilities
+     * Minor: small new features, changes to the json result format, or changes to the disambiguation algorithm
      * Revision: minor change or bug fix
      */
-    static final String PARSER_VERSION = "2.0.0";
+    static final String PARSER_VERSION = "2.1.0";
     
     private static final Logger logger = LoggerFactory.getLogger(ParseManager.class);
 
@@ -53,6 +58,27 @@ public class ParseManager {
     // these two are the statuses used in the JSON responses
     private static final String STATUS_OK = "ok";
     private static final String STATUS_ERROR = "error";
+    
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public static HashMap getResponseMap(HashMap results){
+        HashMap response = new HashMap();
+        response.put("status",STATUS_OK);
+        response.put("version",PARSER_VERSION);
+        response.put("results",results);
+        return response;
+    }
+    
+    @SuppressWarnings({ "rawtypes" })
+    public static HashMap getGeoNameInfo(int id) throws IOException{
+        try {
+            GeoName geoname = ((CliffLocationResolver) resolver).getByGeoNameId(id);
+            HashMap response = getResponseMap( writeGeoNameToHash(geoname) );
+            return response;
+        } catch (UnknownGeoNameIdException e) {
+            logger.warn(e.getMessage());
+            return getErrorText("Invalid GeoNames id "+id);
+        }
+    }
     
     /**
      * Public api method - call this statically to extract locations from a text string 
@@ -79,6 +105,27 @@ public class ParseManager {
     }
     
     @SuppressWarnings({ "unchecked", "rawtypes" })
+    public static HashMap parseFromSentences(String jsonText, boolean manuallyReplaceDemonyms) {
+        long startTime = System.currentTimeMillis();
+        HashMap results = null;
+        if(jsonText.trim().length()==0){
+            return getErrorText("No text");
+        }
+        try {
+            Gson gson = new Gson();
+            Map[] sentences = gson.fromJson(jsonText, Map[].class);
+            ExtractedEntities entities = extractAndResolveFromSentences(sentences,manuallyReplaceDemonyms);
+            results = parseFromEntities(entities);
+        } catch (Exception e) {
+            results = getErrorText(e.toString());
+        }
+        long endTime = System.currentTimeMillis();
+        long elapsedMillis = endTime - startTime;
+        results.put("milliseconds", elapsedMillis);
+        return results;
+    }
+    
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public static HashMap parseFromNlpJson(String nlpJsonString){
         long startTime = System.currentTimeMillis();
         HashMap results = null;
@@ -86,7 +133,7 @@ public class ParseManager {
             return getErrorText("No text");
         }
         try {
-            ExtractedEntities entities = MuckUtils.entitiesFromJsonString(nlpJsonString);
+            ExtractedEntities entities = MuckUtils.entitiesFromNlpJsonString(nlpJsonString);
             entities = getParserInstance().resolve(entities);;
             results = parseFromEntities(entities);
         } catch (Exception e) {
@@ -103,9 +150,6 @@ public class ParseManager {
         if (entities == null){
             return getErrorText("No place or person entitites detected in this text.");
         } 
-        HashMap response = new HashMap();
-        response.put("status",STATUS_OK);
-        response.put("version", PARSER_VERSION);
         
         logger.debug("Adding Mentions:");
         HashMap results = new HashMap();
@@ -168,63 +212,61 @@ public class ParseManager {
         }
         results.put("organizations",organizationResults);
 
-        response.put("results",results);
+        HashMap response = getResponseMap( results );
         return response;
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public static HashMap writeAboutnessLocationToHash(FocusLocation location){
+    public static HashMap writeGeoNameToHash(GeoName place){
         HashMap loc = new HashMap();
-        GeoName place = location.getGeoName();
-        loc.put("score", location.getScore());
         loc.put("id",place.getGeonameID());
         loc.put("name",place.getName());
+        loc.put("lat",place.getLatitude());
+        loc.put("lon",place.getLongitude());
+        loc.put("population", place.getPopulation());
+        String featureCode = place.getFeatureCode().toString();
+        loc.put("featureClass", place.getFeatureClass().toString());
+        loc.put("featureCode", featureCode);
+        // add in country info
         String primaryCountryCodeAlpha2 = ""; 
         if(place.getPrimaryCountryCode()!=CountryCode.NULL){
             primaryCountryCodeAlpha2 = place.getPrimaryCountryCode().toString();
         }
+        loc.put("countryCode",primaryCountryCodeAlpha2);
+        GeoName countryGeoName = CountryGeoNameLookup.lookup(primaryCountryCodeAlpha2);
+        String countryGeoNameId = "";
+        if(countryGeoName!=null){
+            countryGeoNameId = ""+countryGeoName.getGeonameID();
+        }
+        loc.put("countryGeoNameId",countryGeoNameId);
+        // add in state info
         String admin1Code = "";
-        
         if(place.getAdmin1Code() !=null){
             admin1Code = place.getAdmin1Code();
         }
-        String featureCode = place.getFeatureCode().toString();
-        loc.put("featureClass", place.getFeatureClass().toString());
-        loc.put("featureCode", featureCode);
-        loc.put("population", place.getPopulation());
         loc.put("stateCode", admin1Code);
-        loc.put("countryCode",primaryCountryCodeAlpha2);
-        loc.put("lat",place.getLatitude());
-        loc.put("lon",place.getLongitude());
-        
+        GeoName adm1GeoName = Adm1GeoNameLookup.lookup(primaryCountryCodeAlpha2, admin1Code);        
+        String stateGeoNameId = "";
+        if(adm1GeoName!=null){
+            stateGeoNameId = ""+adm1GeoName.getGeonameID();
+        }
+        loc.put("stateGeoNameId",stateGeoNameId);
+
+        return loc;
+    }
+    
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public static HashMap writeAboutnessLocationToHash(FocusLocation location){
+        HashMap loc = writeGeoNameToHash(location.getGeoName());
+        loc.put("score", location.getScore());
         return loc;
     }
     
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public static HashMap writeResolvedLocationToHash(ResolvedLocation resolvedLocation){
-    	HashMap loc = new HashMap();
+    	HashMap loc = writeGeoNameToHash(resolvedLocation.getGeoname());
     	int charIndex = resolvedLocation.getLocation().getPosition();
-    	GeoName place = resolvedLocation.getGeoname();
         loc.put("confidence", resolvedLocation.getConfidence()); // low is good
-        loc.put("id",place.getGeonameID());
-        loc.put("name",place.getName());
-        String primaryCountryCodeAlpha2 = ""; 
-        if(place.getPrimaryCountryCode()!=CountryCode.NULL){
-            primaryCountryCodeAlpha2 = place.getPrimaryCountryCode().toString();
-        }
-        String admin1Code = "";
-        
-        if(place.getAdmin1Code() !=null){
-            admin1Code = place.getAdmin1Code();
-        }
-        String featureCode = place.getFeatureCode().toString();
-        loc.put("featureClass", place.getFeatureClass().toString());
-        loc.put("featureCode", featureCode);
-        loc.put("population", place.getPopulation());
-        loc.put("stateCode", admin1Code);
-        loc.put("countryCode",primaryCountryCodeAlpha2);
-        loc.put("lat",place.getLatitude());
-        loc.put("lon",place.getLongitude());
         HashMap sourceInfo = new HashMap();
         sourceInfo.put("string",resolvedLocation.getLocation().getText());
         sourceInfo.put("charIndex",charIndex);  
@@ -232,7 +274,6 @@ public class ParseManager {
             sourceInfo.put("storySentencesId", ((SentenceLocationOccurrence) resolvedLocation.getLocation()).storySentenceId);
         }
         loc.put("source",sourceInfo);
-        
     	return loc;
     }
     
@@ -244,6 +285,11 @@ public class ParseManager {
         return getParserInstance().extractAndResolve(text,manuallyReplaceDemonyms);
     }
 
+    @SuppressWarnings("rawtypes")
+    public static ExtractedEntities extractAndResolveFromSentences(Map[] sentences, boolean manuallyReplaceDemonyms) throws Exception{
+        return getParserInstance().extractAndResolveFromSentences(sentences, manuallyReplaceDemonyms);
+    }
+    
     /**
      * We want all error messages sent to the client to have the same format 
      * @param msg
@@ -269,7 +315,7 @@ public class ParseManager {
      * @return
      * @throws Exception
      */
-    private static EntityParser getParserInstance() throws Exception{
+    public static EntityParser getParserInstance() throws Exception{
 
         if(parser==null){
 

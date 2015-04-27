@@ -1,6 +1,7 @@
 package org.mediameter.cliff;
 
 import java.util.List;
+import java.util.Map;
 
 import org.mediameter.cliff.extractor.ExtractedEntities;
 import org.mediameter.cliff.extractor.StanfordNamedEntityExtractor;
@@ -56,7 +57,21 @@ public class EntityParser {
         logger.debug("extractAndResolve: "+extract+" / "+resolve);
         return entities;
     }
-            
+
+    @SuppressWarnings("rawtypes")
+    public ExtractedEntities extractAndResolveFromSentences(Map[] sentences, boolean manuallyReplaceDemonyms) throws Exception {
+        logger.trace("input: {}", sentences);
+        long startTime = System.nanoTime();
+        ExtractedEntities extractedEntities = extractor.extractEntitiesFromSentences(sentences,manuallyReplaceDemonyms);
+        long extract = System.nanoTime() - startTime;
+        logger.trace("extracted: {}", extractedEntities.getLocations());
+        startTime = System.nanoTime();
+        ExtractedEntities entities = resolve(extractedEntities);
+        long resolve = System.nanoTime() - startTime;
+        logger.debug("extractAndResolve: "+extract+" / "+resolve);
+        return entities;
+    }
+
     public ExtractedEntities resolve(ExtractedEntities entities) throws Exception{
         
         // resolve the extracted location names against a

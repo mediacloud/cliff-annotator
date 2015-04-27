@@ -18,7 +18,7 @@ public class WikipediaDemonymMapTest {
 
     @Test
     public void testCount() {
-        assertTrue("Wrong number of keys ("+demonyms.getSize()+")", demonyms.getSize()==533);
+        assertTrue("Wrong number of keys ("+demonyms.getSize()+")", demonyms.getSize()==535);
     }
     
     @Test

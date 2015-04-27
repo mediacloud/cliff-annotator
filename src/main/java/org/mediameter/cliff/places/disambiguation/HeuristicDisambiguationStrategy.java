@@ -30,6 +30,7 @@ public class HeuristicDisambiguationStrategy implements LocationDisambiguationSt
         chain = new MultiplePassChain();
         chain.add(new LargeAreasPass());
         chain.add(new FuzzyMatchedCountriesPass());
+        chain.add(new ExactAdmin1MatchPass());
         chain.add(new ExactColocationsPass());
         chain.add(new TopColocationsPass());
         chain.add(new TopAdminPopulatedPass());

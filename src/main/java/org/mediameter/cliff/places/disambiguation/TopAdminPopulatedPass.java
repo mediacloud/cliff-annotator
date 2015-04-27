@@ -3,9 +3,14 @@ package org.mediameter.cliff.places.disambiguation;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.bericotech.clavin.resolver.ResolvedLocation;
 
 public class TopAdminPopulatedPass extends GenericPass {
+
+    private static final Logger logger = LoggerFactory.getLogger(TopAdminPopulatedPass.class);
 
     @Override
     protected List<List<ResolvedLocation>> disambiguate(
@@ -22,8 +27,11 @@ public class TopAdminPopulatedPass extends GenericPass {
         	
             List<ResolvedLocation> exactMatches = getExactMatches(candidates); 
             if(exactMatches.size()>0){
+                logger.debug("  "+exactMatches.size()+" exact matches for");
                 ResolvedLocation cityCandidate = findFirstCityCandidate(exactMatches,true);
                 ResolvedLocation adminCandidate = findFirstAdminCandidate(exactMatches,true);
+                if(cityCandidate!=null) logger.debug("    city "+cityCandidate.getGeoname().getGeonameID());
+                if(adminCandidate!=null) logger.debug("    admin "+adminCandidate.getGeoname().getGeonameID());
 
                 if (chooseCityOverAdmin(cityCandidate, adminCandidate)){
                     bestCandidates.add(cityCandidate);
@@ -33,10 +41,12 @@ public class TopAdminPopulatedPass extends GenericPass {
                     possibilitiesToRemove.add(candidates);
                 }
             } else {
-            
+                logger.debug("  no exact matches for");
                 ResolvedLocation cityCandidate = findFirstCityCandidate(candidates,false);
                 ResolvedLocation adminCandidate = findFirstAdminCandidate(candidates,false);
-    
+                if(cityCandidate!=null) logger.debug("    city "+cityCandidate.getGeoname().getGeonameID());
+                if(adminCandidate!=null) logger.debug("    admin "+adminCandidate.getGeoname().getGeonameID());
+                
                 if (chooseCityOverAdmin(cityCandidate, adminCandidate)){
                 	bestCandidates.add(cityCandidate);
                 	possibilitiesToRemove.add(candidates);

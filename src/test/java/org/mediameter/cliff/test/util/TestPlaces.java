@@ -22,5 +22,18 @@ public class TestPlaces {
     public static final int CITY_CAIRNS = 2172797;
     public static final int COUNTRY_DOMINICAN_REPUBLIC = 3508796;
     public static final int COUNTRY_ENGLAND = 6269131;
+    public static final int CONTINENT_EUROPE = 6255148;
+    public static final int STATE_MAINE = 4971068;
+    public static final int CITY_BANGOR = 4957280;
+    public static final int COUNTRY_RUSSIA = 2017370;
+    public static final int STATE_OKLAHOMA = 4544379;
+    public static final int RIKERS_ISLAND = 5133874;
+    public static final int STATE_DELAWARE = 4142224;
+    public static final int CITY_WILMINGTON_DELAWARE = 4145381;
+    public static final int STATE_VIRGINIA = 6254928;
+    public static final int CITY_ARLINGTON_VIRGINIA = 4744709;
+    public static final int COUNTRY_IRELAND = 2963597;
+    public static final int COUNTRY_FRANCE = 3017382;
+    
 
 }

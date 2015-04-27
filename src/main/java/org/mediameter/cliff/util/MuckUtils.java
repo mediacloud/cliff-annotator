@@ -14,9 +14,9 @@ import com.google.gson.Gson;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class MuckUtils {
 
-    public static ExtractedEntities entitiesFromJsonString(String nlpJsonString){
+    public static ExtractedEntities entitiesFromNlpJsonString(String nlpJsonString){
         Map sentences = sentencesFromJsonString(nlpJsonString);
-        return entitiesFromSentenceMap(sentences);
+        return entitiesFromNlpSentenceMap(sentences);
     }
 
     public static Map sentencesFromJsonString(String nlpJsonString) {
@@ -26,14 +26,17 @@ public class MuckUtils {
     }
         
     /**
-     * I've overloaded "position" in each of the occurrences to be sentenceIndex 
+     *  
      */
-    private static ExtractedEntities entitiesFromSentenceMap(Map mcSentences){
+    private static ExtractedEntities entitiesFromNlpSentenceMap(Map mcSentences){
         ExtractedEntities entities = new ExtractedEntities();
         Iterator it = mcSentences.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry pairs = (Map.Entry)it.next();
             String storySentencesId = pairs.getKey().toString();
+            if(storySentencesId.equals('_')){
+                continue;
+            }
             Map corenlp = (Map) pairs.getValue();
             List<Map> nlpSentences = (List<Map>) ((Map) corenlp.get("corenlp")).get("sentences");
             for(Map sentence:nlpSentences){ // one mc sentence could be multiple corenlp sentences

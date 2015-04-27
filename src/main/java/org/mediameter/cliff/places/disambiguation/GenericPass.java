@@ -60,7 +60,13 @@ public abstract class GenericPass {
         return candidate.getGeoname().getName().equalsIgnoreCase(candidate.getLocation().getText());
         // return candidate.confidence==EXACT_MATCH_CONFIDENCE;
     }
-    
+
+    static boolean isExactMatchToAdmin1(ResolvedLocation candidate) {
+        //logger.debug(candidate.getGeoname().name + " EQUALS " + candidate.location.text + " ? " + candidate.getGeoname().name.equals(candidate.location.text));
+        return candidate.getGeoname().getAdmin1Code().equalsIgnoreCase(candidate.getLocation().getText());
+        // return candidate.confidence==EXACT_MATCH_CONFIDENCE;
+    }
+
     protected static List<ResolvedLocation> getExactMatches(List<ResolvedLocation> candidates){
         ArrayList<ResolvedLocation> exactMatches = new ArrayList<ResolvedLocation>();
         for( ResolvedLocation item: candidates){
@@ -86,6 +92,9 @@ public abstract class GenericPass {
     protected static boolean isAdminRegion(ResolvedLocation candidate){
     	return candidate.getGeoname().getPopulation()>0 && candidate.getGeoname().getFeatureClass()==FeatureClass.A;
     }
+    protected static boolean isCountry(ResolvedLocation candidate){
+        return candidate.getGeoname().getPopulation()>0 && candidate.getGeoname().getAdmin1Code().equals("00");
+    }
     protected ResolvedLocation findFirstCityCandidate(List<ResolvedLocation> candidates, boolean exactMatchRequired){
     	for(ResolvedLocation candidate: candidates) {
             if(isCity(candidate)){
@@ -98,6 +107,7 @@ public abstract class GenericPass {
         }
     	return null; 	
     }
+    
     protected ResolvedLocation findFirstAdminCandidate(List<ResolvedLocation> candidates, boolean exactMatchRequired){
     	for(ResolvedLocation candidate: candidates) {
             if(isAdminRegion(candidate)){
@@ -110,6 +120,7 @@ public abstract class GenericPass {
         }
     	return null; 	
     }
+    
     /* Logic is now to compare the City place with the Admin/State place. 
      * If City has larger population then choose it. If the City and State are in the same country, 
      * then choose the city (this will favor Paris the city over Paris the district in France). 
@@ -126,11 +137,56 @@ public abstract class GenericPass {
     	}
     }
     
-	
-    protected boolean inSameCountry(ResolvedLocation candidate, List<ResolvedLocation> list){
+    /**
+     * Pick all the candidates that are in the same primary country as any of the places already picked
+     * @param candidates
+     * @param placesAlreadyPicked
+     * @return
+     */
+    protected List<ResolvedLocation> inSameCountry(List<ResolvedLocation> candidates, 
+            List<ResolvedLocation> placesAlreadyPicked,
+            boolean citiesOnly,boolean exactMatchesOnly,boolean populatedOnly){
+        List<ResolvedLocation> candidatesInSameCountry = new ArrayList<ResolvedLocation>();
+        for(ResolvedLocation candidate:candidates){
+            if(inSameCountry(candidate,placesAlreadyPicked) &&
+                    (!citiesOnly || isCity(candidate)) &&
+                    (!exactMatchesOnly || isExactMatch(candidate)) && 
+                    (!populatedOnly || isPopulated(candidate))
+              ){
+                candidatesInSameCountry.add(candidate);
+            }
+        }
+        return candidatesInSameCountry;
+    }
+
+    protected static boolean isPopulated(ResolvedLocation candidate) {
+        return candidate.getGeoname().getPopulation() > 0;
+    }
+
+    /**
+     * Return if the candidate is in the same primary country as any of the places already picked
+     * @param candidate
+     * @param placesAlreadyPicked
+     * @return
+     */
+    protected boolean inSameCountry(ResolvedLocation candidate, List<ResolvedLocation> placesAlreadyPicked){
     	
+        for( ResolvedLocation selected: placesAlreadyPicked){
+            if(inSameCountry(candidate,selected)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected boolean inSameCountry(ResolvedLocation loc1, ResolvedLocation loc2) {
+        return loc1.getGeoname().getPrimaryCountryCode().equals(loc2.getGeoname().getPrimaryCountryCode());
+    }
+
+    protected boolean inSameAdmin1(ResolvedLocation candidate, List<ResolvedLocation> list){
+        
         for( ResolvedLocation item: list){
-            if(candidate.getGeoname().getPrimaryCountryCode().equals(item.getGeoname().getPrimaryCountryCode())){
+            if(candidate.getGeoname().getAdmin1Code().equals(item.getGeoname().getAdmin1Code())){
                 return true;
             }
         }
