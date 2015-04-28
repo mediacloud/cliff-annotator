@@ -8,58 +8,14 @@ results with information about organizations mentioned, locations mentioned,
 people mentioned, and countries the text is "about".  The geoparsing is tuned 
 to identify cities, states and countries.
 
-## Developing
+# Installing
 
-You need maven and java (1.7).  We develop in Eclipse Kepler: Java EE.
+You can try CLIFF out on our public website: http://cliff.mediameter.org.
+We don't host a public installation of CLIFF for you to use.  If you want to install and 
+use CLIFF, @ahalterman created [an awesome vagrant script](https://github.com/c4fcm/CLIFF-up) 
+that will install it to a virtual host you can use.  Follow those to get this installed.
 
-You need to build CLAVIN in order to build the Geonames Gazetteer Index for geoparsing. 
-The idea is that you build all that, and then create a symlink at `/etc/cliff2/IndexDirectory` 
-to the CLAVIN index you just built.
-
-### Tomcat Setup
-
-CLIFF is setup to be run inside a Java servlet container (ie. Tomcat7).  For development 
-we use the [Maven Tomcat plugin](http://tomcat.apache.org/maven-plugin.html).  To deploy, 
-add this to your `%TOMCAT_PATH%/conf/tomcat-users.xml` file:
-```xml
-  <role rolename="manager"/>
-  <role rolename="manager-gui"/>
-  <role rolename="manager-script"/>
-  <user username="cliff" password="beer" roles="manager,manager-gui,manager-script"/>
-```
-Also add this to your `~/.m2/settings.xml`:
-```xml
-  <servers>
-    <server>
-	  <id>CliffTomcatServer</id>
-      <username>cliff</username>
-      <password>beer</password>
-    </server>
-  </servers>
-```
-That lets the Maven Tomcat plugin upload the WAR it builds over the website control panel.
-
-### Building and Deploying to Tomcat
-
-First make sure tomcat is running (ie. `catalina run`). Now run `mvn tomcat7:deploy -DskipTests` 
-to deploy the app, or `mvn tomcat7:redeploy -DskipTests` to redeploy once you've already got 
-the app deployed.
-
-### Options
-
-You can configure how CLIFF runs by editing the following properties in the `src/main/resources/cliff.properties` 
-file.
-
-#### ner.modelToUse
-
-Controls which Stanford NER Model to use while extracting entities:
-
-| Value | Default | Model | Notes |
-| ----- | ------- | ----- | ----- |
-|ENGLISH_ALL_3CLASS|*|english.all.3class.distsim.crf|Quick, but doesn't catch all demonyms|
-|ENGLISH_CONLL_4CLASS||english.conll.4class.distsim.crf|Catches most demonyms, but is about 30% slower|
-
-## Using
+# Using
 
 To test it out, hit this url in a browser and you should get some JSON back:
 
@@ -69,9 +25,9 @@ http://localhost:8080/CLIFF-2.0.0/parse/text?q=This is some text about New York 
 
 Of course, when you use this in a script you should do an HTTP POST, not a GET!
 
-### Public API Endpoints
+## Public API Endpoints
 
-####/parse/text
+###/parse/text
 
 The reason CLIFF exists! This parses some text and returns the entities mentioned (people, places and organizations).
 
@@ -178,7 +134,7 @@ Response:
 }
 ```
 
-####/geonames
+###/geonames
 
 A convenience method to help you lookup places by their geonames ids.
 
@@ -210,7 +166,7 @@ Response:
 }
 ```
 
-####/extract
+###/extract
 
 A convenience method to help you get the raw text of the story from a URL.  This uses the [boilerpipe](https://code.google.com/p/boilerpipe/) library.
 
@@ -234,6 +190,57 @@ Response:
 }
 ```
 
+## Options
+
+You can configure how CLIFF runs by editing the following properties in the `src/main/resources/cliff.properties` 
+file.
+
+### ner.modelToUse
+
+Controls which Stanford NER Model to use while extracting entities:
+
+| Value | Default | Model | Notes |
+| ----- | ------- | ----- | ----- |
+|ENGLISH_ALL_3CLASS|*|english.all.3class.distsim.crf|Quick, but doesn't catch all demonyms|
+|ENGLISH_CONLL_4CLASS||english.conll.4class.distsim.crf|Catches most demonyms, but is about 30% slower|
+
+# Developing
+
+You need maven and java (1.7).  We develop in Eclipse Kepler: Java EE.
+
+You need to download and install CLAVIN 2.0.0 in order to build the Geonames Gazetteer Index 
+for geoparsing. The idea is that you build all that, and then create a symlink at 
+`/etc/cliff2/IndexDirectory` to the CLAVIN index you just built.
+
+## Tomcat Setup
+
+CLIFF is setup to be run inside a Java servlet container (ie. Tomcat7).  For development 
+we use the [Maven Tomcat plugin](http://tomcat.apache.org/maven-plugin.html).  To deploy, 
+add this to your `%TOMCAT_PATH%/conf/tomcat-users.xml` file:
+```xml
+  <role rolename="manager"/>
+  <role rolename="manager-gui"/>
+  <role rolename="manager-script"/>
+  <user username="cliff" password="beer" roles="manager,manager-gui,manager-script"/>
+```
+Also add this to your `~/.m2/settings.xml`:
+```xml
+  <servers>
+    <server>
+	  <id>CliffTomcatServer</id>
+      <username>cliff</username>
+      <password>beer</password>
+    </server>
+  </servers>
+```
+That lets the Maven Tomcat plugin upload the WAR it builds over the website control panel.
+
+## Building and Deploying to Tomcat
+
+First make sure tomcat is running (ie. `catalina run`). Now run `mvn tomcat7:deploy -DskipTests` 
+to deploy the app, or `mvn tomcat7:redeploy -DskipTests` to redeploy once you've already got 
+the app deployed.
+
 ## Testing
 
 We have a number of unit tests that can be run with `mvn test`.
@@ -243,7 +250,9 @@ We have a number of unit tests that can be run with `mvn test`.
 To build a release first update the version numbers in the `pom.xml` file, and in 
 `org.mediameter.cliff.ParseManager`. Then to create the WAR file, run `mvn package -DskipTests`.
 
-### Deploying on Ubuntu
+## Deploying on Ubuntu
+
+We run our servers on Ubuntu - here's some tips for deploying to that type of server:
 
 1. First make sure you have java7: `sudo apt-get install openjdk-7-jdk`
 2. First install tomcat7: `sudo apt-get install tomcat7`.
