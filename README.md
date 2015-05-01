@@ -20,7 +20,7 @@ that will install it to a virtual host you can use.  Follow those to get this in
 To test it out, hit this url in a browser and you should get some JSON back:
 
 ```
-http://localhost:8080/CLIFF-2.0.0/parse/text?q=This is some text about New York City, and maybe about Accra as well, and maybe Boston as well.
+http://localhost:8080/CLIFF-2.1.1/parse/text?q=This is some text about New York City, and maybe about Accra as well, and maybe Boston as well.
 ```
 
 Of course, when you use this in a script you should do an HTTP POST, not a GET!
@@ -37,13 +37,11 @@ The reason CLIFF exists! This parses some text and returns the entities mentione
 |replaceAllDemonyms|false|"true" if you want to count things like "Chinese" as a mention of the country China| 
 
 Example Query:
-`http://localhost:8080/CLIFF-2.1.0/parse/text?q=Some%20clever%20text%20mentioning%20places%20like%20New%20Delhi,%20and%20people%20like%20Einstein.%20Perhaps%20also%20we%20want%20mention%20an%20organization%20like%20the%20United%20Nations?`
+`http://localhost:8080/CLIFF-2.1.1/parse/text?q=Some%20clever%20text%20mentioning%20places%20like%20New%20Delhi,%20and%20people%20like%20Einstein.%20Perhaps%20also%20we%20want%20mention%20an%20organization%20like%20the%20United%20Nations?`
 
 Response:
 ```json
 {
-  "status": "ok",
-  "version": "1.3.0",
   "results": {
     "organizations": [
       {
@@ -52,76 +50,76 @@ Response:
       }
     ],
     "places": {
-      "mentions": [
-        {
-          "confidence": 1,
-          "name": "New Delhi",
-          "countryCode": "IN",
-          "featureCode": "PPLC",
-          "lon": 77.22445,
-          "countryGeoNameId": "1269750",
-          "source": {
-            "charIndex": 40,
-            "string": "New Delhi"
-          },
-          "stateCode": "07",
-          "featureClass": "P",
-          "lat": 28.63576,
-          "stateGeoNameId": "1273293",
-          "id": 1261481,
-          "population": 317797
-        }
-      ],
       "focus": {
-        "states": [
-          {
-            "name": "National Capital Territory of Delhi",
-            "countryCode": "IN",
-            "featureCode": "ADM1",
-            "lon": 77.1,
-            "countryGeoNameId": "1269750",
-            "score": 1,
-            "stateCode": "07",
-            "featureClass": "A",
-            "lat": 28.6667,
-            "stateGeoNameId": "1273293",
-            "id": 1273293,
-            "population": 15766943
-          }
-        ],
         "cities": [
           {
+            "id": 1261481,
+            "lon": 77.22445,
             "name": "New Delhi",
+            "score": 1,
+            "countryGeoNameId": "1269750",
             "countryCode": "IN",
             "featureCode": "PPLC",
-            "lon": 77.22445,
-            "countryGeoNameId": "1269750",
-            "score": 1,
-            "stateCode": "07",
             "featureClass": "P",
+            "stateCode": "07",
             "lat": 28.63576,
             "stateGeoNameId": "1273293",
-            "id": 1261481,
             "population": 317797
+          }
+        ],
+        "states": [
+          {
+            "id": 1273293,
+            "lon": 77.1,
+            "name": "National Capital Territory of Delhi",
+            "score": 1,
+            "countryGeoNameId": "1269750",
+            "countryCode": "IN",
+            "featureCode": "ADM1",
+            "featureClass": "A",
+            "stateCode": "07",
+            "lat": 28.6667,
+            "stateGeoNameId": "1273293",
+            "population": 16787941
           }
         ],
         "countries": [
           {
+            "id": 1269750,
+            "lon": 79,
             "name": "Republic of India",
+            "score": 1,
+            "countryGeoNameId": "1269750",
             "countryCode": "IN",
             "featureCode": "PCLI",
-            "lon": 79,
-            "countryGeoNameId": "1269750",
-            "score": 1,
-            "stateCode": "00",
             "featureClass": "A",
+            "stateCode": "00",
             "lat": 22,
             "stateGeoNameId": "",
-            "id": 1269750,
             "population": 1173108018
           }
         ]
-      }
+      },
+      "mentions": [
+        {
+          "id": 1261481,
+          "lon": 77.22445,
+          "source": {
+            "charIndex": 40,
+            "string": "New Delhi"
+          },
+          "name": "New Delhi",
+          "countryGeoNameId": "1269750",
+          "countryCode": "IN",
+          "featureCode": "PPLC",
+          "featureClass": "P",
+          "stateCode": "07",
+          "confidence": 1,
+          "lat": 28.63576,
+          "stateGeoNameId": "1273293",
+          "population": 317797
+        }
+      ]
     },
     "people": [
       {
@@ -130,7 +128,9 @@ Response:
       }
     ]
   },
-  "milliseconds": 5
+  "status": "ok",
+  "milliseconds": 36,
+  "version": "2.1.1"
 }
 ```
 
@@ -143,26 +143,26 @@ A convenience method to help you lookup places by their geonames ids.
 |id|(required)|The unique id that identifies a place in the [geonames.org](geonames.org) database|
 
 Example Query:
-`http://localhost:8080/CLIFF-2.1.0/geonames?id=4930956`
+`http://localhost:8080/CLIFF-2.1.1/geonames?id=4930956`
 
 Response:
 ```json
 {
-  "status": "ok", 
-  "version": "2.1.0", 
   "results": {
-    "name": "Boston", 
-    "countryCode": "US", 
-    "featureCode": "PPLA", 
-    "lon": -71.05977, 
-    "countryGeoNameId": "6252001", 
-    "stateCode": "MA", 
-    "featureClass": "P", 
-    "lat": 42.35843, 
-    "stateGeoNameId": "6254926", 
-    "id": 4930956, 
+    "id": 4930956,
+    "lon": -71.05977,
+    "name": "Boston",
+    "countryGeoNameId": "6252001",
+    "countryCode": "US",
+    "featureCode": "PPLA",
+    "featureClass": "P",
+    "stateCode": "MA",
+    "lat": 42.35843,
+    "stateGeoNameId": "6254926",
     "population": 617594
-  }
+  },
+  "status": "ok",
+  "version": "2.1.1"
 }
 ```
 
@@ -175,18 +175,19 @@ A convenience method to help you get the raw text of the story from a URL.  This
 |url|(required)|The url of a news story to extract the text of|
 
 Example Query:
-`http://localhost:8080/CLIFF-2.1.0/extract?url=http://www.theonion.com/articles/woman-thinks-she-can-just-waltz-back-into-work-aft,38349/`
+`http://localhost:8080/CLIFF-2.1.1/extract?url=http://www.theonion.com/articles/woman-thinks-she-can-just-waltz-back-into-work-aft,38349/`
 
 Response:
 ```json
 {
-  "results":{
-    "text":" \n \nKENWOOD, OH—Saying she has a lot of nerve to try and pull something like this, employees of insurance agency Boland \u0026 Sons told reporters Wednesday that coworker Emily Nelson seems to believe she can just waltz back into work after her maternity leave without once bringing her baby into the office. “I don’t know where she gets off thinking she doesn’t need to come in here with that baby strapped around her in a bjorn,” said Greg Sheldrick, adding that Nelson is out of her goddamn mind if she seriously believes showing off a few measly pictures of the newborn on her cell phone is an adequate substitute for bringing him around to meet everyone in their department. “She’s been back for three weeks already, so the grace period is over. She needs to come in with that baby in a stroller, roll it by my desk, and say ‘Somebody wants to say hello,’ or, frankly, she might as well never show her face here again. Seriously, every single person here better get a chance to lean in and smile at that baby, and God help her if she shows up the rest of this week empty-handed.” Sheldrick reportedly expressed equal astonishment that Nelson’s husband thinks he can get away with not once arriving with the infant to pick up his wife from work.\n \n",
-    "url":"http://www.theonion.com/articles/woman-thinks-she-can-just-waltz-back-into-work-aft,38349/"
+  "results": {
+    "text": "Woman Thinks She Can Just Waltz Back Into Work After Maternity Leave Without Bringing Baby To Office\nNEWS IN BRIEF\nVol 51 Issue 13  \u00b7  Local \u00b7 Workplace \u00b7 Parents \u00b7 Kids \u00b7 After Birth\nKENWOOD, OH\u2014Saying she has a lot of nerve to try and pull something like this, employees of insurance agency Boland & Sons told reporters Wednesday that coworker Emily Nelson seems to believe she can just waltz back into work after her maternity leave without once bringing her baby into the office. \u201cI don\u2019t know where she gets off thinking she doesn\u2019t need to come in here with that baby strapped around her in a bjorn,\u201d said Greg Sheldrick, adding that Nelson is out of her goddamn mind if she seriously believes showing off a few measly pictures of the newborn on her cell phone is an adequate substitute for bringing him around to meet everyone in their department. \u201cShe\u2019s been back for three weeks already, so the grace period is over. She needs to come in with that baby in a stroller, roll it by my desk, and say \u2018Somebody wants to say hello,\u2019 or, frankly, she might as well never show her face here again. Seriously, every single person here better get a chance to lean in and smile at that baby, and God help her if she shows up the rest of this week empty-handed.\u201d Sheldrick reportedly expressed equal astonishment that Nelson\u2019s husband thinks he can get away with not once arriving with the infant to pick up his wife from work.\nShare This Story:\n",
+    "title": "Woman Thinks She Can Just Waltz Back Into Work After Maternity Leave Without Bringing Baby To Office - The Onion - America's Finest News Source",
+    "url": "http:\/\/www.theonion.com\/articles\/woman-thinks-she-can-just-waltz-back-into-work-aft,38349\/"
   },
-  "status":"ok",
-  "milliseconds":185,
-  "version":"2.1.0"
+  "status": "ok",
+  "milliseconds": 651,
+  "version": "2.1.1"
 }
 ```
 
@@ -247,8 +248,13 @@ We have a number of unit tests that can be run with `mvn test`.
 
 ## Releasing
 
-To build a release first update the version numbers in the `pom.xml` file, and in 
-`org.mediameter.cliff.ParseManager`. Then to create the WAR file, run `mvn package -DskipTests`.
+To build a release:
+1. first update the version number in the `pom.xml` file
+2. also update the version number in `org.mediameter.cliff.ParseManager`
+3. to create the WAR file, run `mvn package -DskipTests`.
+4. update the examples in `README.md`
+5. tag the release with the version number `vX.Y.Z`
+6. author a new release for that tag on GitHub, write a description of the changes, and upload the .war 
 
 ## Deploying on Ubuntu
 
