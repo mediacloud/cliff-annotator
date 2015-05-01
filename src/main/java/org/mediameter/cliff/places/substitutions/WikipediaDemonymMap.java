@@ -3,9 +3,9 @@ package org.mediameter.cliff.places.substitutions;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 
 import org.slf4j.Logger;
@@ -60,17 +60,22 @@ public class WikipediaDemonymMap extends AbstractSubstitutionMap {
      * @return
      */
     public String replaceAll(String textToParse) {
-        ArrayList<String> keys = new ArrayList<String>(map.keySet());
-        Collections.sort(keys,Collections.reverseOrder());  // important to do plurals right
-
-        for(String key:keys){
-            String value = map.get(key);
-            if(textToParse.contains(key)){
-                logger.debug("    substituting demonym: "+key+" -> "+value);
-                textToParse = textToParse.replaceAll(key, value);
-            }            
+        int demonymsFound = 0;
+        BreakIterator boundary = BreakIterator.getWordInstance();
+        boundary.setText(textToParse);
+        int start = boundary.first();
+        StringBuffer cleanedText = new StringBuffer();
+        for (int end = boundary.next(); end != BreakIterator.DONE; start=end, end=boundary.next()) {
+            String originalWord = textToParse.substring(start,end);
+            String cleanedWord = substituteIfNeeded(originalWord);
+            if(!cleanedWord.equals(originalWord)){
+                demonymsFound++;
+                logger.debug("    substituting demonym: "+originalWord+" -> "+cleanedWord);
+            }
+            cleanedText.append(cleanedWord);
         }
-        return textToParse;
+        logger.debug("  Replaced "+demonymsFound+" demonyms");
+        return cleanedText.toString();
     }
 
 }

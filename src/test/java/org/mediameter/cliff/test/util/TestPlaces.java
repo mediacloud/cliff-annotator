@@ -34,6 +34,7 @@ public class TestPlaces {
     public static final int CITY_ARLINGTON_VIRGINIA = 4744709;
     public static final int COUNTRY_IRELAND = 2963597;
     public static final int COUNTRY_FRANCE = 3017382;
+    public static final int COUNTRY_AFGHANISTAN = 1149361;
     
 
 }

@@ -58,4 +58,15 @@ public class DemonymPlaceTest {
         assertEquals(TestPlaces.CONTINENT_EUROPE,results.get(0).getGeoname().getGeonameID());
     }
 
+    @Test
+    public void testAfghanistan() throws Exception{
+        List<ResolvedLocation> results;
+        results = ParseManager.extractAndResolve("Afghanistan").getResolvedLocations();
+        assertEquals("Found "+results.size()+" places, should have been 1!",1,results.size());
+        assertEquals(TestPlaces.COUNTRY_AFGHANISTAN,results.get(0).getGeoname().getGeonameID());
+        results = ParseManager.extractAndResolve("Afghanistan",true).getResolvedLocations();
+        assertEquals("Found "+results.size()+" places, should have been 1!",1,results.size());
+        assertEquals(TestPlaces.COUNTRY_AFGHANISTAN,results.get(0).getGeoname().getGeonameID());
+    }
+
 }
