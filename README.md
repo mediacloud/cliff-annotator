@@ -15,6 +15,12 @@ We don't host a public installation of CLIFF for you to use.  If you want to ins
 use CLIFF, @ahalterman created [an awesome vagrant script](https://github.com/c4fcm/CLIFF-up) 
 that will install it to a virtual host you can use.  Follow those to get this installed.
 
+If you want to access CLIFF's results from Python, use our 
+[Python Client API Library](https://github.com/c4fcm/CLIFF-API-Client):
+```
+pip install mediameter-cliff
+```
+
 # Using
 
 To test it out, hit this url in a browser and you should get some JSON back:
