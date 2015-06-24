@@ -68,10 +68,15 @@ public class ParseManager {
         return response;
     }
     
+    public static GeoName getGeoName(int id) throws UnknownGeoNameIdException{
+        GeoName geoname = ((CliffLocationResolver) resolver).getByGeoNameId(id);
+        return geoname;
+    }
+
     @SuppressWarnings({ "rawtypes" })
-    public static HashMap getGeoNameInfo(int id) throws IOException{
+    public static HashMap getGeoNameInfo(int id) {
         try {
-            GeoName geoname = ((CliffLocationResolver) resolver).getByGeoNameId(id);
+            GeoName geoname = getGeoName(id);
             HashMap response = getResponseMap( writeGeoNameToHash(geoname) );
             return response;
         } catch (UnknownGeoNameIdException e) {
