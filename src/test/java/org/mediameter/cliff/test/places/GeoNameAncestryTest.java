@@ -27,6 +27,8 @@ public class GeoNameAncestryTest {
             assertEquals(GEONAME_MASSACHUSETTS_STATE,mitParent2.getGeonameID());
             GeoName mitParent3 = mitParent2.getParent();
             assertEquals(GEONAME_USA,mitParent3.getGeonameID());
+            GeoName mitParent4 = mitParent3.getParent();
+            assertEquals(null,mitParent4);
         } catch (UnknownGeoNameIdException e) {
             e.printStackTrace();
         }

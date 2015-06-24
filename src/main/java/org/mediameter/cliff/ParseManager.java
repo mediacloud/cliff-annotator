@@ -40,7 +40,7 @@ public class ParseManager {
      * Minor: small new features, changes to the json result format, or changes to the disambiguation algorithm
      * Revision: minor change or bug fix
      */
-    static final String PARSER_VERSION = "2.1.1";
+    static final String PARSER_VERSION = "2.2.0";
     
     private static final Logger logger = LoggerFactory.getLogger(ParseManager.class);
 
@@ -74,9 +74,26 @@ public class ParseManager {
 
     @SuppressWarnings({ "rawtypes" })
     public static HashMap getGeoNameInfo(int id) {
+        return getGeoNameInfo(id, true);
+    }
+    
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public static HashMap getGeoNameInfo(int id, boolean withAncestry) {
         try {
             GeoName geoname = getGeoName(id);
-            HashMap response = getResponseMap( writeGeoNameToHash(geoname) );
+            HashMap info = writeGeoNameToHash(geoname);
+            if(withAncestry){
+                HashMap childInfo = info;
+                GeoName child = geoname; 
+                while(child.getParent()!=null){
+                    GeoName parent = child.getParent();
+                    HashMap parentInfo = writeGeoNameToHash(parent);
+                    childInfo.put("parent", parentInfo);
+                    child = parent;
+                    childInfo = parentInfo;
+                }
+            }
+            HashMap response = getResponseMap( info );
             return response;
         } catch (UnknownGeoNameIdException e) {
             logger.warn(e.getMessage());
