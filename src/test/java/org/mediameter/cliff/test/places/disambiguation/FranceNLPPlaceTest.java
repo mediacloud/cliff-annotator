@@ -16,7 +16,6 @@ import com.bericotech.clavin.resolver.ResolvedLocation;
 
 public class FranceNLPPlaceTest {
     
-    @SuppressWarnings("rawtypes")
     @Test
     public void testFranceFromNlp() throws Exception{
         String fileName = "story307385477.json";
