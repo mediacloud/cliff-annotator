@@ -7,10 +7,8 @@
   <packaging>pom</packaging>
   <version>2.2.0</version>
     <modules>
-        <module>stanford-entity-extractor</module>
         <module>common</module>
         <module>webapp</module>
-        <module>mitie</module>
     </modules>
 
     <name>CLIFF</name>
@@ -110,4 +108,25 @@
       </plugin>
     </plugins>
   </build>
+
+    <profiles>
+        <profile>
+            <id>stanford-ner</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>stanford-entity-extractor</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>mitie</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <modules>
+                <module>mitie</module>
+            </modules>
+        </profile>
+    </profiles>
 </project>
