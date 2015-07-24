@@ -4,10 +4,16 @@
 
   <groupId>org.mediameter</groupId>
   <artifactId>CLIFF</artifactId>
-  <packaging>war</packaging>
+  <packaging>pom</packaging>
   <version>2.2.0</version>
+    <modules>
+        <module>stanford-entity-extractor</module>
+        <module>common</module>
+        <module>webapp</module>
+        <module>mitie</module>
+    </modules>
 
-  <name>CLIFF</name>
+    <name>CLIFF</name>
   <url>http://cliff.mediameter.org/</url>
 
   <properties>
@@ -25,11 +31,6 @@
   </repositories>
 
   <dependencies>
-	<dependency>
-    	<groupId>edu.stanford.nlp</groupId>
-    	<artifactId>stanford-corenlp</artifactId>
-    	<version>3.3.1</version>
-	</dependency>
 	<dependency>
     	<groupId>com.bericotech</groupId>
     	<artifactId>clavin</artifactId>
@@ -109,5 +110,4 @@
       </plugin>
     </plugins>
   </build>
-  
 </project>

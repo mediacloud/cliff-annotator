@@ -4,7 +4,9 @@ data/nyt/*
 target/*
 *.log
 *.log.zip
-/target
+*/target
+.idea/
+*.iml
 data/gdelt/*.CSV
 data/gdelt/*.zip
 data/reuters/*
