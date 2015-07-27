@@ -83,7 +83,8 @@ public class MitieEntityExtractor implements EntityExtractor {
             text = demonyms.replaceAll(textToParse);
         }
 
-        StringVector words = global.tokenize(text);
+        global g = new global();
+        StringVector words = g.tokenize(text);
 
         StringVector possibleTags = namedEntityRecognizer.getPossibleNerTags();
         EntityMentionVector extractedEntities = namedEntityRecognizer.extractEntities(words);
