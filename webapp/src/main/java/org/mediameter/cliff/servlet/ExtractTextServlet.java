@@ -30,7 +30,7 @@ public class ExtractTextServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
         logger.info("Text Parse Request from "+request.getRemoteAddr());
         request.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        response.setContentType("application/json;charset=UTF=8");
+        response.setContentType("application/json");
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
         long startTime = System.currentTimeMillis();

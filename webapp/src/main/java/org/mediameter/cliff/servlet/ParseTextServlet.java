@@ -40,7 +40,7 @@ public class ParseTextServlet extends HttpServlet{
 
         logger.info("Text Parse Request from "+request.getRemoteAddr());
         request.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        response.setContentType("application/json;charset=UTF=8");
+        response.setContentType("application/json");
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
         HashMap results = null;
