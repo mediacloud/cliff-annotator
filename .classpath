@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="common/src/main/java"/>
+	<classpathentry kind="src" path="webapp/src/main/java"/>
 	<classpathentry kind="src" path="stanford-entity-extractor/src/test/java"/>
 	<classpathentry kind="src" path="stanford-entity-extractor/src/main/java"/>
 	<classpathentry kind="src" path="mitie/src/main/java"/>

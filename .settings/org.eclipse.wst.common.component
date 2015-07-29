@@ -5,6 +5,7 @@
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/mitie/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/stanford-entity-extractor/src/test/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/stanford-entity-extractor/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/webapp/src/main/java"/>
         <property name="context-root" value="CLIFF"/>
         <property name="java-output-path" value="/CLIFF/target/classes"/>
     </wb-module>
