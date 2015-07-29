@@ -8,7 +8,11 @@ import java.util.Properties;
 
 import org.kohsuke.MetaInfServices;
 import org.mediameter.cliff.CliffConfig;
-import org.mediameter.cliff.extractor.*;
+import org.mediameter.cliff.extractor.EntityExtractor;
+import org.mediameter.cliff.extractor.ExtractedEntities;
+import org.mediameter.cliff.extractor.OrganizationOccurrence;
+import org.mediameter.cliff.extractor.PersonOccurrence;
+import org.mediameter.cliff.extractor.SentenceLocationOccurrence;
 import org.mediameter.cliff.places.substitutions.Blacklist;
 import org.mediameter.cliff.places.substitutions.CustomSubstitutionMap;
 import org.mediameter.cliff.places.substitutions.WikipediaDemonymMap;
