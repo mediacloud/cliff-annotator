@@ -235,6 +235,7 @@ public class ParseManager {
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public static HashMap writeGeoNameToHash(GeoName place){
         HashMap loc = new HashMap();
+        String fullName = place.getPreferredName() != null ? place.getPreferredName() : place.getName();
         loc.put("id",place.getGeonameID());
         loc.put("name",place.getName());
         loc.put("lat",place.getLatitude());
@@ -243,30 +244,44 @@ public class ParseManager {
         String featureCode = place.getFeatureCode().toString();
         loc.put("featureClass", place.getFeatureClass().toString());
         loc.put("featureCode", featureCode);
-        // add in country info
-        String primaryCountryCodeAlpha2 = ""; 
+
+        String primaryCountryCodeAlpha2 = "";
         if(place.getPrimaryCountryCode()!=CountryCode.NULL){
             primaryCountryCodeAlpha2 = place.getPrimaryCountryCode().toString();
         }
-        loc.put("countryCode",primaryCountryCodeAlpha2);
-        GeoName countryGeoName = CountryGeoNameLookup.lookup(primaryCountryCodeAlpha2);
-        String countryGeoNameId = "";
-        if(countryGeoName!=null){
-            countryGeoNameId = ""+countryGeoName.getGeonameID();
-        }
-        loc.put("countryGeoNameId",countryGeoNameId);
+
         // add in state info
         String admin1Code = "";
         if(place.getAdmin1Code() !=null){
             admin1Code = place.getAdmin1Code();
         }
+
         loc.put("stateCode", admin1Code);
-        GeoName adm1GeoName = Adm1GeoNameLookup.lookup(primaryCountryCodeAlpha2, admin1Code);        
+        GeoName adm1GeoName = Adm1GeoNameLookup.lookup(primaryCountryCodeAlpha2, admin1Code);
         String stateGeoNameId = "";
         if(adm1GeoName!=null){
             stateGeoNameId = ""+adm1GeoName.getGeonameID();
+            if(place.getGeonameID() != adm1GeoName.getGeonameID()){
+                fullName += ", " + (adm1GeoName.getPreferredName() != null ? adm1GeoName.getPreferredName() :
+                        adm1GeoName.getName());
+            }
         }
         loc.put("stateGeoNameId",stateGeoNameId);
+
+        // add in country info
+        loc.put("countryCode",primaryCountryCodeAlpha2);
+        GeoName countryGeoName = CountryGeoNameLookup.lookup(primaryCountryCodeAlpha2);
+        String countryGeoNameId = "";
+        if(countryGeoName!=null){
+            countryGeoNameId = ""+countryGeoName.getGeonameID();
+            if(place.getGeonameID() != countryGeoName.getGeonameID()){
+                fullName += ", " + (countryGeoName.getPreferredName() != null ? countryGeoName.getPreferredName() :
+                        countryGeoName.getPreferredName());
+            }
+        }
+        loc.put("fullName", fullName);
+        loc.put("countryGeoNameId",countryGeoNameId);
+
 
         return loc;
     }
