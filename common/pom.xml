@@ -5,9 +5,19 @@
     <parent>
         <artifactId>CLIFF</artifactId>
         <groupId>org.mediameter</groupId>
-        <version>2.2.0</version>
+        <version>2.3.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
+
+	<repositories>
+		<repository>
+			<id>nexus.bericotechnologies.com</id>
+			<name>Berico Technologies Nexus</name>
+			<url>http://nexus.bericotechnologies.com/content/groups/public</url>
+			<releases><enabled>true</enabled></releases>
+			<snapshots><enabled>true</enabled></snapshots>
+		</repository>
+	</repositories>
 
     <artifactId>common</artifactId>
     <dependencies>

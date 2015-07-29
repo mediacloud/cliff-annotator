@@ -26,7 +26,7 @@ pip install mediameter-cliff
 To test it out, hit this url in a browser and you should get some JSON back:
 
 ```
-http://localhost:8080/CLIFF-2.1.1/parse/text?q=This is some text about New York City, and maybe about Accra as well, and maybe Boston as well.
+http://localhost:8080/cliff-2.3.0/parse/text?q=This is some text about New York City, and maybe about Accra as well, and maybe Boston as well.
 ```
 
 Of course, when you use this in a script you should do an HTTP POST, not a GET!
@@ -135,8 +135,8 @@ Response:
     ]
   },
   "status": "ok",
-  "milliseconds": 36,
-  "version": "2.1.1"
+  "milliseconds": 4004,
+  "version": "2.3.0"
 }
 ```
 
@@ -149,7 +149,7 @@ A convenience method to help you lookup places by their geonames ids.
 |id|(required)|The unique id that identifies a place in the [geonames.org](geonames.org) database|
 
 Example Query:
-`http://localhost:8080/CLIFF-2.1.1/geonames?id=4930956`
+`http://localhost:8080/cliff-2.3.0/geonames?id=4930956`
 
 Response:
 ```json
@@ -162,13 +162,52 @@ Response:
     "countryCode": "US",
     "featureCode": "PPLA",
     "featureClass": "P",
+    "parent": {
+      "id": 4952349,
+      "lon": -71.06575,
+      "name": "Suffolk County",
+      "countryGeoNameId": "6252001",
+      "countryCode": "US",
+      "featureCode": "ADM2",
+      "featureClass": "A",
+      "parent": {
+        "id": 6254926,
+        "lon": -71.10832,
+        "name": "Massachusetts",
+        "countryGeoNameId": "6252001",
+        "countryCode": "US",
+        "featureCode": "ADM1",
+        "featureClass": "A",
+        "parent": {
+          "id": 6252001,
+          "lon": -98.5,
+          "name": "United States",
+          "countryGeoNameId": "6252001",
+          "countryCode": "US",
+          "featureCode": "PCLI",
+          "featureClass": "A",
+          "stateCode": "00",
+          "lat": 39.76,
+          "stateGeoNameId": "",
+          "population": 310232863
+        },
+        "stateCode": "MA",
+        "lat": 42.36565,
+        "stateGeoNameId": "6254926",
+        "population": 6433422
+      },
+      "stateCode": "MA",
+      "lat": 42.3555,
+      "stateGeoNameId": "6254926",
+      "population": 722023
+    },
     "stateCode": "MA",
     "lat": 42.35843,
     "stateGeoNameId": "6254926",
     "population": 617594
   },
   "status": "ok",
-  "version": "2.1.1"
+  "version": "2.3.0"
 }
 ```
 
@@ -181,19 +220,19 @@ A convenience method to help you get the raw text of the story from a URL.  This
 |url|(required)|The url of a news story to extract the text of|
 
 Example Query:
-`http://localhost:8080/CLIFF-2.1.1/extract?url=http://www.theonion.com/articles/woman-thinks-she-can-just-waltz-back-into-work-aft,38349/`
+`http://localhost:8080/cliff-2.3.0/extract?url=http://www.theonion.com/articles/woman-thinks-she-can-just-waltz-back-into-work-aft,38349/`
 
 Response:
 ```json
 {
   "results": {
-    "text": "Woman Thinks She Can Just Waltz Back Into Work After Maternity Leave Without Bringing Baby To Office\nNEWS IN BRIEF\nVol 51 Issue 13  \u00b7  Local \u00b7 Workplace \u00b7 Parents \u00b7 Kids \u00b7 After Birth\nKENWOOD, OH\u2014Saying she has a lot of nerve to try and pull something like this, employees of insurance agency Boland & Sons told reporters Wednesday that coworker Emily Nelson seems to believe she can just waltz back into work after her maternity leave without once bringing her baby into the office. \u201cI don\u2019t know where she gets off thinking she doesn\u2019t need to come in here with that baby strapped around her in a bjorn,\u201d said Greg Sheldrick, adding that Nelson is out of her goddamn mind if she seriously believes showing off a few measly pictures of the newborn on her cell phone is an adequate substitute for bringing him around to meet everyone in their department. \u201cShe\u2019s been back for three weeks already, so the grace period is over. She needs to come in with that baby in a stroller, roll it by my desk, and say \u2018Somebody wants to say hello,\u2019 or, frankly, she might as well never show her face here again. Seriously, every single person here better get a chance to lean in and smile at that baby, and God help her if she shows up the rest of this week empty-handed.\u201d Sheldrick reportedly expressed equal astonishment that Nelson\u2019s husband thinks he can get away with not once arriving with the infant to pick up his wife from work.\nShare This Story:\n",
+    "text": "Business\nPresented by\nWoman Thinks She Can Just Waltz Back Into Work After Maternity Leave Without Bringing Baby To Office\nClose\nVol 51 Issue 13  \u00b7  Local \u00b7 Workplace \u00b7 Parents \u00b7 Kids \u00b7 After Birth\nKENWOOD, OH\u2014Saying she has a lot of nerve to try and pull something like this, employees of insurance agency Boland & Sons told reporters Wednesday that coworker Emily Nelson seems to believe she can just waltz back into work after her maternity leave without once bringing her baby into the office. \u201cI don\u2019t know where she gets off thinking she doesn\u2019t need to come in here with that baby strapped around her in a bjorn,\u201d said Greg Sheldrick, adding that Nelson is out of her goddamn mind if she seriously believes showing off a few measly pictures of the newborn on her cell phone is an adequate substitute for bringing him around to meet everyone in their department. \u201cShe\u2019s been back for three weeks already, so the grace period is over. She needs to come in with that baby in a stroller, roll it by my desk, and say \u2018Somebody wants to say hello,\u2019 or, frankly, she might as well never show her face here again. Seriously, every single person here better get a chance to lean in and smile at that baby, and God help her if she shows up the rest of this week empty-handed.\u201d Sheldrick reportedly expressed equal astonishment that Nelson\u2019s husband thinks he can get away with not once arriving with the infant to pick up his wife from work.\nShare This Story:\nSign-up For The Onion's Newsletter\nGive your spam filter something to do.\nDaily Headlines\nThe Onion is not intended for readers under 18 years of age.\n\u00a9 Copyright 2015 Onion Inc. All rights reserved\n",
     "title": "Woman Thinks She Can Just Waltz Back Into Work After Maternity Leave Without Bringing Baby To Office - The Onion - America's Finest News Source",
     "url": "http:\/\/www.theonion.com\/articles\/woman-thinks-she-can-just-waltz-back-into-work-aft,38349\/"
   },
   "status": "ok",
-  "milliseconds": 651,
-  "version": "2.1.1"
+  "milliseconds": 625,
+  "version": "2.3.0"
 }
 ```
 
@@ -208,8 +247,9 @@ Controls which Stanford NER Model to use while extracting entities:
 
 | Value | Default | Model | Notes |
 | ----- | ------- | ----- | ----- |
-|ENGLISH_ALL_3CLASS|*|english.all.3class.distsim.crf|Quick, but doesn't catch all demonyms|
-|ENGLISH_CONLL_4CLASS||english.conll.4class.distsim.crf|Catches most demonyms, but is about 30% slower|
+|ENGLISH_ALL_3CLASS|*|english.all.3class.caseless.distsim.crf.ser.gz|Quick, but doesn't catch all demonyms|
+|ENGLISH_CONLL_4CLASS||english.conll.4class.caseless.distsim.crf.ser.gz|Catches most demonyms, but is about 30% slower|
+|SPANISH_ANCORA|spanish.ancora.distsim.s512.crf.ser.gz|Untested Spanish model|
 
 # Developing
 
@@ -277,7 +317,6 @@ webapp/pom.xml for a correct profile which includes the MITIE NER sub-module and
 transitive depenencies of your NER system. Then make sure you install any modules you need for your
 NER system and can activate the module as described in the MITIE section.
 
-
 ## Testing
 
 We have a number of unit tests that can be run with `mvn test`.
@@ -285,7 +324,7 @@ We have a number of unit tests that can be run with `mvn test`.
 ## Releasing
 
 To build a release:
-1. first update the version number in the `pom.xml` file
+1. first update the version numbers in all the `pom.xml` files
 2. also update the version number in `org.mediameter.cliff.ParseManager`
 3. to create the WAR file, run `mvn package -DskipTests`.
 4. update the examples in `README.md`

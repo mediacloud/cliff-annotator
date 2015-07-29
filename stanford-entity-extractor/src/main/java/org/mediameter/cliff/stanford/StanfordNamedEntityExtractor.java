@@ -49,12 +49,11 @@ public class StanfordNamedEntityExtractor implements EntityExtractor {
     
     // Don't change the order of this, unless you also change the default in the cliff.properties file
     public enum Model {
-        ENGLISH_ALL_3CLASS, ENGLISH_CONLL_4CLASS 
+        ENGLISH_ALL_3CLASS, ENGLISH_CONLL_4CLASS, SPANISH_ANCORA
     }
 
     public String getName(){
-
-        return "Standord NER";
+        return "Standord CoreNLP NER";
     }
 
     public void initialize(CliffConfig config) throws ClassCastException, IOException, ClassNotFoundException{
@@ -64,10 +63,13 @@ public class StanfordNamedEntityExtractor implements EntityExtractor {
         logger.info("Creating Standford stanford with " + modelToUse);
         switch(model){
             case ENGLISH_ALL_3CLASS:
-                initializeWithModelFiles("english.all.3class.distsim.crf.ser.gz", "english.all.3class.distsim.prop" );
+                initializeWithModelFiles("english.all.3class.caseless.distsim.crf.ser.gz", "english.all.3class.caseless.distsim.prop" );
                 break;
             case ENGLISH_CONLL_4CLASS:
-                initializeWithModelFiles("english.conll.4class.distsim.crf.ser.gz", "english.conll.4class.distsim.prop"); // makes it take about 30% longer :-(
+                initializeWithModelFiles("english.conll.4class.caseless.distsim.crf.ser.gz", "english.conll.4class.caseless.distsim.prop"); // makes it take about 30% longer :-(
+                break;
+            case SPANISH_ANCORA:
+                initializeWithModelFiles("spanish.ancora.distsim.s512.crf.ser.gz", "spanish.ancora.distsim.s512.prop"); // not tested yet
                 break;
         }
         demonyms = new WikipediaDemonymMap();
