@@ -248,6 +248,36 @@ First make sure tomcat is running (ie. `catalina run`). Now run `mvn tomcat7:dep
 to deploy the app, or `mvn tomcat7:redeploy -DskipTests` to redeploy once you've already got 
 the app deployed.
 
+## Pluggable Entity Extraction
+
+CLIFF leverages a pluggable entity extractor(s) via a java SPI system. This works by discovering
+which providers implement the EntityExtractor interface on the classpath. To work, the jar
+containing the entity extractor must exist in the classpath of the CLIFF Webapp. By default, this
+project utilizes a maven profile which will select the stanford-ner model by default. However,
+the Stanford NER leverages a GNU / Commercial License.
+
+###Running the MITIE NER
+Download and compile the MITIE NER package for your system following the instructions at
+ [MITIE](https://github.com/mit-nlp/MITIE). As MITIE is not published to a maven repo, prior to
+ compiling CLIFF you must install MITIE via mvn such as
+ `mvn org.apache.maven.plugins:maven-install-plugin:2.5.2:install-file -Dfile=$PWD/javamitie.jar -DgroupId=edu.mit.ll.mitie -DartifactId=mitie -Dversion=0.4 -Dpackaging=jar`
+Once compiled, the MITIE binary library must also be on your tomcat / java's `java.libray.path`. You
+can either set this on your system to the folder of the MITIE binary or copy the MITIE binary to
+`$JAVA_HOME/jre/lib/`. MITIE requires a model which is a fairly large download. Follow the instructions
+on the MITIE site to retrieve this and point `cliff.properties` at the location you choose to store this
+in your deployment.
+
+The final step is during your build, you must disable the stanford-ner maven
+profile and activate the mitie profile. For example `mvn -P mitie,\!stanford-ner clean install`,
+`mvn -P mitie,\!stanford-ner tomcat7:run`. Cliff will then use MITIE instead of Stanford NER.
+
+##Using your own NER
+To use your own NER, create a mvn module modeled after the MITIE example. You must modify the
+webapp/pom.xml for a correct profile which includes the MITIE NER sub-module and includes the
+transitive depenencies of your NER system. Then make sure you install any modules you need for your
+NER system and can activate the module as described in the MITIE section.
+
+
 ## Testing
 
 We have a number of unit tests that can be run with `mvn test`.

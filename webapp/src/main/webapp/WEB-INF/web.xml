@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!DOCTYPE web-app
+     PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN"
+     "http://java.sun.com/j2ee/dtds/web-app_2_2.dtd">
+ 
+ <web-app>
+
+     <servlet>
+         <servlet-name>ParseTextServlet</servlet-name>
+         <servlet-class>org.mediameter.cliff.servlet.ParseTextServlet</servlet-class>
+     </servlet>
+     <servlet-mapping>
+         <servlet-name>ParseTextServlet</servlet-name>
+         <url-pattern>/parse/text</url-pattern>
+     </servlet-mapping>
+
+     <servlet>
+         <servlet-name>ParseNlpJsonServlet</servlet-name>
+         <servlet-class>org.mediameter.cliff.servlet.ParseNlpJsonServlet</servlet-class>
+     </servlet>
+     <servlet-mapping>
+         <servlet-name>ParseNlpJsonServlet</servlet-name>
+         <url-pattern>/parse/json</url-pattern>
+     </servlet-mapping>
+
+     <servlet>
+         <servlet-name>ParseSentencesServlet</servlet-name>
+         <servlet-class>org.mediameter.cliff.servlet.ParseSentencesServlet</servlet-class>
+     </servlet>
+     <servlet-mapping>
+         <servlet-name>ParseSentencesServlet</servlet-name>
+         <url-pattern>/parse/sentences</url-pattern>
+     </servlet-mapping>
+
+     <servlet>
+         <servlet-name>GeonamesLookupServlet</servlet-name>
+         <servlet-class>org.mediameter.cliff.servlet.GeonamesLookupServlet</servlet-class>
+     </servlet>
+     <servlet-mapping>
+         <servlet-name>GeonamesLookupServlet</servlet-name>
+         <url-pattern>/geonames</url-pattern>
+     </servlet-mapping>
+     
+     <servlet>
+         <servlet-name>ExtractTextServlet</servlet-name>
+         <servlet-class>org.mediameter.cliff.servlet.ExtractTextServlet</servlet-class>
+     </servlet>
+     <servlet-mapping>
+         <servlet-name>ExtractTextServlet</servlet-name>
+         <url-pattern>/extract</url-pattern>
+     </servlet-mapping>
+     
+
+ </web-app>
