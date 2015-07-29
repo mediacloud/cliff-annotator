@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
     <wb-module deploy-name="CLIFF">
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/resources"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/common/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/mitie/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/stanford-entity-extractor/src/test/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/stanford-entity-extractor/src/main/java"/>
         <property name="context-root" value="CLIFF"/>
         <property name="java-output-path" value="/CLIFF/target/classes"/>
     </wb-module>
