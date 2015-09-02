@@ -259,6 +259,9 @@ You need to download and install CLAVIN 2.0.0 in order to build the Geonames Gaz
 for geoparsing. The idea is that you build all that, and then create a symlink at 
 `/etc/cliff2/IndexDirectory` to the CLAVIN index you just built.
 
+To build, run `mvn` in the top level directory.  You can do `mvn package -DskipTests` and then you will get a 
+.war file in `webapp/target/`.
+
 ## Tomcat Setup
 
 CLIFF is setup to be run inside a Java servlet container (ie. Tomcat7).  For development 
