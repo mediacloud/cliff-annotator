@@ -34,7 +34,7 @@ RUN wget http://sourceforge.net/projects/mitie/files/binaries/MITIE-models-v0.2.
 #cd MITIE-models && mv * /etc/mitie/. 
 
 WORKDIR /tmp
-RUN wget http://apache.mirrors.hoobly.com/tomcat/tomcat-7/v7.0.63/bin/apache-tomcat-7.0.63.tar.gz && tar xzf apache-tomcat-7.0.63.tar.gz && rm -rf apache-tomcat-7.0.63.tar.gz && mv apache-tomcat-7.0.63 /usr/local/tomcat7 && rm -rf /usr/local/tomcat7/webapps/examples && rm -rf /usr/local/tomcat7/webapps/manager && rm -rf /usr/local/tomcat7/webapps/docs 
+RUN wget https://s3.amazonaws.com/docker.sensorhub.eagle-ow.com/apache-tomcat-7.0.64.tar.gz && tar xzf apache-tomcat-7.0.64.tar.gz && rm -rf apache-tomcat-7.0.64.tar.gz && mv apache-tomcat-7.0.64 /usr/local/tomcat7 && rm -rf /usr/local/tomcat7/webapps/examples && rm -rf /usr/local/tomcat7/webapps/manager && rm -rf /usr/local/tomcat7/webapps/docs 
 
 #Build Me
 ADD . /opt/java/.
