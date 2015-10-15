@@ -85,7 +85,7 @@ public class EntityParser {
         // Disambiguate people
         List<ResolvedPerson> resolvedPeople = personResolver.resolve(entities.getPeople());
         entities.setResolvedPeople( resolvedPeople );
-        logger.trace("resolvedPeople: {}", resolvedLocations);
+        logger.trace("resolvedPeople: {}", resolvedPeople);
 
         // Disambiguate organizations
         List<ResolvedOrganization> resolvedOrganizations = organizationResolver.resolve(entities.getOrganizations());
