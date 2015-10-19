@@ -101,7 +101,7 @@ public class MitieEntityExtractor implements EntityExtractor {
             EntityMention extractedEntity = extractedEntities.get(i);
             String entityName = getEntityString(words, extractedEntity);
             String tag = possibleTags.get(extractedEntity.getTag());
-            int position = text.indexOf(entityName);
+            int position = extractedEntity.getStart();
             switch(tag){
                 case "PERSON":
                     if(personToPlaceSubstitutions.contains(entityName)){

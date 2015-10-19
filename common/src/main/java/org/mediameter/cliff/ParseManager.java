@@ -1,10 +1,8 @@
 package org.mediameter.cliff;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import org.mediameter.cliff.extractor.EntityExtractorService;
 import org.mediameter.cliff.extractor.ExtractedEntities;
@@ -212,6 +210,8 @@ public class ParseManager {
             HashMap sourceInfo = new HashMap();
             sourceInfo.put("name", person.getName());
             sourceInfo.put("count", person.getOccurenceCount());
+            sourceInfo.put("occurences", person.getOccurrences().stream()
+                    .map(o -> o.position).collect(Collectors.toList()));
             personResults.add(sourceInfo);
         }
         results.put("people",personResults);
@@ -224,6 +224,8 @@ public class ParseManager {
             HashMap sourceInfo = new HashMap();
             sourceInfo.put("name", organization.getName());
             sourceInfo.put("count", organization.getOccurenceCount());
+            sourceInfo.put("occurences", organization.getOccurrences().stream()
+                    .map( o -> o.position).collect(Collectors.toList()));
             organizationResults.add(sourceInfo);
         }
         results.put("organizations",organizationResults);
