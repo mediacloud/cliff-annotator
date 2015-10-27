@@ -1,5 +1,6 @@
 package org.mediameter.cliff.servlet;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -28,28 +29,18 @@ public class ParseTextServlet extends HttpServlet{
 	public ParseTextServlet() {
 	}
 
+    private void parseTextResults(String text, HttpServletRequest request, HttpServletResponse response)  throws IOException{
 
-	@Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
-	    doGet(request,response);
-	}	
-	
-	@Override
-    @SuppressWarnings("rawtypes")
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
-
-        logger.info("Text Parse Request from "+request.getRemoteAddr());
         request.setCharacterEncoding(StandardCharsets.UTF_8.name());
         response.setContentType("application/json");
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
         HashMap results = null;
-        String text = request.getParameter("q");
         String replaceAllDemonymsStr = request.getParameter("replaceAllDemonyms");
         boolean manuallyReplaceDemonyms = (replaceAllDemonymsStr==null) ? false : Boolean.parseBoolean(replaceAllDemonymsStr);
         logger.debug("q="+text);
         logger.debug("replaceAllDemonyms="+manuallyReplaceDemonyms);
-        
+
         if(text==null){
             response.sendError(HttpServletResponse.SC_BAD_REQUEST);
         } else {
@@ -59,10 +50,49 @@ public class ParseTextServlet extends HttpServlet{
                 logger.error(e.toString());
                 results = ParseManager.getErrorText(e.toString());
             }
-            String jsonResults = gson.toJson(results);
-            logger.info(jsonResults);
-            response.getWriter().write(jsonResults);
+            handleResults(results, response);
         }
+    }
+
+    private void handleResults(HashMap results, HttpServletResponse response ) throws IOException{
+        String jsonResults = gson.toJson(results);
+        logger.info(jsonResults);
+        response.getWriter().write(jsonResults);
+    }
+
+	@Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
+        if(request.getParameter("q") != null){
+            doGet(request,response);
+        }
+        else{
+
+            StringBuilder jb = new StringBuilder();
+            String line = null;
+            try(BufferedReader reader = request.getReader()) {
+                request.setCharacterEncoding(StandardCharsets.UTF_8.name());
+                while ((line = reader.readLine()) != null)
+                    jb.append(line);
+            } catch (Exception e) {
+                logger.error(e.toString());
+                HashMap results = ParseManager.getErrorText(e.toString());
+                handleResults(results, response);
+                return;
+            }
+
+            parseTextResults(jb.toString(), request, response);
+        }
+
+	}	
+	
+	@Override
+    @SuppressWarnings("rawtypes")
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
+
+        logger.info("Text Parse Request from "+request.getRemoteAddr());
+
+        String text = request.getParameter("q");
+        parseTextResults(text, request, response);
 	}
 	
 }

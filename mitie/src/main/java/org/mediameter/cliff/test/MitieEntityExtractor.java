@@ -96,10 +96,15 @@ public class MitieEntityExtractor implements EntityExtractor {
         return entities;
     }
 
+    //Lot's of entities had this character some reason, remove so valid
+    private String cleanName(String name){
+        return name.replace("\\n", "");
+    }
+
     private void assignExtractedEntities(ExtractedEntities entities, String text, StringVector words, StringVector possibleTags, EntityMentionVector extractedEntities) {
         for (int i=0; i < extractedEntities.size(); i++){
             EntityMention extractedEntity = extractedEntities.get(i);
-            String entityName = getEntityString(words, extractedEntity);
+            String entityName = cleanName(getEntityString(words, extractedEntity));
             String tag = possibleTags.get(extractedEntity.getTag());
             int position = extractedEntity.getStart();
             switch(tag){
