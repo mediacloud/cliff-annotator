@@ -4,6 +4,10 @@ machine:
   java:
     version: oraclejdk8
 
+test:
+    override:
+        - echo "Skip tests due to external dependencies"
+
 dependencies:
   pre:
     - sudo apt-get update; sudo apt-get install -y cmake swig gcc g++ gfortran bzip2 make wget
