@@ -61,6 +61,7 @@ ENV LD_LIBRARY_PATH "/usr/lib/jvm/java-8-oracle/jre/lib"
 ADD . /opt/java/.
 RUN mvn -Dmaven.test.skip=true -P mitie,\!stanford-ner clean install && \
     mv /opt/java/webapp/target/cliff-*.war /usr/local/tomcat7/webapps/ROOT.war && \
+    find . -path '*/target/*' -delete && \
     rm -rf /usr/local/tomcat7/webapps/ROOT && \
     rm -rf ~/.m2
 
