@@ -1,51 +1,68 @@
-FROM	centos:latest
-RUN yum -y update; yum clean all; yum install -y crontabs wget tar apr-devel openssl-devel curl unzip wget
+FROM debian:jessie
 
-ENV JDK_VERSION 8u45
-ENV JDK_BUILD_VERSION b14
+ENV MAVEN_VERSION 3.3.9
+ENV MAVEN_HOME /usr/share/maven
+ENV LANG C.UTF-8
 
-RUN curl -LO "http://download.oracle.com/otn-pub/java/jdk/$JDK_VERSION-$JDK_BUILD_VERSION/jdk-$JDK_VERSION-linux-x64.rpm" -H 'Cookie: oraclelicense=accept-securebackup-cookie' && rpm -i jdk-$JDK_VERSION-linux-x64.rpm; rm -f jdk-$JDK_VERSION-linux-x64.rpm; yum clean all
-ENV JAVA_HOME /usr/java/default
+WORKDIR /opt/java
+RUN apt-get update; apt-get install -y unzip curl openssl tar wget
 
-RUN cd /usr/local &&  wget http://mirror.cc.columbia.edu/pub/software/apache/maven/maven-3/3.3.3/binaries/apache-maven-3.3.3-bin.tar.gz 
-RUN cd /usr/local && tar -xzf apache-maven-3.3.3-bin.tar.gz && ln -s apache-maven-3.3.3 maven
+RUN \
+    echo "===> add webupd8 repository..."  && \
+    echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" | tee /etc/apt/sources.list.d/webupd8team-java.list  && \
+    echo "deb-src http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" | tee -a /etc/apt/sources.list.d/webupd8team-java.list  && \
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys EEA14886  && \
+    apt-get update  && \
+    \
+    \
+    echo "===> install Java"  && \
+    echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections  && \
+    echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections  && \
+    DEBIAN_FRONTEND=noninteractive  apt-get install -y --force-yes oracle-java8-installer oracle-java8-set-default  && \
+    \
+    curl -kfsSL https://archive.apache.org/dist/maven/maven-3/$MAVEN_VERSION/binaries/apache-maven-$MAVEN_VERSION-bin.tar.gz | tar xzf - -C /usr/share \
+    && mv /usr/share/apache-maven-$MAVEN_VERSION /usr/share/maven \
+    && ln -s /usr/share/maven/bin/mvn /usr/bin/mvn && \
+    \
+    echo "===> clean up..."  && \
+    rm -rf /var/cache/oracle-jdk8-installer  && \
+    apt-get clean  && \
+    rm -rf /var/lib/apt/lists/*
 
-RUN sed -i.bak 's/#networkaddress.cache.ttl=-1/networkaddress.cache.ttl=60/' /usr/java/default/jre/lib/security/java.security
+#RUN sed -i.bak 's/#networkaddress.cache.ttl=-1/networkaddress.cache.ttl=60/' /usr/java/default/jre/lib/security/java.security
 
-ENV M2_HOME /usr/local/maven
-ENV PATH ${M2_HOME}/bin:${PATH}
+RUN mkdir -p /opt/java &&  mkdir -p /data/log
 
-RUN mkdir -p /opt/java
-RUN mkdir -p /data/log
 VOLUME ["/data/log"]
-
 VOLUME /etc/cliff2/IndexDirectory
 
-ENV JAVA_OPTS "-Djava.libary.path=/usr/java/default/jre/lib -Xmx4g"
+ENV JAVA_OPTS "-Djava.libary.path=/usr/lib/jvm/java-8-oracle/jre/lib -Xmx4g"
+WORKDIR /opt/java
+#CLIFF Specific stuff
+RUN apt-get update; apt-get install -y cmake swig gcc g++ gfortran bzip2 make libopenblas-dev liblapack-dev && \
+    wget https://github.com/mit-nlp/MITIE/archive/master.zip && unzip master.zip && rm master.zip && \
+    cd MITIE-master/mitielib/java && mkdir build && cd build && cmake .. && cmake --build . --config Release --target install && \
+    cd /opt/java/MITIE-master/mitielib && mvn org.apache.maven.plugins:maven-install-plugin:2.5.2:install-file -Dfile=$PWD/javamitie.jar -DgroupId=edu.mit.ll.mitie -DartifactId=mitie -Dversion=0.4 -Dpackaging=jar && \
+    mv /opt/java/MITIE-master/mitielib/libjavamitie.so /usr/lib/jvm/java-8-oracle/jre/lib/. && \
+    mkdir -p /etc/mitie/ && \
+    cd /tmp && wget http://sourceforge.net/projects/mitie/files/binaries/MITIE-models-v0.2.tar.bz2 && tar -xjf MITIE-models-v0.2.tar.bz2 && rm MITIE-models-v0.2.tar.bz2 && \
+    mv /tmp/MITIE-models/english/ /etc/mitie/. && \
+    rm -rf /tmp/MITIE-models && \
+    \
+    cd /tmp && \
+    wget https://s3.amazonaws.com/docker.sensorhub.eagle-ow.com/apache-tomcat-7.0.64.tar.gz && tar xzf apache-tomcat-7.0.64.tar.gz && \
+    rm -rf apache-tomcat-7.0.64.tar.gz && mv apache-tomcat-7.0.64 /usr/local/tomcat7 && rm -rf /usr/local/tomcat7/webapps/examples && \
+    rm -rf /usr/local/tomcat7/webapps/manager && rm -rf /usr/local/tomcat7/webapps/docs && \
+    apt-get remove -y --auto-remove cmake swig gcc g++ gfortran bzip2 make
 
-RUN yum install -y cmake swig gcc gcc-c++ bzip2 make
-RUN wget https://github.com/mit-nlp/MITIE/archive/master.zip && unzip master.zip && rm master.zip && cd MITIE-master/mitielib/java && mkdir build && cd build && cmake .. && cmake --build . --config Release --target install
-
-RUN cd MITIE-master/mitielib  && mvn org.apache.maven.plugins:maven-install-plugin:2.5.2:install-file -Dfile=$PWD/javamitie.jar -DgroupId=edu.mit.ll.mitie -DartifactId=mitie -Dversion=0.4 -Dpackaging=jar  
-RUN cp MITIE-master/mitielib/libjavamitie.so $JAVA_HOME/jre/lib/.
-RUN mkdir -p /etc/mitie/
-RUN wget http://sourceforge.net/projects/mitie/files/binaries/MITIE-models-v0.2.tar.bz2 && tar -xjf MITIE-models-v0.2.tar.bz2 && rm MITIE-models-v0.2.tar.bz2
-
-#cd MITIE-models && mv * /etc/mitie/. 
-
-WORKDIR /tmp
-RUN wget https://s3.amazonaws.com/docker.sensorhub.eagle-ow.com/apache-tomcat-7.0.64.tar.gz && tar xzf apache-tomcat-7.0.64.tar.gz && rm -rf apache-tomcat-7.0.64.tar.gz && mv apache-tomcat-7.0.64 /usr/local/tomcat7 && rm -rf /usr/local/tomcat7/webapps/examples && rm -rf /usr/local/tomcat7/webapps/manager && rm -rf /usr/local/tomcat7/webapps/docs 
-
+RUN chmod +x /usr/lib/jvm/java-8-oracle/jre/lib/libjavamitie.so
+ENV LD_LIBRARY_PATH "/usr/lib/jvm/java-8-oracle/jre/lib"
 #Build Me
 ADD . /opt/java/.
-WORKDIR /opt/java
-RUN mvn  -Dmaven.test.skip=true -P mitie,\!stanford-ner clean install
-
-RUN mv /opt/java/webapp/target/cliff-2.2.0.war /usr/local/tomcat7/webapps/ROOT.war
-
-#Force a redeploy
-RUN rm -rf /usr/local/tomcat7/webapps/ROOT
+RUN mvn -Dmaven.test.skip=true -P mitie,\!stanford-ner clean install && \
+    mv /opt/java/webapp/target/cliff-*.war /usr/local/tomcat7/webapps/ROOT.war && \
+    rm -rf /usr/local/tomcat7/webapps/ROOT && \
+    rm -rf ~/.m2
 
 EXPOSE 8080
-RUN mv /MITIE-models/english/ /etc/mitie/.
 CMD /usr/local/tomcat7/bin/catalina.sh run 2>&1 | tee /data/log/tomcat.log
