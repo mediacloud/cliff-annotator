@@ -19,3 +19,14 @@ dependencies:
   override:
     - mvn -P mitie,\!stanford-ner clean install
 
+
+deployment:
+  dev:
+    branch: develop
+    commands:
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASSWORD
+      - docker pull openwhere/cliff:dev
+      - docker build -t cliff .:
+          timeout: 1200
+      - docker tag -f cliff openwhere/cliff:dev
+      - docker push openwhere/cliff:dev
