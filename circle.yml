@@ -7,7 +7,7 @@ machine:
 dependencies:
   pre:
     - sudo apt-get update; sudo apt-get install -y cmake swig gcc g++ gfortran bzip2 make wget
-    - wget https://github.com/mit-nlp/MITIE/archive/master.zip && unzip master.zip && rm master.zip &&
+    - wget https://github.com/mit-nlp/MITIE/archive/master.zip && unzip master.zip && rm master.zip
     - cd MITIE-master/mitielib/java && mkdir build && cd build && cmake .. && cmake --build . --config Release --target install
     - cd MITIE-master/mitielib && mvn org.apache.maven.plugins:maven-install-plugin:2.5.2:install-file -Dfile=$PWD/javamitie.jar -DgroupId=edu.mit.ll.mitie -DartifactId=mitie -Dversion=0.4 -Dpackaging=jar
     - echo $JAVA_HOME
