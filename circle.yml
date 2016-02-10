@@ -25,8 +25,6 @@ deployment:
     branch: develop
     commands:
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASSWORD
-      - docker pull openwhere/cliff:dev || true:
-          timeout: 1200
       - docker build -t cliff .:
           timeout: 1200
       - docker tag -f cliff openwhere/cliff:dev
