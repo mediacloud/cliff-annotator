@@ -13,6 +13,5 @@ dependencies:
     - echo $JAVA_HOME
     - sudo mv MITIE-master/mitielib/libjavamitie.so $JAVA_HOME/jre/lib/.
   override:
-    - mvn dependency:go-offline
     - mvn -P mitie,\!stanford-ner clean install
 
