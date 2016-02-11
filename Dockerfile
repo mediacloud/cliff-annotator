@@ -50,7 +50,7 @@ RUN apt-get update; apt-get install -y cmake swig gcc g++ gfortran bzip2 make li
     rm -rf /tmp/MITIE-models && \
     \
     cd /tmp && \
-    wget https://s3.amazonaws.com/docker.sensorhub.eagle-ow.com/apache-tomcat-7.0.64.tar.gz && tar xzfo -o apache-tomcat-7.0.64.tar.gz && \
+    wget https://s3.amazonaws.com/docker.sensorhub.eagle-ow.com/apache-tomcat-7.0.64.tar.gz && tar xzfo apache-tomcat-7.0.64.tar.gz && \
     rm -rf apache-tomcat-7.0.64.tar.gz && mv apache-tomcat-7.0.64 /usr/local/tomcat7 && rm -rf /usr/local/tomcat7/webapps/examples && \
     rm -rf /usr/local/tomcat7/webapps/manager && rm -rf /usr/local/tomcat7/webapps/docs && \
     apt-get remove -y --auto-remove cmake swig gcc g++ gfortran bzip2 make
