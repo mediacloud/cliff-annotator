@@ -45,12 +45,12 @@ RUN apt-get update; apt-get install -y cmake swig gcc g++ gfortran bzip2 make li
     cd /opt/java/MITIE-master/mitielib && mvn org.apache.maven.plugins:maven-install-plugin:2.5.2:install-file -Dfile=$PWD/javamitie.jar -DgroupId=edu.mit.ll.mitie -DartifactId=mitie -Dversion=0.4 -Dpackaging=jar && \
     mv /opt/java/MITIE-master/mitielib/libjavamitie.so /usr/lib/jvm/java-8-oracle/jre/lib/. && \
     mkdir -p /etc/mitie/ && \
-    cd /tmp && wget http://sourceforge.net/projects/mitie/files/binaries/MITIE-models-v0.2.tar.bz2 && tar -xjf MITIE-models-v0.2.tar.bz2 && rm MITIE-models-v0.2.tar.bz2 && \
+    cd /tmp && wget http://sourceforge.net/projects/mitie/files/binaries/MITIE-models-v0.2.tar.bz2 && tar xjfo MITIE-models-v0.2.tar.bz2 && rm MITIE-models-v0.2.tar.bz2 && \
     mv /tmp/MITIE-models/english/ /etc/mitie/. && \
     rm -rf /tmp/MITIE-models && \
     \
     cd /tmp && \
-    wget https://s3.amazonaws.com/docker.sensorhub.eagle-ow.com/apache-tomcat-7.0.64.tar.gz && tar xzf apache-tomcat-7.0.64.tar.gz && \
+    wget https://s3.amazonaws.com/docker.sensorhub.eagle-ow.com/apache-tomcat-7.0.64.tar.gz && tar xzfo -o apache-tomcat-7.0.64.tar.gz && \
     rm -rf apache-tomcat-7.0.64.tar.gz && mv apache-tomcat-7.0.64 /usr/local/tomcat7 && rm -rf /usr/local/tomcat7/webapps/examples && \
     rm -rf /usr/local/tomcat7/webapps/manager && rm -rf /usr/local/tomcat7/webapps/docs && \
     apt-get remove -y --auto-remove cmake swig gcc g++ gfortran bzip2 make
