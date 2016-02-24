@@ -39,7 +39,7 @@ public class ParseManager {
      * Minor: small new features, changes to the json result format, or changes to the disambiguation algorithm
      * Revision: minor change or bug fix
      */
-    static final String PARSER_VERSION = "2.3.0";
+    static final String PARSER_VERSION = "2.4.0";
     
     private static final Logger logger = LoggerFactory.getLogger(ParseManager.class);
 
