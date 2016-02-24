@@ -250,6 +250,7 @@ Controls which Stanford NER Model to use while extracting entities:
 |ENGLISH_ALL_3CLASS|*|english.all.3class.caseless.distsim.crf.ser.gz|Quick, but doesn't catch all demonyms|
 |ENGLISH_CONLL_4CLASS||english.conll.4class.caseless.distsim.crf.ser.gz|Catches most demonyms, but is about 30% slower|
 |SPANISH_ANCORA|spanish.ancora.distsim.s512.crf.ser.gz|Untested Spanish model|
+|GERMAN_DEWAC|german.dewac_175m_600.crf.ser.gz|Untested German model|
 
 # Developing
 

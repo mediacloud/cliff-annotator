@@ -49,7 +49,7 @@ public class StanfordNamedEntityExtractor implements EntityExtractor {
     
     // Don't change the order of this, unless you also change the default in the cliff.properties file
     public enum Model {
-        ENGLISH_ALL_3CLASS, ENGLISH_CONLL_4CLASS, SPANISH_ANCORA
+        ENGLISH_ALL_3CLASS, ENGLISH_CONLL_4CLASS, SPANISH_ANCORA, GERMAN_DEWAC
     }
 
     public String getName(){
@@ -59,8 +59,7 @@ public class StanfordNamedEntityExtractor implements EntityExtractor {
     public void initialize(CliffConfig config) throws ClassCastException, IOException, ClassNotFoundException{
         String modelToUse = config.getNerModelName();
         model = Model.valueOf(modelToUse);
-        logger.info("Creating Standford stanford with " + modelToUse);
-        logger.info("Creating Standford stanford with " + modelToUse);
+        logger.info("Creating Standford NER with " + modelToUse);
         switch(model){
             case ENGLISH_ALL_3CLASS:
                 initializeWithModelFiles("english.all.3class.caseless.distsim.crf.ser.gz", "english.all.3class.caseless.distsim.prop" );
@@ -70,6 +69,9 @@ public class StanfordNamedEntityExtractor implements EntityExtractor {
                 break;
             case SPANISH_ANCORA:
                 initializeWithModelFiles("spanish.ancora.distsim.s512.crf.ser.gz", "spanish.ancora.distsim.s512.prop"); // not tested yet
+                break;
+            case GERMAN_DEWAC:
+                initializeWithModelFiles("german.dewac_175m_600.crf.ser.gz", "german.dewac_175m_600.prop"); // not tested yet
                 break;
         }
         demonyms = new WikipediaDemonymMap();
@@ -129,7 +131,9 @@ public class StanfordNamedEntityExtractor implements EntityExtractor {
                 String entityName = text.substring(extractedEntity.second(), extractedEntity.third());
                 int position = extractedEntity.second();
                 switch(extractedEntity.first){
-                case "PERSON":
+                case ":PERS":       // spanish
+                case ":I-PER":      // german
+                case "PERSON":      // english
                     if(personToPlaceSubstitutions.contains(entityName)){
                         entities.addLocation( getLocationOccurrence(personToPlaceSubstitutions.getSubstitution(entityName), position) );
                         logger.debug("Changed person "+entityName+" to a place");
@@ -138,14 +142,18 @@ public class StanfordNamedEntityExtractor implements EntityExtractor {
                         entities.addPerson( person );
                     }
                     break;
-                case "LOCATION":
+                case ":LUG":        // spanish
+                case ":I-LOC":      // german
+                case "LOCATION":    // english
                     if(!locationBlacklist.contains(entityName)){
                         entities.addLocation( getLocationOccurrence(entityName, position) );
                     } else {
                        logger.debug("Ignored blacklisted location "+entityName);
                     }
                     break;
-                case "ORGANIZATION":
+                case ":ORG":            // spanish
+                case ":I-ORG":          // german
+                case "ORGANIZATION":    // english
                     OrganizationOccurrence organization = new OrganizationOccurrence(entityName, position);
                     entities.addOrganization( organization );
                     break;
