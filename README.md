@@ -13,7 +13,9 @@ to identify cities, states and countries.
 You can try CLIFF out on our public website: http://cliff.mediameter.org.
 We don't host a public installation of CLIFF for you to use.  If you want to install and 
 use CLIFF, @ahalterman created [an awesome vagrant script](https://github.com/c4fcm/CLIFF-up) 
-that will install it to a virtual host you can use.  Follow those to get this installed.
+that will install it to a virtual host you can use.  Or check out @johnb30's 
+[docker config](https://github.com/johnb30/cliff-docker).  Use one of those to get this 
+installed quickly and easily.
 
 If you want to access CLIFF's results from Python, use our 
 [Python Client API Library](https://github.com/c4fcm/CLIFF-API-Client):
