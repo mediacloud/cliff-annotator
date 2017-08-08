@@ -8,7 +8,7 @@
 	<classpathentry kind="var" path="M2_REPO/javax/xml/bind/jaxb-api/2.2.7/jaxb-api-2.2.7.jar"/>
 	<classpathentry kind="var" path="M2_REPO/javax/servlet/servlet-api/2.5/servlet-api-2.5.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="var" path="M2_REPO/edu/stanford/nlp/stanford-corenlp/3.3.1/stanford-corenlp-3.3.1.jar"/>
+	<classpathentry kind="var" path="M2_REPO/edu/stanford/nlp/stanford-corenlp/3.4.1/stanford-corenlp-3.4.1.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/io7m/xom/xom/1.2.10/xom-1.2.10.jar"/>
 	<classpathentry kind="var" path="M2_REPO/xml-apis/xml-apis/1.4.01/xml-apis-1.4.01.jar"/>
 	<classpathentry kind="var" path="M2_REPO/xerces/xercesImpl/2.11.0/xercesImpl-2.11.0.jar"/>
