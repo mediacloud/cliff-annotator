@@ -17,12 +17,14 @@ public class ExactAdmin1MatchPass extends GenericPass {
             if(containsPopulatedCityExactMatch(candidates)){
                 continue;
             }
-            ResolvedLocation firstCandidate = candidates.get(0);
-            if( (isExactMatch(firstCandidate) || isExactMatchToAdmin1(firstCandidate)) &&   /* pick exact matches to name or ADMIN1, to catch state abbreviations */
-                    firstCandidate.getGeoname().getPopulation()>0 && 
-                    firstCandidate.getGeoname().getFeatureCode().equals(FeatureCode.ADM1)){
-                bestCandidates.add(firstCandidate);
-                possibilitiesToRemove.add(candidates);
+            List<ResolvedLocation> exactMatchCandidates = getExactMatchesOrAdmin1ExactMatches(candidates);
+            if(exactMatchCandidates.size() > 0) {
+                ResolvedLocation firstCandidate = exactMatchCandidates.get(0);
+                if(firstCandidate.getGeoname().getPopulation()>0 && 
+                        firstCandidate.getGeoname().getFeatureCode().equals(FeatureCode.ADM1)){
+                    bestCandidates.add(firstCandidate);
+                    possibilitiesToRemove.add(candidates);
+                }                
             }
         }
         return possibilitiesToRemove;

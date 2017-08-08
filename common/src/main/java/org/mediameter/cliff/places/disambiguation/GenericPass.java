@@ -77,6 +77,16 @@ public abstract class GenericPass {
         return exactMatches;
     }
 
+    protected static List<ResolvedLocation> getExactMatchesOrAdmin1ExactMatches(List<ResolvedLocation> candidates){
+        ArrayList<ResolvedLocation> exactMatches = new ArrayList<ResolvedLocation>();
+        for( ResolvedLocation item: candidates){
+            if(GenericPass.isExactMatch(item) || GenericPass.isExactMatchToAdmin1(item)){
+                exactMatches.add(item);
+            }
+        }
+        return exactMatches;
+    }
+
     protected static boolean inSameSuperPlace(ResolvedLocation candidate, List<ResolvedLocation> list){
         for( ResolvedLocation item: list){
             if(candidate.getGeoname().getAdmin1Code().equals(item.getGeoname().getAdmin1Code())){
