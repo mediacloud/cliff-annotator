@@ -276,7 +276,7 @@ To build, run `mvn` in the top level directory.  You can do `mvn package -DskipT
 
 ## Tomcat Setup
 
-CLIFF is setup to be run inside a Java servlet container (ie. Tomcat7).  For development 
+CLIFF is setup to be run inside a Java servlet container (ie. Tomcat 8).  For development 
 we use the [Maven Tomcat plugin](http://tomcat.apache.org/maven-plugin.html).  To deploy, 
 add this to your `%TOMCAT_PATH%/conf/tomcat-users.xml` file:
 ```xml
