@@ -258,7 +258,16 @@ Controls which Stanford NER Model to use while extracting entities:
 
 You need maven and java (1.7).  We develop in Eclipse Kepler: Java EE.
 
-You need to download and install CLAVIN 2.0.0 in order to build the Geonames Gazetteer Index 
+## Eclipse & Java on Mac
+You might need to update your version of the JRE for developing on Mac. If so, you can do:
+```
+brew update
+brew cask install Java
+```
+
+## Install CLAVIN
+
+You need to download and install the latest version of CLAVIN in order to build the Geonames Gazetteer Index 
 for geoparsing. The idea is that you build all that, and then create a symlink at 
 `/etc/cliff2/IndexDirectory` to the CLAVIN index you just built.
 
