@@ -16,7 +16,7 @@
 	<classpathentry kind="var" path="M2_REPO/joda-time/joda-time/2.1/joda-time-2.1.jar"/>
 	<classpathentry kind="var" path="M2_REPO/de/jollyday/jollyday/0.4.7/jollyday-0.4.7.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/googlecode/efficient-java-matrix-library/ejml/0.23/ejml-0.23.jar"/>
-	<classpathentry kind="var" path="M2_REPO/com/bericotech/clavin/2.0.0/clavin-2.0.0.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/bericotech/clavin/2.1.0/clavin-2.1.0.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/apache/lucene/lucene-core/4.9.0/lucene-core-4.9.0.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/apache/lucene/lucene-analyzers-common/4.9.0/lucene-analyzers-common-4.9.0.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/apache/lucene/lucene-queryparser/4.9.0/lucene-queryparser-4.9.0.jar"/>
