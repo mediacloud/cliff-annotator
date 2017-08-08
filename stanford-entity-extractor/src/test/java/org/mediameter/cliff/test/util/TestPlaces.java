@@ -12,7 +12,7 @@ public class TestPlaces {
     public static final int COUNTRY_US = 6252001;
     public static final int CITY_SAO_PAULO = 3448439;
     public static final int CITY_LONDON = 2643743;
-    public static final int PLACE_RUSSEL_SQ_LONDON = 6954795;
+    public static final int PLACE_RUSSEL_SQ_LONDON = 10858976;
     public static final int REGION_MIDDLE_EAST = 6269133;
     public static final int PROVINCE_BALI = 1650535;
     public static final int COUNTRY_SINGAPORE = 1880251;
