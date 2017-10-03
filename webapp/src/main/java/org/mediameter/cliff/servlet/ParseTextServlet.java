@@ -56,7 +56,7 @@ public class ParseTextServlet extends HttpServlet{
             try {
                 results = ParseManager.parseFromText(text,manuallyReplaceDemonyms);
             } catch(Exception e){   // try to give the user something useful
-                logger.error(e.toString());
+                logger.error(e.toString(), e);
                 results = ParseManager.getErrorText(e.toString());
             }
             String jsonResults = gson.toJson(results);

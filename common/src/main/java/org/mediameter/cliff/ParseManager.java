@@ -39,7 +39,7 @@ public class ParseManager {
      * Minor: small new features, changes to the json result format, or changes to the disambiguation algorithm
      * Revision: minor change or bug fix
      */
-    static final String PARSER_VERSION = "2.4.0";
+    static final String PARSER_VERSION = "2.4.1";
     
     private static final Logger logger = LoggerFactory.getLogger(ParseManager.class);
 
@@ -112,6 +112,7 @@ public class ParseManager {
             ExtractedEntities entities = extractAndResolve(text,manuallyReplaceDemonyms);
             results = parseFromEntities(entities);
         } catch (Exception e) {
+            logger.error(e.toString(), e);
             results = getErrorText(e.toString());
         }
         long endTime = System.currentTimeMillis();
@@ -185,7 +186,11 @@ public class ParseManager {
             logger.debug("Adding Country Focus:");
             focusLocationInfoList = new ArrayList<HashMap>();
             for(FocusLocation loc:focusStrategy.selectCountries(entities.getResolvedLocations())) {
-                focusLocationInfoList.add( writeAboutnessLocationToHash(loc) );
+                try {
+                    focusLocationInfoList.add( writeAboutnessLocationToHash(loc) );
+                } catch (NullPointerException npe) {
+                    logger.warn("Got an about country with no Geoname info :-( ");
+                }
             }
             focusResults.put("countries", focusLocationInfoList);
             logger.debug("Adding State Focus:");
