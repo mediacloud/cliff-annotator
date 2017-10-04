@@ -68,14 +68,8 @@ public class CountryGeoNameLookup extends AbstractGeoNameLookup {
         try{
             CountryGeoNameLookup lookup = getInstance();
             GeoName countryGeoName = lookup.get(countryCodeAlpha2);
-            if (countryGeoName==null) {
-                logger.debug("Found '"+countryCodeAlpha2+"': "+countryGeoName);
-                return countryGeoName;
-            } else {
-                // catch the Czechoslovakia case - we don't handle "historical political entity"s
-                logger.warn("Found '"+countryCodeAlpha2+"' without any geoname id!");
-                return null;
-            }
+            logger.debug("Found '"+countryCodeAlpha2+"': "+countryGeoName);
+            return countryGeoName;
         } catch (IOException ioe){
             logger.error("Couldn't lookup country geoname!");
             logger.error(ioe.toString());
