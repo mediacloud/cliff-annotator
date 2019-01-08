@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.mediameter.cliff.places.Adm1GeoNameLookup;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.bericotech.clavin.gazetteer.CountryCode;
 import com.bericotech.clavin.gazetteer.FeatureClass;
@@ -12,6 +14,8 @@ import com.bericotech.clavin.gazetteer.GeoName;
 import com.bericotech.clavin.resolver.ResolvedLocation;
 
 public class FocusUtils {
+
+    private static final Logger logger = LoggerFactory.getLogger(FocusUtils.class);
 
 	public static HashMap<GeoName,Integer> getCityCounts(List<ResolvedLocation> resolvedLocations){     
         HashMap<GeoName,Integer> cityCounts = new HashMap<GeoName,Integer>();
@@ -26,14 +30,14 @@ public class FocusUtils {
             for (GeoName geoname: cityCountKeys){
             	if (geoname.getGeonameID() == resolvedLocation.getGeoname().getGeonameID()){
             		cityCounts.put(geoname, cityCounts.get(geoname)+1);
-            		System.out.println("Adding count to city " + geoname.getAsciiName() + cityCounts.get(geoname));
+            		logger.debug("Adding count to city " + geoname.getAsciiName() + cityCounts.get(geoname));
             		found=true;
             		break;
             	}
             }
             if(!found){
             	cityCounts.put(resolvedLocation.getGeoname(), 1);
-            	System.out.println("Adding city " + resolvedLocation.getGeoname().getAsciiName());
+            	logger.debug("Adding city " + resolvedLocation.getGeoname().getAsciiName());
             }
             
         }
