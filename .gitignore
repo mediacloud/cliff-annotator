@@ -12,7 +12,6 @@ data/gdelt/*.zip
 data/reuters/*
 *.tmp
 catalina.out
-stanford-entity-extractor/log/*
 target
 HANDY SNIPPETS.txt
 tomcat-webapps
