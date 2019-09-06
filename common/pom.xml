@@ -8,18 +8,8 @@
         <version>2.4.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
-	<repositories>
-		<repository>
-			<id>nexus.bericotechnologies.com</id>
-			<name>Berico Technologies Nexus</name>
-			<url>http://nexus.bericotechnologies.com/content/groups/public</url>
-			<releases><enabled>true</enabled></releases>
-			<snapshots><enabled>true</enabled></snapshots>
-		</repository>
-	</repositories>
-
     <artifactId>common</artifactId>
+
     <dependencies>
         <dependency>
             <groupId>com.bericotech</groupId>
