@@ -69,7 +69,7 @@
 		<dependency>
 			<groupId>org.kohsuke.metainf-services</groupId>
 			<artifactId>metainf-services</artifactId>
-			<version>1.1</version>
+			<version>1.8</version>
 			<optional>true</optional>
 		</dependency>
 	</dependencies>
@@ -79,7 +79,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.16</version>
+				<version>3.0.0-M3</version>
 				<configuration>
 					<argLine>-Xmx2g -ea</argLine>
 				</configuration>
@@ -87,7 +87,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
+				<version>3.8.1</version>
 				<configuration>
 					<source>1.7</source>
 					<target>1.7</target>
@@ -96,7 +96,7 @@
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
 				<artifactId>tomcat7-maven-plugin</artifactId>
-				<version>2.1</version>
+				<version>2.2</version>
 				<configuration>
 					<server>CliffTomcatServer</server>
 					<path>/${project.build.finalName}</path>

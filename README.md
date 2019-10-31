@@ -271,6 +271,8 @@ You need to download and install the latest version of CLAVIN in order to build 
 for geoparsing. The idea is that you build all that, and then create a symlink at 
 `/etc/cliff2/IndexDirectory` to the CLAVIN index you just built.
 
+Instead of building the CLAVIN geonames index yourself, consider downloading a prebuilt one from [`mediacloud-clavin-build-geonames-index` repository's releases page](https://github.com/berkmancenter/mediacloud-clavin-build-geonames-index/releases).
+
 To build, run `mvn` in the top level directory.  You can do `mvn package -DskipTests` and then you will get a 
 .war file in `webapp/target/`.
 

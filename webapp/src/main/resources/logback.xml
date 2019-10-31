@@ -12,21 +12,9 @@
     </layout>
   </appender>
 
-  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <File>cliff.log</File>
-    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <FileNamePattern>log/cliff.%d{yyyy-MM-dd_HH-mm}.log.zip</FileNamePattern>
-    </rollingPolicy>
-
-    <layout class="ch.qos.logback.classic.PatternLayout">
-      <Pattern>%d{HH:mm:ss,SSS} [%thread] %-5level %logger{32} - %msg%n</Pattern>
-    </layout>
-  </appender>
-
   <root>
     <level value="ERROR"/>
     <appender-ref ref="STDOUT"/>
-    <appender-ref ref="FILE"/>
   </root>
 
 </configuration>
