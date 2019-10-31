@@ -96,8 +96,7 @@ public class StanfordNamedEntityExtractor implements EntityExtractor {
         InputStream mpis = this.getClass().getClassLoader().getResourceAsStream("models/" + NERprop);
         Properties mp = new Properties();
         mp.load(mpis);
-        namedEntityRecognizer = (AbstractSequenceClassifier<CoreMap>)
-                CRFClassifier.getJarClassifier("/models/" + NERmodel, mp);
+        namedEntityRecognizer = CRFClassifier.getClassifier("models/" + NERmodel, mp);
     }
 
     /**

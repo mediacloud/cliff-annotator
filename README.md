@@ -256,7 +256,7 @@ Controls which Stanford NER Model to use while extracting entities:
 
 # Developing
 
-You need maven and java (1.7).  We develop in Eclipse Kepler: Java EE.
+You need maven and java (1.8).  We develop in Eclipse Kepler: Java EE.
 
 ## Eclipse & Java on Mac
 You might need to update your version of the JRE for developing on Mac. If so, you can do:
