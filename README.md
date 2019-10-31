@@ -28,7 +28,7 @@ pip install mediameter-cliff
 To test it out, hit this url in a browser and you should get some JSON back:
 
 ```
-http://localhost:8080/cliff-2.4.2/parse/text?q=This is some text about New York City, and maybe about Accra as well, and maybe Boston as well.
+http://localhost:8080/cliff-2.5.0/parse/text?q=This is some text about New York City, and maybe about Accra as well, and maybe Boston as well.
 ```
 
 Of course, when you use this in a script you should do an HTTP POST, not a GET!
@@ -138,7 +138,7 @@ Response:
   },
   "status": "ok",
   "milliseconds": 4004,
-  "version": "2.4.2"
+  "version": "2.5.0"
 }
 ```
 
@@ -151,7 +151,7 @@ A convenience method to help you lookup places by their geonames ids.
 |id|(required)|The unique id that identifies a place in the [geonames.org](geonames.org) database|
 
 Example Query:
-`http://localhost:8080/cliff-2.4.2/geonames?id=4930956`
+`http://localhost:8080/cliff-2.5.0/geonames?id=4930956`
 
 Response:
 ```json
@@ -209,7 +209,7 @@ Response:
     "population": 617594
   },
   "status": "ok",
-  "version": "2.4.2"
+  "version": "2.5.0"
 }
 ```
 
@@ -222,7 +222,7 @@ A convenience method to help you get the raw text of the story from a URL.  This
 |url|(required)|The url of a news story to extract the text of|
 
 Example Query:
-`http://localhost:8080/cliff-2.4.2/extract?url=http://www.theonion.com/articles/woman-thinks-she-can-just-waltz-back-into-work-aft,38349/`
+`http://localhost:8080/cliff-2.5.0/extract?url=http://www.theonion.com/articles/woman-thinks-she-can-just-waltz-back-into-work-aft,38349/`
 
 Response:
 ```json
@@ -234,7 +234,7 @@ Response:
   },
   "status": "ok",
   "milliseconds": 625,
-  "version": "2.4.2"
+  "version": "2.5.0"
 }
 ```
 
@@ -341,7 +341,7 @@ We have a number of unit tests that can be run with `mvn test`.
 ## Releasing
 
 To build a release:
-1. first update the version numbers in all the `pom.xml` files (`pom.xml`, `webapp/pom.xml`, `common/pom.xml`, `stanford-entity-extractor/pom.xml`, `webapp/pom.xml`) 
+1. first update the version numbers in all the `pom.xml` files (`pom.xml`, `webapp/pom.xml`, `common/pom.xml`, `stanford-entity-extractor/pom.xml` ) 
 2. also update the version number in `org.mediameter.cliff.ParseManager`
 3. to create the WAR file, run `mvn package -DskipTests`.
 4. update the examples in `README.md`
