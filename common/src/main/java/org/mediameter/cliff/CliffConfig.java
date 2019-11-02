@@ -1,14 +1,10 @@
 package org.mediameter.cliff;
 
-import java.io.InputStream;
-import java.util.Enumeration;
-import java.util.Properties;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Singleton wrapper around configuration properties file
+ * Singleton wrapper around configuration loaded from env-vars
  * @author rahulb
  */
 public class CliffConfig {
@@ -17,44 +13,28 @@ public class CliffConfig {
 
     private static CliffConfig instance = null;
 
-    private static String PROPS_FILE_NAME = "cliff.properties";
+    private static String INDEX_PATH_ENV_VAR = "INDEX_PATH";
     
-    private Properties props;
-        
-    protected CliffConfig() throws Exception{
-        InputStream is = this.getClass().getClassLoader().getResourceAsStream(PROPS_FILE_NAME);
-        if(is==null){
-            logger.error("Couldn't find resource "+PROPS_FILE_NAME);
-            throw new RuntimeException("Couldn't find resource "+PROPS_FILE_NAME);
-        }
-        props = new Properties();
-        props.load(is);
-        logger.debug("Loaded "+PROPS_FILE_NAME+":");
-        Enumeration<Object> keys = props.keys();
-        while (keys.hasMoreElements()) {
-          String key = keys.nextElement().toString();
-          String value = props.get(key).toString();
-          logger.debug("  "+key+ "=" + value);
-        }
+    private static String DEFAULT_INDEX_PATH = "/etc/cliff2/IndexDirectory";
+            
+    private String indexPath = null;
+    
+    protected CliffConfig() {
+    	indexPath = System.getenv(INDEX_PATH_ENV_VAR);
+    	if (indexPath == null) {
+    		indexPath = DEFAULT_INDEX_PATH;
+    		logger.warn("No INDEX_PATH env-var configured, using "+DEFAULT_INDEX_PATH);
+    	}
     }
     
-    public String getNerModelName(){
-        return (String) props.get("ner.modelToUse");
+    public String getPathToGeonamesIndex(){
+    	return indexPath;
     }
-
-    public String getPropertyByName(String name){
-        return (String) props.get(name);
-    }
-    public String getPathToGeonamesIndex(){ return (String) props.get("geonamesIndex.path");}
 
     
     public static CliffConfig getInstance() {
        if(instance==null){
-           try {
-               instance = new CliffConfig();
-           } catch (Exception e) {
-               logger.error("Couldn't load "+PROPS_FILE_NAME+ " ("+e.toString()+")");
-           }
+           instance = new CliffConfig();
        }
        return instance;
     }
