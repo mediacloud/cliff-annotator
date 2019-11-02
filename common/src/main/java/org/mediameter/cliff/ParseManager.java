@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.mediameter.cliff.extractor.EntityExtractor;
 import org.mediameter.cliff.extractor.EntityExtractorService;
 import org.mediameter.cliff.extractor.ExtractedEntities;
 import org.mediameter.cliff.extractor.SentenceLocationOccurrence;
@@ -96,20 +97,24 @@ public class ParseManager {
         }
     }
     
+    public static HashMap parseFromText(String text,boolean manuallyReplaceDemonyms) {
+    	return parseFromText(text, manuallyReplaceDemonyms, EntityExtractor.ENGLISH);
+    }
+    
     /**
      * Public api method - call this statically to extract locations from a text string 
      * @param text  unstructured text that you want to parse for location mentions
      * @return      json string with details about locations mentioned
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public static HashMap parseFromText(String text,boolean manuallyReplaceDemonyms) {
+    public static HashMap parseFromText(String text,boolean manuallyReplaceDemonyms, String language) {
         long startTime = System.currentTimeMillis();
         HashMap results = null;
         if(text.trim().length()==0){
             return getErrorText("No text");
         }
         try {
-            ExtractedEntities entities = extractAndResolve(text,manuallyReplaceDemonyms);
+            ExtractedEntities entities = extractAndResolve(text,manuallyReplaceDemonyms, language);
             results = parseFromEntities(entities);
         } catch (Exception e) {
             logger.error(e.toString(), e);
@@ -302,8 +307,12 @@ public class ParseManager {
         return extractAndResolve(text, false);
     }
     
+    public static ExtractedEntities extractAndResolve(String text,boolean manuallyReplaceDemonyms, String language) throws Exception{
+    	return getParserInstance().extractAndResolve(text,manuallyReplaceDemonyms, language);
+    }
+
     public static ExtractedEntities extractAndResolve(String text,boolean manuallyReplaceDemonyms) throws Exception{
-        return getParserInstance().extractAndResolve(text,manuallyReplaceDemonyms);
+        return extractAndResolve(text, manuallyReplaceDemonyms, EntityExtractor.ENGLISH);
     }
 
     @SuppressWarnings("rawtypes")

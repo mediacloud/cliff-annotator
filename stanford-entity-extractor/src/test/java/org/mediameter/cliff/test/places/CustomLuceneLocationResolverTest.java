@@ -6,7 +6,6 @@ import java.io.File;
 
 import org.junit.Test;
 import org.mediameter.cliff.CliffConfig;
-import org.mediameter.cliff.ParseManager;
 import org.mediameter.cliff.places.CliffLocationResolver;
 
 import com.bericotech.clavin.gazetteer.FeatureCode;

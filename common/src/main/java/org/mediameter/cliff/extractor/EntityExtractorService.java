@@ -48,15 +48,14 @@ public class EntityExtractorService {
         }
 
     }
-
-
-    public ExtractedEntities extractEntities(String textToParse, boolean manuallyReplaceDemonyms){
+    
+    public ExtractedEntities extractEntities(String textToParse, boolean manuallyReplaceDemonyms, String language){
         ExtractedEntities e = new ExtractedEntities();
         try {
             Iterator<EntityExtractor> extractors = loader.iterator();
             while (extractors != null && extractors.hasNext()) {
                 EntityExtractor currentExtractor = extractors.next();
-                ExtractedEntities e2 = currentExtractor.extractEntities(textToParse, manuallyReplaceDemonyms);
+                ExtractedEntities e2 = currentExtractor.extractEntities(textToParse, manuallyReplaceDemonyms, language);
                 e.merge(e2);
             }
         } catch (ServiceConfigurationError serviceError) {

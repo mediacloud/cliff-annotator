@@ -3,6 +3,7 @@ package org.mediameter.cliff;
 import java.util.List;
 import java.util.Map;
 
+import org.mediameter.cliff.extractor.EntityExtractor;
 import org.mediameter.cliff.extractor.EntityExtractorService;
 import org.mediameter.cliff.extractor.ExtractedEntities;
 import org.mediameter.cliff.orgs.OrganizationResolver;
@@ -46,9 +47,13 @@ public class EntityParser {
     }
 
     public ExtractedEntities extractAndResolve(String inputText, boolean manuallyReplaceDemonyms) throws Exception {
+    	return extractAndResolve(inputText, manuallyReplaceDemonyms, EntityExtractor.ENGLISH);
+    }
+
+    public ExtractedEntities extractAndResolve(String inputText, boolean manuallyReplaceDemonyms, String language) throws Exception {
         logger.trace("input: {}", inputText);
         long startTime = System.nanoTime();
-        ExtractedEntities extractedEntities = extractor.extractEntities(inputText,manuallyReplaceDemonyms);
+        ExtractedEntities extractedEntities = extractor.extractEntities(inputText,manuallyReplaceDemonyms, language);
         long extract = System.nanoTime() - startTime;
         logger.trace("extracted: {}", extractedEntities.getLocations());
         startTime = System.nanoTime();

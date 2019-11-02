@@ -2,6 +2,7 @@ package org.mediameter.cliff.servlet;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import javax.servlet.http.HttpServlet;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.mediameter.cliff.ParseManager;
+import org.mediameter.cliff.extractor.EntityExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,6 +49,15 @@ public class ParseTextServlet extends HttpServlet{
         String text = request.getParameter("q");
         String replaceAllDemonymsStr = request.getParameter("replaceAllDemonyms");
         boolean manuallyReplaceDemonyms = (replaceAllDemonymsStr==null) ? false : Boolean.parseBoolean(replaceAllDemonymsStr);
+        String language = request.getParameter("language");
+        if (language == null) {
+        	language = EntityExtractor.ENGLISH;
+        }
+        // check for invalid language argument
+        if (!Arrays.asList(EntityExtractor.VALID_LANGUAGES).contains(language)) {
+        	response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+        	return;
+        }
         logger.debug("q="+text);
         logger.debug("replaceAllDemonyms="+manuallyReplaceDemonyms);
         
@@ -54,7 +65,7 @@ public class ParseTextServlet extends HttpServlet{
             response.sendError(HttpServletResponse.SC_BAD_REQUEST);
         } else {
             try {
-                results = ParseManager.parseFromText(text,manuallyReplaceDemonyms);
+                results = ParseManager.parseFromText(text,manuallyReplaceDemonyms, language);
             } catch(Exception e){   // try to give the user something useful
                 logger.error(e.toString(), e);
                 results = ParseManager.getErrorText(e.toString());
