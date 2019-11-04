@@ -123,11 +123,12 @@ public class ParseManager {
         long endTime = System.currentTimeMillis();
         long elapsedMillis = endTime - startTime;
         results.put("milliseconds", elapsedMillis);
+        results.put("language", language);
         return results;
     }
     
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public static HashMap parseFromSentences(String jsonText, boolean manuallyReplaceDemonyms) {
+    public static HashMap parseFromSentences(String jsonText, boolean manuallyReplaceDemonyms, String language) {
         long startTime = System.currentTimeMillis();
         HashMap results = null;
         if(jsonText.trim().length()==0){
@@ -136,7 +137,7 @@ public class ParseManager {
         try {
             Gson gson = new Gson();
             Map[] sentences = gson.fromJson(jsonText, Map[].class);
-            ExtractedEntities entities = extractAndResolveFromSentences(sentences,manuallyReplaceDemonyms);
+            ExtractedEntities entities = extractAndResolveFromSentences(sentences,manuallyReplaceDemonyms, language);
             results = parseFromEntities(entities);
         } catch (Exception e) {
             results = getErrorText(e.toString());
@@ -144,6 +145,7 @@ public class ParseManager {
         long endTime = System.currentTimeMillis();
         long elapsedMillis = endTime - startTime;
         results.put("milliseconds", elapsedMillis);
+        results.put("language", language);
         return results;
     }
     
@@ -315,9 +317,13 @@ public class ParseManager {
         return extractAndResolve(text, manuallyReplaceDemonyms, EntityExtractor.ENGLISH);
     }
 
-    @SuppressWarnings("rawtypes")
     public static ExtractedEntities extractAndResolveFromSentences(Map[] sentences, boolean manuallyReplaceDemonyms) throws Exception{
-        return getParserInstance().extractAndResolveFromSentences(sentences, manuallyReplaceDemonyms);
+        return getParserInstance().extractAndResolveFromSentences(sentences, manuallyReplaceDemonyms, EntityExtractor.ENGLISH);
+    }
+
+    @SuppressWarnings("rawtypes")
+    public static ExtractedEntities extractAndResolveFromSentences(Map[] sentences, boolean manuallyReplaceDemonyms, String langauge) throws Exception{
+        return getParserInstance().extractAndResolveFromSentences(sentences, manuallyReplaceDemonyms, langauge);
     }
     
     /**

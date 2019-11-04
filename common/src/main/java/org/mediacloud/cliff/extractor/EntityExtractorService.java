@@ -66,13 +66,13 @@ public class EntityExtractorService {
     }
 
     @SuppressWarnings("rawtypes")
-    public ExtractedEntities extractEntitiesFromSentences(Map[] sentences, boolean manuallyReplaceDemonyms){
+    public ExtractedEntities extractEntitiesFromSentences(Map[] sentences, boolean manuallyReplaceDemonyms, String langauge){
         ExtractedEntities e = new ExtractedEntities();
         try {
             Iterator<EntityExtractor> extractors = loader.iterator();
             while (extractors != null && extractors.hasNext()) {
                 EntityExtractor currentExtractor = extractors.next();
-                ExtractedEntities e2 = currentExtractor.extractEntitiesFromSentences(sentences, manuallyReplaceDemonyms);
+                ExtractedEntities e2 = currentExtractor.extractEntitiesFromSentences(sentences, manuallyReplaceDemonyms, langauge);
                 e.merge(e2);
             }
         } catch (ServiceConfigurationError serviceError) {

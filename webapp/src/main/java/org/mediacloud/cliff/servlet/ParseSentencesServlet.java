@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.mediacloud.cliff.ParseManager;
+import org.mediacloud.cliff.extractor.EntityExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,6 +45,10 @@ public class ParseSentencesServlet extends HttpServlet{
 
         HashMap results = null;
         String text = request.getParameter("q");
+        String language = request.getParameter("language");
+        if (language == null) {
+        	language = EntityExtractor.ENGLISH;
+        }
         String replaceAllDemonymsStr = request.getParameter("replaceAllDemonyms");
         boolean manuallyReplaceDemonyms = (replaceAllDemonymsStr==null) ? false : Boolean.parseBoolean(replaceAllDemonymsStr);
         logger.debug("q="+text);
@@ -53,7 +58,7 @@ public class ParseSentencesServlet extends HttpServlet{
             response.sendError(HttpServletResponse.SC_BAD_REQUEST);
         } else {
             try {
-                results = ParseManager.parseFromSentences(text,manuallyReplaceDemonyms);
+                results = ParseManager.parseFromSentences(text,manuallyReplaceDemonyms, language);
             } catch(Exception e){   // try to give the user something useful
                 logger.error(e.toString());
                 results = ParseManager.getErrorText(e.toString());

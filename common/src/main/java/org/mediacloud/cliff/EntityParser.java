@@ -64,10 +64,10 @@ public class EntityParser {
     }
 
     @SuppressWarnings("rawtypes")
-    public ExtractedEntities extractAndResolveFromSentences(Map[] sentences, boolean manuallyReplaceDemonyms) throws Exception {
+    public ExtractedEntities extractAndResolveFromSentences(Map[] sentences, boolean manuallyReplaceDemonyms, String langauge) throws Exception {
         logger.trace("input: {}", (Object[]) sentences);
         long startTime = System.nanoTime();
-        ExtractedEntities extractedEntities = extractor.extractEntitiesFromSentences(sentences,manuallyReplaceDemonyms);
+        ExtractedEntities extractedEntities = extractor.extractEntitiesFromSentences(sentences,manuallyReplaceDemonyms, langauge);
         long extract = System.nanoTime() - startTime;
         logger.trace("extracted: {}", extractedEntities.getLocations());
         startTime = System.nanoTime();
