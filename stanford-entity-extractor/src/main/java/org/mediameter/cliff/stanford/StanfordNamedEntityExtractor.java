@@ -2,7 +2,6 @@ package org.mediameter.cliff.stanford;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +29,7 @@ import edu.stanford.nlp.util.Triple;
 
 
 /**
+ * Wrapper around the StanfordNamedEntityExtractor
  */
 @MetaInfServices(EntityExtractor.class)
 public class StanfordNamedEntityExtractor implements EntityExtractor {
@@ -56,7 +56,7 @@ public class StanfordNamedEntityExtractor implements EntityExtractor {
         InputStream mpis = this.getClass().getClassLoader().getResourceAsStream("models/" + NERprop);
         Properties mp = new Properties();
         mp.load(mpis);
-        AbstractSequenceClassifier<CoreMap> recognizer = CRFClassifier.getClassifier("models/" + NERmodel, mp);
+        AbstractSequenceClassifier<CoreMap> recognizer = (AbstractSequenceClassifier<CoreMap>) CRFClassifier.getClassifier("models/" + NERmodel, mp);
         return recognizer;
     }
 
@@ -105,9 +105,9 @@ public class StanfordNamedEntityExtractor implements EntityExtractor {
             for (Triple<String, Integer, Integer> extractedEntity : extractedEntities) {
                 String entityName = text.substring(extractedEntity.second(), extractedEntity.third());
                 int position = extractedEntity.second();
-                switch(extractedEntity.first){
-                case ":PERS":       // spanish
-                case ":I-PER":      // german
+            	switch(extractedEntity.first){
+                case "PERS":       // spanish
+                case "I-PER":      // german
                 case "PERSON":      // english
                     if(personToPlaceSubstitutions.contains(entityName)){
                         entities.addLocation( getLocationOccurrence(personToPlaceSubstitutions.getSubstitution(entityName), position) );
@@ -117,8 +117,8 @@ public class StanfordNamedEntityExtractor implements EntityExtractor {
                         entities.addPerson( person );
                     }
                     break;
-                case ":LUG":        // spanish
-                case ":I-LOC":      // german
+                case "LUG":
+                case "I-LOC":      // german
                 case "LOCATION":    // english
                     if(!locationBlacklist.contains(entityName)){
                         entities.addLocation( getLocationOccurrence(entityName, position) );
@@ -126,12 +126,13 @@ public class StanfordNamedEntityExtractor implements EntityExtractor {
                        logger.debug("Ignored blacklisted location "+entityName);
                     }
                     break;
-                case ":ORG":            // spanish
-                case ":I-ORG":          // german
+                case "ORG":            // spanish
+                case "I-ORG":          // german
                 case "ORGANIZATION":    // english
                     OrganizationOccurrence organization = new OrganizationOccurrence(entityName, position);
                     entities.addOrganization( organization );
                     break;
+                case "OTROS":	// spanish
                 case "MISC":    // if you're using the slower 4class model
                     if (demonyms.contains(entityName)) {
                         logger.debug("Found and adding a MISC demonym "+entityName);

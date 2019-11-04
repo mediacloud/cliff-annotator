@@ -23,7 +23,7 @@ public class CliffConfig {
     	indexPath = System.getenv(INDEX_PATH_ENV_VAR);
     	if (indexPath == null) {
     		indexPath = DEFAULT_INDEX_PATH;
-    		logger.warn("No INDEX_PATH env-var configured, using "+DEFAULT_INDEX_PATH);
+    		logger.warn("No INDEX_PATH env-var configured, using default path of "+DEFAULT_INDEX_PATH);
     	}
     }
     

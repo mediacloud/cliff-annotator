@@ -7,13 +7,14 @@ import java.util.HashMap;
 
 import org.junit.Test;
 import org.mediameter.cliff.ParseManager;
+import org.mediameter.cliff.extractor.EntityExtractor;
 
 public class ParseManagerTest {
 
     @SuppressWarnings("rawtypes")
     @Test
     public void testCountry() {
-        HashMap response = ParseManager.parseFromText("This is focus India the country.", false);
+        HashMap response = ParseManager.parseFromText("This is about India the country.", false);
         HashMap results = (HashMap) response.get("results");
         assertEquals( ((ArrayList)((HashMap) results.get("places")).get("mentions")).size(),1 );
         assertEquals( ((ArrayList)((HashMap)((HashMap) results.get("places")).get("focus")).get("states")).size(),0 );
@@ -22,7 +23,7 @@ public class ParseManagerTest {
         assertEquals( ((ArrayList) results.get("people")).size(),0 );
         assertEquals( ((ArrayList) results.get("organizations")).size(),0 );
     }
-
+    
     @SuppressWarnings("rawtypes")
     @Test
     public void testCity() {
