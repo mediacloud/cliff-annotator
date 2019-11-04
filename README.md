@@ -10,7 +10,7 @@ to identify cities, states and countries.
 
 # Installing
 
-You can try CLIFF out on our public website: http://cliff.mediameter.org.
+You can try CLIFF out on our public website: http://cliff.mediacloud.org.
 We don't host a public installation of CLIFF for you to use.  If you want to install and 
 use CLIFF, @ahalterman created [an awesome vagrant script](https://github.com/c4fcm/CLIFF-up) 
 that will install it to a virtual host you can use.  Or check out @johnb30's 
@@ -20,7 +20,7 @@ installed quickly and easily.
 If you want to access CLIFF's results from Python, use our 
 [Python Client API Library](https://github.com/c4fcm/CLIFF-API-Client):
 ```
-pip install mediameter-cliff
+pip install mediacloud-cliff
 ```
 
 # Using
@@ -28,7 +28,7 @@ pip install mediameter-cliff
 To test it out, hit this url in a browser and you should get some JSON back:
 
 ```
-http://localhost:8080/cliff-2.5.0/parse/text?q=This is some text about New York City, and maybe about Accra as well, and maybe Boston as well.
+http://localhost:8080/cliff-2.6.0/parse/text?q=This is some text about New York City, and maybe about Accra as well, and maybe Boston as well.
 ```
 
 Of course, when you use this in a script you should do an HTTP POST, not a GET!
@@ -138,7 +138,7 @@ Response:
   },
   "status": "ok",
   "milliseconds": 4004,
-  "version": "2.5.0"
+  "version": "2.6.0"
 }
 ```
 
@@ -151,7 +151,7 @@ A convenience method to help you lookup places by their geonames ids.
 |id|(required)|The unique id that identifies a place in the [geonames.org](geonames.org) database|
 
 Example Query:
-`http://localhost:8080/cliff-2.5.0/geonames?id=4930956`
+`http://localhost:8080/cliff-2.6.0/geonames?id=4930956`
 
 Response:
 ```json
@@ -209,7 +209,7 @@ Response:
     "population": 617594
   },
   "status": "ok",
-  "version": "2.5.0"
+  "version": "2.6.0"
 }
 ```
 
@@ -222,7 +222,7 @@ A convenience method to help you get the raw text of the story from a URL.  This
 |url|(required)|The url of a news story to extract the text of|
 
 Example Query:
-`http://localhost:8080/cliff-2.5.0/extract?url=http://www.theonion.com/articles/woman-thinks-she-can-just-waltz-back-into-work-aft,38349/`
+`http://localhost:8080/cliff-2.6.0/extract?url=http://www.theonion.com/articles/woman-thinks-she-can-just-waltz-back-into-work-aft,38349/`
 
 Response:
 ```json
@@ -234,25 +234,15 @@ Response:
   },
   "status": "ok",
   "milliseconds": 625,
-  "version": "2.5.0"
+  "version": "2.6.0"
 }
 ```
 
 ## Options
 
-You can configure how CLIFF runs by editing the following properties in the `src/main/resources/cliff.properties` 
-file.
+You can configure how CLIFF runs by editing environment variables.
 
-### ner.modelToUse
-
-Controls which Stanford NER Model to use while extracting entities:
-
-| Value | Default | Model | Notes |
-| ----- | ------- | ----- | ----- |
-|ENGLISH_ALL_3CLASS|*|english.all.3class.caseless.distsim.crf.ser.gz|Quick, but doesn't catch all demonyms|
-|ENGLISH_CONLL_4CLASS||english.conll.4class.caseless.distsim.crf.ser.gz|Catches most demonyms, but is about 30% slower|
-|SPANISH_ANCORA|spanish.ancora.distsim.s512.crf.ser.gz|Untested Spanish model|
-|GERMAN_DEWAC|german.dewac_175m_600.crf.ser.gz|Untested German model|
+ * `INDEX_PATH` - controls where CLIFF will look for the geonames index (defaults to `/etc/cliff2/IndexDirectory` for reverse compatability)
 
 # Developing
 
@@ -342,8 +332,8 @@ We have a number of unit tests that can be run with `mvn test`.
 
 To build a release:
 1. first update the version numbers in all the `pom.xml` files (`pom.xml`, `webapp/pom.xml`, `common/pom.xml`, `stanford-entity-extractor/pom.xml` ) 
-2. also update the version number in `org.mediameter.cliff.ParseManager`
-3. to create the WAR file, run `mvn package -DskipTests`.
+2. also update the version number in `org.mediacloud.cliff.ParseManager`
+3. to create the WAR file, run `mvn package`
 4. update the examples in `README.md`
 5. tag the release with the version number `vX.Y.Z`
 6. author a new release for that tag on GitHub, write a description of the changes, and upload the .war 

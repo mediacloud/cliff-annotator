@@ -7,7 +7,7 @@
 
      <servlet>
          <servlet-name>ParseTextServlet</servlet-name>
-         <servlet-class>org.mediameter.cliff.servlet.ParseTextServlet</servlet-class>
+         <servlet-class>org.mediacloud.cliff.servlet.ParseTextServlet</servlet-class>
      </servlet>
      <servlet-mapping>
          <servlet-name>ParseTextServlet</servlet-name>
@@ -16,7 +16,7 @@
 
      <servlet>
          <servlet-name>ParseNlpJsonServlet</servlet-name>
-         <servlet-class>org.mediameter.cliff.servlet.ParseNlpJsonServlet</servlet-class>
+         <servlet-class>org.mediacloud.cliff.servlet.ParseNlpJsonServlet</servlet-class>
      </servlet>
      <servlet-mapping>
          <servlet-name>ParseNlpJsonServlet</servlet-name>
@@ -25,7 +25,7 @@
 
      <servlet>
          <servlet-name>ParseSentencesServlet</servlet-name>
-         <servlet-class>org.mediameter.cliff.servlet.ParseSentencesServlet</servlet-class>
+         <servlet-class>org.mediacloud.cliff.servlet.ParseSentencesServlet</servlet-class>
      </servlet>
      <servlet-mapping>
          <servlet-name>ParseSentencesServlet</servlet-name>
@@ -34,7 +34,7 @@
 
      <servlet>
          <servlet-name>GeonamesLookupServlet</servlet-name>
-         <servlet-class>org.mediameter.cliff.servlet.GeonamesLookupServlet</servlet-class>
+         <servlet-class>org.mediacloud.cliff.servlet.GeonamesLookupServlet</servlet-class>
      </servlet>
      <servlet-mapping>
          <servlet-name>GeonamesLookupServlet</servlet-name>
@@ -43,7 +43,7 @@
      
      <servlet>
          <servlet-name>ExtractTextServlet</servlet-name>
-         <servlet-class>org.mediameter.cliff.servlet.ExtractTextServlet</servlet-class>
+         <servlet-class>org.mediacloud.cliff.servlet.ExtractTextServlet</servlet-class>
      </servlet>
      <servlet-mapping>
          <servlet-name>ExtractTextServlet</servlet-name>
