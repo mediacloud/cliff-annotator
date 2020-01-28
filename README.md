@@ -12,13 +12,10 @@ to identify cities, states and countries.
 
 You can try CLIFF out on our public website: http://cliff.mediacloud.org.
 We don't host a public installation of CLIFF for you to use.  If you want to install and 
-use CLIFF, @ahalterman created [an awesome vagrant script](https://github.com/c4fcm/CLIFF-up) 
-that will install it to a virtual host you can use.  Or check out @johnb30's 
-[docker config](https://github.com/johnb30/cliff-docker).  Use one of those to get this 
-installed quickly and easily.
+use CLIFF quickly, try [our Docker config](https://github.com/mitmedialab/cliff-docker).
 
 If you want to access CLIFF's results from Python, use our 
-[Python Client API Library](https://github.com/c4fcm/CLIFF-API-Client):
+[`mediacloud-cliff Python client API library](https://pypi.org/project/mediacloud-cliff/):
 ```
 pip install mediacloud-cliff
 ```
@@ -35,7 +32,7 @@ Of course, when you use this in a script you should do an HTTP POST, not a GET!
 
 ## Public API Endpoints
 
-###/parse/text
+### /parse/text
 
 The reason CLIFF exists! This parses some text and returns the entities mentioned (people, places and organizations).
 
@@ -142,7 +139,7 @@ Response:
 }
 ```
 
-###/geonames
+### /geonames
 
 A convenience method to help you lookup places by their geonames ids.
 
@@ -213,7 +210,7 @@ Response:
 }
 ```
 
-###/extract
+### /extract
 
 A convenience method to help you get the raw text of the story from a URL.  This uses the [boilerpipe](https://code.google.com/p/boilerpipe/) library.
 
@@ -304,6 +301,7 @@ project utilizes a maven profile which will select the stanford-ner model by def
 the Stanford NER leverages a GNU / Commercial License.
 
 ###Running the MITIE NER
+
 Download and compile the MITIE NER package for your system following the instructions at
  [MITIE](https://github.com/mit-nlp/MITIE). As MITIE is not published to a maven repo, prior to
  compiling CLIFF you must install MITIE via mvn such as
@@ -319,6 +317,7 @@ profile and activate the mitie profile. For example `mvn -P mitie,\!stanford-ner
 `mvn -P mitie,\!stanford-ner tomcat7:run`. Cliff will then use MITIE instead of Stanford NER.
 
 ##Using your own NER
+
 To use your own NER, create a mvn module modeled after the MITIE example. You must modify the
 webapp/pom.xml for a correct profile which includes the MITIE NER sub-module and includes the
 transitive depenencies of your NER system. Then make sure you install any modules you need for your
