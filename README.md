@@ -300,7 +300,7 @@ containing the entity extractor must exist in the classpath of the CLIFF Webapp.
 project utilizes a maven profile which will select the stanford-ner model by default. However,
 the Stanford NER leverages a GNU / Commercial License.
 
-###Running the MITIE NER
+### Running the MITIE NER
 
 Download and compile the MITIE NER package for your system following the instructions at
  [MITIE](https://github.com/mit-nlp/MITIE). As MITIE is not published to a maven repo, prior to
@@ -316,7 +316,7 @@ The final step is during your build, you must disable the stanford-ner maven
 profile and activate the mitie profile. For example `mvn -P mitie,\!stanford-ner clean install`,
 `mvn -P mitie,\!stanford-ner tomcat7:run`. Cliff will then use MITIE instead of Stanford NER.
 
-##Using your own NER
+## Using your own NER
 
 To use your own NER, create a mvn module modeled after the MITIE example. You must modify the
 webapp/pom.xml for a correct profile which includes the MITIE NER sub-module and includes the
