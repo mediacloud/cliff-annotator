@@ -21,6 +21,25 @@ public class StanfordNamedEntityExtractorTest {
 
     public final static Logger logger = LoggerFactory.getLogger(StanfordNamedEntityExtractorTest.class);
     
+    public void testOrgSpanish() {
+    	CliffConfig config = CliffConfig.getInstance();
+        EntityExtractor extractor = new StanfordNamedEntityExtractor();
+        try {
+			extractor.initialize(config);
+			ExtractedEntities entities = extractor.extractEntities("Instituciones clave: Instituto del Niño y Adolescente del Uruguay (INAU), Administración Nacional de Educación Pública (ANEP), Educación Privada, Universidades, Ministerio de Educación y Cultura (MEC), Centros de formación militar.", false, EntityExtractor.SPANISH);
+			List<PersonOccurrence> people = entities.getPeople();
+			List<LocationOccurrence> places = entities.getLocations();
+			List<OrganizationOccurrence> orgs = entities.getOrganizations();
+			assertEquals( 8, orgs.size() );
+			assertEquals( 0, places.size() );
+			assertEquals( 0, people.size() );
+			assertEquals( "Ministerio de Educación y Cultura", orgs.get(5).text);
+		} catch (ClassCastException | ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    
     @Test
     public void testPersonSpanish() {
         CliffConfig config = CliffConfig.getInstance();

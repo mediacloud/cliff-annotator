@@ -1,6 +1,8 @@
 package org.mediacloud.cliff.servlet;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -68,7 +70,10 @@ public class ParseTextServlet extends HttpServlet{
                 results = ParseManager.parseFromText(text,manuallyReplaceDemonyms, language);
             } catch(Exception e){   // try to give the user something useful
                 logger.error(e.toString(), e);
-                results = ParseManager.getErrorText(e.toString());
+            	StringWriter sw = new StringWriter();
+            	PrintWriter pw = new PrintWriter(sw);
+            	e.printStackTrace(pw);
+            	results = ParseManager.getErrorText(sw.toString());
             }
             String jsonResults = gson.toJson(results);
             logger.info(jsonResults);
