@@ -40,20 +40,20 @@ public class ParseManager {
      * Minor: small new features, changes to the json result format, or changes to the disambiguation algorithm
      * Revision: minor change or bug fix
      */
-    static final String PARSER_VERSION = "2.6.0";
-    
+    static final String PARSER_VERSION = "2.6.1";
+
     private static final Logger logger = LoggerFactory.getLogger(ParseManager.class);
 
     public static EntityParser parser = null;
 
     private static CliffLocationResolver resolver;   // HACK: pointer to keep around for stats logging
-    
+
     private static FocusStrategy focusStrategy = new FrequencyOfMentionFocusStrategy();
-    
+
     // these two are the statuses used in the JSON responses
     private static final String STATUS_OK = "ok";
     private static final String STATUS_ERROR = "error";
-    
+
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public static HashMap getResponseMap(HashMap results){
         HashMap response = new HashMap();
@@ -62,7 +62,7 @@ public class ParseManager {
         response.put("results",results);
         return response;
     }
-    
+
     public static GeoName getGeoName(int id) throws UnknownGeoNameIdException{
         GeoName geoname = ((CliffLocationResolver) resolver).getByGeoNameId(id);
         return geoname;
@@ -72,7 +72,7 @@ public class ParseManager {
     public static HashMap getGeoNameInfo(int id) {
         return getGeoNameInfo(id, true);
     }
-    
+
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public static HashMap getGeoNameInfo(int id, boolean withAncestry) {
         try {
@@ -80,7 +80,7 @@ public class ParseManager {
             HashMap info = writeGeoNameToHash(geoname);
             if(withAncestry){
                 HashMap childInfo = info;
-                GeoName child = geoname; 
+                GeoName child = geoname;
                 while(child.getParent()!=null){
                     GeoName parent = child.getParent();
                     HashMap parentInfo = writeGeoNameToHash(parent);
@@ -96,13 +96,13 @@ public class ParseManager {
             return getErrorText("Invalid GeoNames id "+id);
         }
     }
-    
+
     public static HashMap parseFromText(String text,boolean manuallyReplaceDemonyms) {
     	return parseFromText(text, manuallyReplaceDemonyms, EntityExtractor.ENGLISH);
     }
-    
+
     /**
-     * Public api method - call this statically to extract locations from a text string 
+     * Public api method - call this statically to extract locations from a text string
      * @param text  unstructured text that you want to parse for location mentions
      * @return      json string with details about locations mentioned
      */
@@ -126,7 +126,7 @@ public class ParseManager {
         results.put("language", language);
         return results;
     }
-    
+
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public static HashMap parseFromSentences(String jsonText, boolean manuallyReplaceDemonyms, String language) {
         long startTime = System.currentTimeMillis();
@@ -148,7 +148,7 @@ public class ParseManager {
         results.put("language", language);
         return results;
     }
-    
+
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public static HashMap parseFromNlpJson(String nlpJsonString){
         long startTime = System.currentTimeMillis();
@@ -162,19 +162,19 @@ public class ParseManager {
             results = parseFromEntities(entities);
         } catch (Exception e) {
             results = getErrorText(e.toString());
-        } 
+        }
         long endTime = System.currentTimeMillis();
         long elapsedMillis = endTime - startTime;
         results.put("milliseconds", elapsedMillis);
         return results;
     }
-    
+
     @SuppressWarnings({ "rawtypes", "unchecked" })  // I'm generating JSON... don't whine!
     public static HashMap parseFromEntities(ExtractedEntities entities){
         if (entities == null){
             return getErrorText("No place or person entitites detected in this text.");
-        } 
-        
+        }
+
         logger.debug("Adding Mentions:");
         HashMap results = new HashMap();
         // assemble the "where" results
@@ -185,7 +185,7 @@ public class ParseManager {
             resolvedPlaces.add(loc);
         }
         placeResults.put("mentions",resolvedPlaces);
-        
+
         logger.debug("Adding Focus:");
         HashMap focusResults = new HashMap();
         if (resolvedPlaces.size() > 0){
@@ -256,7 +256,7 @@ public class ParseManager {
         loc.put("featureClass", place.getFeatureClass().toString());
         loc.put("featureCode", featureCode);
         // add in country info
-        String primaryCountryCodeAlpha2 = ""; 
+        String primaryCountryCodeAlpha2 = "";
         if(place.getPrimaryCountryCode()!=CountryCode.NULL){
             primaryCountryCodeAlpha2 = place.getPrimaryCountryCode().toString();
         }
@@ -273,7 +273,7 @@ public class ParseManager {
             admin1Code = place.getAdmin1Code();
         }
         loc.put("stateCode", admin1Code);
-        GeoName adm1GeoName = Adm1GeoNameLookup.lookup(primaryCountryCodeAlpha2, admin1Code);        
+        GeoName adm1GeoName = Adm1GeoNameLookup.lookup(primaryCountryCodeAlpha2, admin1Code);
         String stateGeoNameId = "";
         if(adm1GeoName!=null){
             stateGeoNameId = ""+adm1GeoName.getGeonameID();
@@ -282,14 +282,14 @@ public class ParseManager {
 
         return loc;
     }
-    
+
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public static HashMap writeAboutnessLocationToHash(FocusLocation location){
         HashMap loc = writeGeoNameToHash(location.getGeoName());
         loc.put("score", location.getScore());
         return loc;
     }
-    
+
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public static HashMap writeResolvedLocationToHash(ResolvedLocation resolvedLocation){
     	HashMap loc = writeGeoNameToHash(resolvedLocation.getGeoname());
@@ -297,18 +297,18 @@ public class ParseManager {
         loc.put("confidence", resolvedLocation.getConfidence()); // low is good
         HashMap sourceInfo = new HashMap();
         sourceInfo.put("string",resolvedLocation.getLocation().getText());
-        sourceInfo.put("charIndex",charIndex);  
+        sourceInfo.put("charIndex",charIndex);
         if(resolvedLocation.getLocation() instanceof SentenceLocationOccurrence){
             sourceInfo.put("storySentencesId", ((SentenceLocationOccurrence) resolvedLocation.getLocation()).storySentenceId);
         }
         loc.put("source",sourceInfo);
     	return loc;
     }
-    
+
     public static ExtractedEntities extractAndResolve(String text) throws Exception{
         return extractAndResolve(text, false);
     }
-    
+
     public static ExtractedEntities extractAndResolve(String text,boolean manuallyReplaceDemonyms, String language) throws Exception{
     	return getParserInstance().extractAndResolve(text,manuallyReplaceDemonyms, language);
     }
@@ -325,9 +325,9 @@ public class ParseManager {
     public static ExtractedEntities extractAndResolveFromSentences(Map[] sentences, boolean manuallyReplaceDemonyms, String langauge) throws Exception{
         return getParserInstance().extractAndResolveFromSentences(sentences, manuallyReplaceDemonyms, langauge);
     }
-    
+
     /**
-     * We want all error messages sent to the client to have the same format 
+     * We want all error messages sent to the client to have the same format
      * @param msg
      * @return
      */
@@ -339,13 +339,13 @@ public class ParseManager {
         info.put("details",msg);
         return info;
     }
-    
+
     public static void logStats(){
         if(resolver!=null){
             ((CliffLocationResolver) resolver).logStats();
         }
     }
-    
+
     /**
      * Lazy instantiation of singleton parser
      * @return
@@ -359,7 +359,7 @@ public class ParseManager {
             EntityExtractorService extractor = EntityExtractorService.getInstance();
             CliffConfig config = CliffConfig.getInstance();
             extractor.initialize(config);
-            
+
             boolean useFuzzyMatching = false;
             File gazetteerDir = new File(config.getPathToGeonamesIndex());
             if( !gazetteerDir.exists() || !gazetteerDir.isDirectory() ){
@@ -372,10 +372,10 @@ public class ParseManager {
 
             parser = new EntityParser(extractor, resolver,
                     useFuzzyMatching, CliffLocationResolver.MAX_HIT_DEPTH);
-                        
+
             logger.info("Created parser successfully");
         }
-        
+
         return parser;
     }
 
@@ -392,11 +392,11 @@ public class ParseManager {
     static {
      // instatiate and load right away
         try {
-            ParseManager.getParserInstance();  
+            ParseManager.getParserInstance();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             logger.error("Unable to create parser "+e);
         }
     }
-    
+
 }

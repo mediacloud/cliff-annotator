@@ -1,20 +1,20 @@
 CLIFF: Extract Named Entities and Geoparse the News
 ===================================================
 
-CLIFF is a lightweight server to allow HTTP requests to the Stanford Named Entity 
+CLIFF is a lightweight server to allow HTTP requests to the Stanford Named Entity
 Recognizer and a modified [CLAVIN 2.1.0 geoparser](http://clavin.bericotechnologies.com).  
-It allows you to submit unstructured text over HTTP and a receive in reply JSON 
-results with information about organizations mentioned, locations mentioned, 
-people mentioned, and countries the text is "about".  The geoparsing is tuned 
+It allows you to submit unstructured text over HTTP and a receive in reply JSON
+results with information about organizations mentioned, locations mentioned,
+people mentioned, and countries the text is "about".  The geoparsing is tuned
 to identify cities, states and countries.
 
 # Installing
 
 You can try CLIFF out on our public website: http://cliff.mediacloud.org.
-We don't host a public installation of CLIFF for you to use.  If you want to install and 
+We don't host a public installation of CLIFF for you to use.  If you want to install and
 use CLIFF quickly, try [our Docker config](https://github.com/mitmedialab/cliff-docker).
 
-If you want to access CLIFF's results from Python, use our 
+If you want to access CLIFF's results from Python, use our
 [`mediacloud-cliff Python client API library](https://pypi.org/project/mediacloud-cliff/):
 ```
 pip install mediacloud-cliff
@@ -25,7 +25,7 @@ pip install mediacloud-cliff
 To test it out, hit this url in a browser and you should get some JSON back:
 
 ```
-http://localhost:8080/cliff-2.6.0/parse/text?q=This is some text about New York City, and maybe about Accra as well, and maybe Boston as well.
+http://localhost:8080/cliff-2.6.1/parse/text?q=This is some text about New York City, and maybe about Accra as well, and maybe Boston as well.
 ```
 
 Of course, when you use this in a script you should do an HTTP POST, not a GET!
@@ -39,7 +39,7 @@ The reason CLIFF exists! This parses some text and returns the entities mentione
 |Parameter|Default|Notes|
 |----------|----------|----------|
 |q|(required)|Raw text of a news story that you want to parse|
-|replaceAllDemonyms|false|"true" if you want to count things like "Chinese" as a mention of the country China| 
+|replaceAllDemonyms|false|"true" if you want to count things like "Chinese" as a mention of the country China|
 
 Example Query:
 `http://localhost:8080/CLIFF-2.1.1/parse/text?q=Some%20clever%20text%20mentioning%20places%20like%20New%20Delhi,%20and%20people%20like%20Einstein.%20Perhaps%20also%20we%20want%20mention%20an%20organization%20like%20the%20United%20Nations?`
@@ -135,7 +135,7 @@ Response:
   },
   "status": "ok",
   "milliseconds": 4004,
-  "version": "2.6.0"
+  "version": "2.6.1"
 }
 ```
 
@@ -148,7 +148,7 @@ A convenience method to help you lookup places by their geonames ids.
 |id|(required)|The unique id that identifies a place in the [geonames.org](geonames.org) database|
 
 Example Query:
-`http://localhost:8080/cliff-2.6.0/geonames?id=4930956`
+`http://localhost:8080/cliff-2.6.1/geonames?id=4930956`
 
 Response:
 ```json
@@ -206,7 +206,7 @@ Response:
     "population": 617594
   },
   "status": "ok",
-  "version": "2.6.0"
+  "version": "2.6.1"
 }
 ```
 
@@ -219,7 +219,7 @@ A convenience method to help you get the raw text of the story from a URL.  This
 |url|(required)|The url of a news story to extract the text of|
 
 Example Query:
-`http://localhost:8080/cliff-2.6.0/extract?url=http://www.theonion.com/articles/woman-thinks-she-can-just-waltz-back-into-work-aft,38349/`
+`http://localhost:8080/cliff-2.6.1/extract?url=http://www.theonion.com/articles/woman-thinks-she-can-just-waltz-back-into-work-aft,38349/`
 
 Response:
 ```json
@@ -231,7 +231,7 @@ Response:
   },
   "status": "ok",
   "milliseconds": 625,
-  "version": "2.6.0"
+  "version": "2.6.1"
 }
 ```
 
@@ -254,19 +254,19 @@ brew cask install Java
 
 ## Install CLAVIN
 
-You need to download and install the latest version of CLAVIN in order to build the Geonames Gazetteer Index 
-for geoparsing. The idea is that you build all that, and then create a symlink at 
+You need to download and install the latest version of CLAVIN in order to build the Geonames Gazetteer Index
+for geoparsing. The idea is that you build all that, and then create a symlink at
 `/etc/cliff2/IndexDirectory` to the CLAVIN index you just built.
 
 Instead of building the CLAVIN geonames index yourself, consider downloading a prebuilt one from [`mediacloud-clavin-build-geonames-index` repository's releases page](https://github.com/berkmancenter/mediacloud-clavin-build-geonames-index/releases).
 
-To build, run `mvn` in the top level directory.  You can do `mvn package -DskipTests` and then you will get a 
+To build, run `mvn` in the top level directory.  You can do `mvn package -DskipTests` and then you will get a
 .war file in `webapp/target/`.
 
 ## Tomcat Setup
 
-CLIFF is setup to be run inside a Java servlet container (ie. Tomcat 8).  For development 
-we use the [Maven Tomcat plugin](http://tomcat.apache.org/maven-plugin.html).  To deploy, 
+CLIFF is setup to be run inside a Java servlet container (ie. Tomcat 8).  For development
+we use the [Maven Tomcat plugin](http://tomcat.apache.org/maven-plugin.html).  To deploy,
 add this to your `%TOMCAT_PATH%/conf/tomcat-users.xml` file:
 ```xml
   <role rolename="manager"/>
@@ -288,8 +288,8 @@ That lets the Maven Tomcat plugin upload the WAR it builds over the website cont
 
 ## Building and Deploying to Tomcat
 
-First make sure tomcat is running (ie. `catalina run`). Now run `mvn tomcat7:deploy -DskipTests` 
-to deploy the app, or `mvn tomcat7:redeploy -DskipTests` to redeploy once you've already got 
+First make sure tomcat is running (ie. `catalina run`). Now run `mvn tomcat7:deploy -DskipTests`
+to deploy the app, or `mvn tomcat7:redeploy -DskipTests` to redeploy once you've already got
 the app deployed.
 
 ## Pluggable Entity Extraction
@@ -330,12 +330,12 @@ We have a number of unit tests that can be run with `mvn test`.
 ## Releasing
 
 To build a release:
-1. first update the version numbers in all the `pom.xml` files (`pom.xml`, `webapp/pom.xml`, `common/pom.xml`, `stanford-entity-extractor/pom.xml` ) 
+1. first update the version numbers in all the `pom.xml` files (`pom.xml`, `webapp/pom.xml`, `common/pom.xml`, `stanford-entity-extractor/pom.xml` )
 2. also update the version number in `org.mediacloud.cliff.ParseManager`
 3. to create the WAR file, run `mvn package`
 4. update the examples in `README.md`
 5. tag the release with the version number `vX.Y.Z`
-6. author a new release for that tag on GitHub, write a description of the changes, and upload the .war 
+6. author a new release for that tag on GitHub, write a description of the changes, and upload the .war
 
 ## Deploying on Ubuntu
 
